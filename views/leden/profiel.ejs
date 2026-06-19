@@ -1,0 +1,66 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Mijn profiel</span>
+      <h1>Profiel beheren</h1>
+      <p>Zo zie je eruit in de ledengids.</p>
+    </div>
+    <a href="/leden/<%= profiel.id %>" class="btn btn--ghost">Bekijk mijn profiel</a>
+  </div>
+</div>
+
+<section class="section">
+  <div class="wrap" style="max-width:760px;">
+    <% if (succes) { %><div class="flash flash--succes"><%= succes %></div><% } %>
+    <% if (fout) { %><div class="flash flash--fout"><%= fout %></div><% } %>
+
+    <form action="/profiel" method="post" enctype="multipart/form-data" class="form-card">
+      <div class="flex" style="gap:20px; margin-bottom:22px;">
+        <% if (profiel.logo_id) { %>
+          <img class="avatar avatar--lg" src="/media/<%= profiel.logo_id %>" alt="">
+        <% } else { %>
+          <span class="avatar avatar--lg"><%= h.initialen(profiel.bedrijf || profiel.naam) %></span>
+        <% } %>
+        <div class="veld" style="flex:1; margin:0;">
+          <label for="logo">Logo of foto</label>
+          <input type="file" id="logo" name="logo" accept="image/*">
+          <span class="hint">PNG, JPG of WebP, max 2 MB. Leeg laten = ongewijzigd.</span>
+        </div>
+      </div>
+
+      <div class="veld">
+        <label for="naam">Naam</label>
+        <input type="text" id="naam" name="naam" value="<%= profiel.naam || '' %>">
+      </div>
+      <div class="veld-rij">
+        <div class="veld"><label for="bedrijf">Bedrijf</label><input type="text" id="bedrijf" name="bedrijf" value="<%= profiel.bedrijf || '' %>"></div>
+        <div class="veld"><label for="functie">Functie</label><input type="text" id="functie" name="functie" value="<%= profiel.functie || '' %>"></div>
+      </div>
+      <div class="veld-rij">
+        <div class="veld"><label for="branche">Branche</label><input type="text" id="branche" name="branche" value="<%= profiel.branche || '' %>" placeholder="bijv. Bouw, ICT, Advies"></div>
+        <div class="veld"><label for="plaats">Plaats</label><input type="text" id="plaats" name="plaats" value="<%= profiel.plaats || '' %>"></div>
+      </div>
+      <div class="veld-rij">
+        <div class="veld"><label for="telefoon">Telefoon</label><input type="tel" id="telefoon" name="telefoon" value="<%= profiel.telefoon || '' %>"></div>
+        <div class="veld"><label for="website">Website</label><input type="text" id="website" name="website" value="<%= profiel.website || '' %>" placeholder="www.voorbeeld.nl"></div>
+      </div>
+      <div class="veld">
+        <label for="bio">Over jou / je bedrijf</label>
+        <textarea id="bio" name="bio" placeholder="Vertel kort wie je bent, wat je doet en waarmee je andere leden kunt helpen."><%= profiel.bio || '' %></textarea>
+      </div>
+      <button type="submit" class="btn btn--primary">Profiel opslaan</button>
+    </form>
+
+    <div class="form-card" style="margin-top:24px;">
+      <h3>Wachtwoord wijzigen</h3>
+      <form action="/profiel/wachtwoord" method="post">
+        <div class="veld"><label for="huidig">Huidig wachtwoord</label><input type="password" id="huidig" name="huidig"></div>
+        <div class="veld-rij">
+          <div class="veld"><label for="nieuw">Nieuw wachtwoord</label><input type="password" id="nieuw" name="nieuw"></div>
+          <div class="veld"><label for="nieuw2">Herhaal nieuw</label><input type="password" id="nieuw2" name="nieuw2"></div>
+        </div>
+        <button type="submit" class="btn btn--ghost">Wachtwoord wijzigen</button>
+      </form>
+    </div>
+  </div>
+</section>

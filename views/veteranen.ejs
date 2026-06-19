@@ -1,0 +1,102 @@
+<section class="hero hero--foto" style="background-image:url('https://images.unsplash.com/photo-1723395439174-4a5c26eec556?q=80&w=1600&auto=format&fit=crop');">
+  <div class="wrap" style="padding-top:72px; padding-bottom:72px;">
+    <span class="kicker reveal">Veteranenzaken</span>
+    <h1 class="reveal d1" style="max-width:18ch;">Een netwerk dat blijft staan, ook na de dienst.</h1>
+    <p class="lede reveal d2">Hulpbronnen, contacten en passend werk voor veteranen — verzorgd door de brigade en het bestuur van de Business Club Luchtmobiel.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="detail-grid">
+      <div>
+        <% var cats = Object.keys(perCat); %>
+        <% if (!cats.length) { %>
+          <div class="lege-staat"><p class="mb-0">Er zijn nog geen hulpbronnen toegevoegd.</p></div>
+        <% } else { %>
+          <% cats.forEach(function(cat){ %>
+            <div class="hub-cat">
+              <h3><%= cat %></h3>
+              <% perCat[cat].forEach(function(r){ %>
+                <div class="resource">
+                  <div>
+                    <strong style="font-family:var(--font-display);"><%= r.titel %></strong>
+                    <% if (r.omschrijving) { %><p class="muted mb-0" style="margin-top:4px;"><%= r.omschrijving %></p><% } %>
+                    <% if (r.link) { %><a href="<%= r.link %>" target="_blank" rel="noopener" style="font-weight:600; font-size:.9rem;"><%= h.toonUrl(r.link) %> →</a><% } %>
+                  </div>
+                  <% if (magRedactie) { %>
+                    <form action="/veteranen/resource/<%= r.id %>/verwijderen" method="post" class="inline-form" data-bevestig="Deze hulpbron verwijderen?">
+                      <button class="btn btn--danger btn--sm" type="submit">×</button>
+                    </form>
+                  <% } %>
+                </div>
+              <% }) %>
+            </div>
+          <% }) %>
+        <% } %>
+
+        <% if (vacatures.length) { %>
+          <hr class="divider">
+          <h2>Passend werk voor veteranen</h2>
+          <div class="grid grid--2" style="margin-top:16px;">
+            <% vacatures.forEach(function(v){ %>
+              <a href="<%= user ? '/vacatures/' + v.id : '/inloggen' %>" class="card" style="padding:18px 20px;">
+                <strong style="font-family:var(--font-display);"><%= v.titel %></strong>
+                <div class="meta"><%= [v.bedrijf, v.plaats].filter(Boolean).join(' · ') %></div>
+              </a>
+            <% }) %>
+          </div>
+        <% } %>
+      </div>
+
+      <aside>
+        <% if (magRedactie) { %>
+          <div class="zijbalk">
+            <span class="kicker" style="margin-bottom:10px;">Redactie</span>
+            <h3 style="margin-top:0; font-size:1.05rem;">Hulpbron toevoegen</h3>
+            <form action="/veteranen/resource" method="post" class="stack">
+              <div class="veld" style="margin:0;"><label for="titel">Titel</label><input type="text" id="titel" name="titel" required></div>
+              <div class="veld" style="margin:0;">
+                <label for="categorie">Categorie</label>
+                <select id="categorie" name="categorie">
+                  <% categorieen.forEach(function(c){ %><option value="<%= c %>"><%= c %></option><% }) %>
+                </select>
+              </div>
+              <div class="veld" style="margin:0;"><label for="omschrijving">Omschrijving</label><textarea id="omschrijving" name="omschrijving" style="min-height:80px;"></textarea></div>
+              <div class="veld" style="margin:0;"><label for="link">Link</label><input type="text" id="link" name="link" placeholder="www.voorbeeld.nl"></div>
+              <button type="submit" class="btn btn--primary btn--block">Toevoegen</button>
+            </form>
+          </div>
+        <% } else { %>
+          <div class="zijbalk">
+            <span class="kicker" style="margin-bottom:10px;">Brigade</span>
+            <p class="muted mb-0">Hoor je bij de brigade en wil je deze hub mee verzorgen? Vraag het bestuur om je account te koppelen.</p>
+          </div>
+        <% } %>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="section foto-sectie">
+  <div class="wrap">
+    <span class="kicker">Ter herinnering</span>
+    <h2 style="margin-bottom:8px;">Onze brigade, onze geschiedenis</h2>
+    <p class="muted" style="max-width:60ch; margin-bottom:26px;">Beelden van herdenkingen en het optreden van 11 Luchtmobiele Brigade &mdash; waar veteranen en de huidige generatie elkaar vinden.</p>
+    <div class="foto-galerij">
+      <figure>
+        <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/75TH_ANNIVERSARY_OF_OPERATION_MARKET_GARDEN_24.jpg/1024px-75TH_ANNIVERSARY_OF_OPERATION_MARKET_GARDEN_24.jpg" alt="Herdenkingssprong 75 jaar Market Garden" onerror="this.closest('figure').style.display='none';">
+        <figcaption>Herdenkingssprong &mdash; 75 jaar Operatie Market Garden</figcaption>
+      </figure>
+      <figure>
+        <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Het-bevestigen-van-de-uitzendlinten-aan-het-vaandel-van-11-herstelcompagnie.jpg/1024px-Het-bevestigen-van-de-uitzendlinten-aan-het-vaandel-van-11-herstelcompagnie.jpg" alt="Bevestigen van uitzendlinten aan het vaandel" onerror="this.closest('figure').style.display='none';">
+        <figcaption>Uitzendlinten aan het vaandel &mdash; eerbetoon aan inzet</figcaption>
+      </figure>
+      <figure>
+        <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/75TH_ANNIVERSARY_OF_OPERATION_MARKET_GARDEN_27.jpg/1024px-75TH_ANNIVERSARY_OF_OPERATION_MARKET_GARDEN_27.jpg" alt="Parachutisten dalen neer tijdens herdenking" onerror="this.closest('figure').style.display='none';">
+        <figcaption>Samen de sprong gewaagd</figcaption>
+      </figure>
+    </div>
+    <p class="muted" style="font-size:.8rem; margin-top:18px;">Foto's: Ministerie van Defensie / U.S. Army via Wikimedia Commons &mdash; vrij te gebruiken.</p>
+  </div>
+</section>

@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-label="Kastanjebruine baret met embleem">
+  <defs>
+    <radialGradient id="baretvlak" cx="0.4" cy="0.32" r="0.9">
+      <stop offset="0" stop-color="#8a2f3f"/>
+      <stop offset="0.6" stop-color="#6e2230"/>
+      <stop offset="1" stop-color="#4a141d"/>
+    </radialGradient>
+  </defs>
+
+  <!-- schaduw -->
+  <ellipse cx="162" cy="206" rx="120" ry="14" fill="#1c1714" opacity="0.12"/>
+
+  <!-- baretdoek -->
+  <path d="M44,138
+           C40,96 92,64 160,62
+           C232,60 286,86 288,124
+           C289,142 270,156 240,160
+           L150,170
+           C92,168 52,160 46,148
+           C45,145 44,142 44,138 Z" fill="url(#baretvlak)"/>
+
+  <!-- plooien/relief -->
+  <path d="M150,70 C150,108 150,140 150,168" stroke="#4a141d" stroke-width="2" opacity="0.35" fill="none"/>
+  <path d="M205,68 C210,104 205,140 188,162" stroke="#4a141d" stroke-width="2" opacity="0.3" fill="none"/>
+  <path d="M100,72 C92,104 100,138 120,162" stroke="#4a141d" stroke-width="2" opacity="0.3" fill="none"/>
+  <path d="M60,128 C120,150 220,150 280,126" stroke="#8a2f3f" stroke-width="2" opacity="0.5" fill="none"/>
+
+  <!-- staartje bovenop -->
+  <circle cx="168" cy="60" r="5" fill="#4a141d"/>
+
+  <!-- leren zweetband -->
+  <path d="M52,150 C70,170 130,180 168,180 C150,176 120,166 108,150 Z" fill="#2a1418"/>
+  <path d="M52,150 C92,166 140,170 168,170" stroke="#1c1714" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+  <!-- embleem (eigen, gestileerd: valk boven gekruiste zwaarden op schild) -->
+  <g transform="translate(118,96)">
+    <!-- schild -->
+    <path d="M0,-26 L30,-18 V6 C30,26 17,38 0,46 C-17,38 -30,26 -30,6 V-18 Z"
+          fill="#5a1a26" stroke="#a98443" stroke-width="2.5"/>
+    <!-- gekruiste zwaarden -->
+    <g stroke="#e9dcc2" stroke-width="3" stroke-linecap="round">
+      <line x1="-15" y1="30" x2="16" y2="-6"/>
+      <line x1="15" y1="30" x2="-16" y2="-6"/>
+    </g>
+    <g stroke="#a98443" stroke-width="3" stroke-linecap="round">
+      <line x1="-17" y1="26" x2="-11" y2="33"/>
+      <line x1="17" y1="26" x2="11" y2="33"/>
+    </g>
+    <!-- duikende valk -->
+    <path d="M0,-16 C-9,-13 -16,-7 -20,2 C-12,-2 -6,-3 0,-3 C6,-3 12,-2 20,2 C16,-7 9,-13 0,-16 Z" fill="#e9dcc2"/>
+    <path d="M0,-15 C-2,-9 -2,-2 0,3 C2,-2 2,-9 0,-15 Z" fill="#a98443"/>
+  </g>
+</svg>

@@ -1,0 +1,52 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Over het netwerk</span>
+      <h1>Verbinden, ondernemen en ondersteunen</h1>
+      <p>Het besloten platform van de Business Club Luchtmobiel.</p>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="wrap" style="max-width:760px;">
+    <p style="font-size:1.12rem;">De Business Club Luchtmobiel verbindt ondernemers en professionals met een band met de Luchtmobiele Brigade. Dit platform brengt die verbinding online: leden presenteren zichzelf en hun bedrijf, delen kansen en steunen elkaar — met bijzondere aandacht voor veteranenzaken.</p>
+
+    <hr class="divider">
+
+    <h2>Zo werkt het</h2>
+    <div class="grid grid--2" style="margin-top:20px;">
+      <div class="card">
+        <span class="badge badge--maroon">1</span>
+        <h3 style="margin-top:12px;">Word lid met de toegangscode</h3>
+        <p class="muted mb-0">Het bestuur deelt een toegangscode. Daarmee maak je zelf een account aan — zo blijft het netwerk besloten zonder wachttijd.</p>
+      </div>
+      <div class="card">
+        <span class="badge badge--maroon">2</span>
+        <h3 style="margin-top:12px;">Beheer alles zelf</h3>
+        <p class="muted mb-0">Je profiel, vacatures en projecten beheer je volledig zelf. Plaats, wijzig en verwijder wanneer je maar wilt.</p>
+      </div>
+      <div class="card">
+        <span class="badge badge--maroon">3</span>
+        <h3 style="margin-top:12px;">Vind en deel kansen</h3>
+        <p class="muted mb-0">Doorzoek de ledengids, plaats vacatures en ontdek projecten die steun zoeken binnen het netwerk.</p>
+      </div>
+      <div class="card">
+        <span class="badge badge--maroon">4</span>
+        <h3 style="margin-top:12px;">Ondersteun veteranen</h3>
+        <p class="muted mb-0">De brigade en het bestuur beheren een hub met hulpbronnen en passend werk voor veteranen.</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="card" style="background:var(--bone-2);">
+      <h3>Ook voor de brigade</h3>
+      <p class="muted mb-0">De Luchtmobiele Brigade gebruikt het platform mee: officiële accounts krijgen een herkenbaar kenmerk en kunnen de veteranenhub vullen met hulpbronnen en contacten.</p>
+    </div>
+
+    <div class="center" style="margin-top:40px;">
+      <% if (!user) { %><a href="/registreren" class="btn btn--primary">Word lid</a><% } else { %><a href="/leden" class="btn btn--primary">Naar de ledengids</a><% } %>
+    </div>
+  </div>
+</section>

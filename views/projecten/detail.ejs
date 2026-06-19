@@ -1,0 +1,84 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker"><%= project.steun_type ? 'Steun gezocht: ' + project.steun_type : 'Project' %></span>
+      <h1 style="margin:0;"><%= project.titel %></h1>
+      <% if (project.plaats) { %><p><%= project.plaats %></p><% } %>
+    </div>
+    <a href="/projecten" class="btn btn--ghost">← Alle projecten</a>
+  </div>
+</div>
+
+<section class="section">
+  <div class="wrap">
+    <div class="detail-grid">
+      <div>
+        <% if (project.afbeelding_id) { %>
+          <img src="/media/<%= project.afbeelding_id %>" alt="" style="width:100%; border-radius:var(--radius); border:1px solid var(--line); margin-bottom:24px;">
+        <% } %>
+
+        <% if (project.samenvatting) { %><p style="font-size:1.12rem;"><%= project.samenvatting %></p><% } %>
+        <% if (project.omschrijving) { %><div class="prose"><%= project.omschrijving %></div><% } %>
+
+        <% if (project.doel) { %>
+          <div class="card" style="background:var(--bone-2); margin-top:20px;">
+            <span class="kicker" style="margin-bottom:6px;">Doel</span>
+            <p class="mb-0"><%= project.doel %></p>
+          </div>
+        <% } %>
+
+        <% if (mag) { %>
+          <hr class="divider">
+          <div class="flex">
+            <a href="/projecten/<%= project.id %>/bewerken" class="btn btn--ghost btn--sm">Bewerken</a>
+            <form action="/projecten/<%= project.id %>/verwijderen" method="post" class="inline-form" data-bevestig="Dit project verwijderen?">
+              <button class="btn btn--danger btn--sm" type="submit">Verwijderen</button>
+            </form>
+          </div>
+
+          <hr class="divider">
+          <h2>Aanmeldingen (<%= aanmeldingen.length %>)</h2>
+          <% if (!aanmeldingen.length) { %>
+            <p class="muted">Nog geen aanmeldingen.</p>
+          <% } else { %>
+            <div class="stack">
+              <% aanmeldingen.forEach(function(a){ %>
+                <div class="card" style="padding:16px 18px;">
+                  <div class="flex between">
+                    <a href="/leden/<%= a.uid %>" style="font-weight:700;"><%= a.naam %></a>
+                    <span class="meta"><%= h.formatDatum(a.aangemaakt) %></span>
+                  </div>
+                  <% if (a.bericht) { %><p class="muted mb-0" style="margin-top:6px;"><%= a.bericht %></p><% } %>
+                </div>
+              <% }) %>
+            </div>
+          <% } %>
+        <% } %>
+      </div>
+
+      <aside class="zijbalk">
+        <dl style="margin:0 0 16px;">
+          <% if (project.steun_type) { %><dt>Soort steun</dt><dd><%= project.steun_type %></dd><% } %>
+          <dt>Geplaatst door</dt><dd><a href="/leden/<%= project.user_id %>"><%= project.plaatser %></a></dd>
+          <dt>Geplaatst op</dt><dd><%= h.formatDatum(project.aangemaakt) %></dd>
+        </dl>
+
+        <% if (!mag) { %>
+          <% if (alAangemeld) { %>
+            <div class="flash flash--succes mb-0">Je hebt je aangemeld voor dit project.</div>
+          <% } else { %>
+            <h3 style="font-size:1rem;">Wil je helpen?</h3>
+            <form action="/projecten/<%= project.id %>/aanmelden" method="post" class="stack">
+              <textarea name="bericht" placeholder="Optioneel: hoe kun of wil je bijdragen?" style="min-height:90px;"></textarea>
+              <button type="submit" class="btn btn--primary btn--block">Aanmelden voor dit project</button>
+            </form>
+          <% } %>
+        <% } %>
+
+        <% if (project.contact_email) { %>
+          <a href="mailto:<%= project.contact_email %>?subject=Project: <%= project.titel %>" class="btn btn--ghost btn--block" style="margin-top:10px;">Contact via e-mail</a>
+        <% } %>
+      </aside>
+    </div>
+  </div>
+</section>

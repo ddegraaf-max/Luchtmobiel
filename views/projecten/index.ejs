@@ -1,0 +1,50 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Ondersteuningsprojecten</span>
+      <h1>Steun zoeken &amp; bieden</h1>
+      <p><%= projecten.length %> <%= projecten.length === 1 ? 'project' : 'projecten' %> met een steunvraag</p>
+    </div>
+    <a href="/projecten/nieuw" class="btn btn--primary">+ Project plaatsen</a>
+  </div>
+</div>
+
+<section class="section section--tight">
+  <div class="wrap">
+    <form method="get" class="filterbalk">
+      <select name="type" onchange="this.form.submit()">
+        <option value="">Alle soorten steun</option>
+        <% steuntypes.forEach(function(s){ %>
+          <option value="<%= s %>" <%= type === s ? 'selected' : '' %>><%= s %></option>
+        <% }) %>
+      </select>
+      <% if (type) { %><a href="/projecten" class="btn btn--ghost">Wis filter</a><% } %>
+    </form>
+
+    <% if (!projecten.length) { %>
+      <div class="lege-staat">
+        <p>Er staan nog geen projecten online.</p>
+        <a href="/projecten/nieuw" class="btn btn--primary">Plaats het eerste project</a>
+      </div>
+    <% } else { %>
+      <div class="grid grid--auto">
+        <% projecten.forEach(function(p){ %>
+          <div class="card" style="padding:0; overflow:hidden;">
+            <% if (p.afbeelding_id) { %>
+              <a href="/projecten/<%= p.id %>"><img src="/media/<%= p.afbeelding_id %>" alt="" style="height:170px; width:100%; object-fit:cover;"></a>
+            <% } %>
+            <div style="padding:22px; display:flex; flex-direction:column; flex:1;">
+              <% if (p.steun_type) { %><div style="margin-bottom:8px;"><span class="badge badge--olive"><%= p.steun_type %></span></div><% } %>
+              <a class="card-titel" href="/projecten/<%= p.id %>" style="font-family:var(--font-display); font-weight:700; font-size:1.18rem;"><%= p.titel %></a>
+              <p class="muted" style="margin-top:8px; flex:1;"><%= h.kort(p.samenvatting, 130) %></p>
+              <div class="flex between" style="margin-top:14px;">
+                <span class="meta"><%= p.plaats || '' %></span>
+                <a href="/projecten/<%= p.id %>" style="font-weight:700;">Bekijk →</a>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</section>

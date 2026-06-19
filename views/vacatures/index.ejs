@@ -1,0 +1,46 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Vacatures</span>
+      <h1>Werk binnen het netwerk</h1>
+      <p><%= vacatures.length %> openstaande <%= vacatures.length === 1 ? 'vacature' : 'vacatures' %></p>
+    </div>
+    <a href="/vacatures/nieuw" class="btn btn--primary">+ Vacature plaatsen</a>
+  </div>
+</div>
+
+<section class="section section--tight">
+  <div class="wrap">
+    <form method="get" class="filterbalk">
+      <input type="text" name="zoek" placeholder="Zoek op functie, bedrijf of plaats…" value="<%= zoek %>">
+      <label class="check" style="flex:none;"><input type="checkbox" name="veteraan" value="1" <%= alleenVeteraan ? 'checked' : '' %> onchange="this.form.submit()"> Alleen veteraanvriendelijk</label>
+      <button type="submit" class="btn btn--primary">Filter</button>
+      <% if (zoek || alleenVeteraan) { %><a href="/vacatures" class="btn btn--ghost">Wis</a><% } %>
+    </form>
+
+    <% if (!vacatures.length) { %>
+      <div class="lege-staat">
+        <p>Er staan nog geen vacatures online.</p>
+        <a href="/vacatures/nieuw" class="btn btn--primary">Plaats de eerste vacature</a>
+      </div>
+    <% } else { %>
+      <div class="grid grid--auto">
+        <% vacatures.forEach(function(v){ %>
+          <div class="card">
+            <div class="flex between" style="align-items:flex-start; margin-bottom:6px;">
+              <span class="badge"><%= v.dienstverband || 'Functie' %></span>
+              <% if (v.veteraan_vriendelijk) { %><span class="badge badge--maroon">Veteraan welkom</span><% } %>
+            </div>
+            <a class="card-titel" href="/vacatures/<%= v.id %>" style="font-family:var(--font-display); font-weight:700; font-size:1.18rem;"><%= v.titel %></a>
+            <div class="meta" style="margin:4px 0 12px;"><%= v.bedrijf || '' %><%= v.plaats ? ' · ' + v.plaats : '' %></div>
+            <p class="muted" style="flex:1;"><%= h.kort(v.omschrijving, 120) %></p>
+            <div class="flex between" style="margin-top:auto;">
+              <span class="meta">Geplaatst <%= h.formatDatum(v.aangemaakt) %></span>
+              <a href="/vacatures/<%= v.id %>" style="font-weight:700;">Bekijk →</a>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</section>

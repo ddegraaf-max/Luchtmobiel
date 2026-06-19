@@ -1,0 +1,69 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Beheer</span>
+      <h1>Ledenbeheer</h1>
+      <p>Beheer rollen, activeer of deactiveer leden en houd overzicht.</p>
+    </div>
+  </div>
+</div>
+
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="statbar" style="margin-top:0; margin-bottom:32px;">
+      <div class="stat"><div class="getal"><%= stats.leden %></div><div class="label">Leden</div></div>
+      <div class="stat"><div class="getal"><%= stats.vacatures %></div><div class="label">Vacatures</div></div>
+      <div class="stat"><div class="getal"><%= stats.projecten %></div><div class="label">Projecten</div></div>
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table class="tabel">
+        <thead>
+          <tr><th>Naam</th><th>E-mail</th><th>Rol</th><th>Status</th><th>Acties</th></tr>
+        </thead>
+        <tbody>
+          <% leden.forEach(function(l){ %>
+            <tr>
+              <td>
+                <strong><%= l.naam %></strong>
+                <% if (l.bedrijf) { %><div class="meta"><%= l.bedrijf %></div><% } %>
+              </td>
+              <td class="muted"><%= l.email %></td>
+              <td>
+                <% if (l.id === user.id) { %>
+                  <span class="badge badge--brigade">Jij (admin)</span>
+                <% } else { %>
+                  <form action="/beheer/lid/<%= l.id %>/rol" method="post" class="inline-form">
+                    <select name="rol" onchange="this.form.submit()">
+                      <option value="lid" <%= l.rol === 'lid' ? 'selected' : '' %>>Lid</option>
+                      <option value="brigade" <%= l.rol === 'brigade' ? 'selected' : '' %>>Brigade</option>
+                      <option value="admin" <%= l.rol === 'admin' ? 'selected' : '' %>>Admin</option>
+                    </select>
+                  </form>
+                <% } %>
+              </td>
+              <td>
+                <% if (l.actief) { %><span class="badge badge--olive">Actief</span><% } else { %><span class="badge">Inactief</span><% } %>
+              </td>
+              <td>
+                <% if (l.id !== user.id) { %>
+                  <div class="flex" style="gap:6px;">
+                    <form action="/beheer/lid/<%= l.id %>/status" method="post" class="inline-form">
+                      <button class="btn btn--ghost btn--sm" type="submit"><%= l.actief ? 'Deactiveren' : 'Activeren' %></button>
+                    </form>
+                    <form action="/beheer/lid/<%= l.id %>/verwijderen" method="post" class="inline-form" data-bevestig="Dit lid definitief verwijderen? Alle vacatures en projecten van dit lid verdwijnen ook.">
+                      <button class="btn btn--danger btn--sm" type="submit">×</button>
+                    </form>
+                  </div>
+                <% } else { %>
+                  <span class="muted">—</span>
+                <% } %>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted" style="margin-top:16px; font-size:.85rem;">Tip: zet een lid op <strong>Brigade</strong> om die persoon de veteranenhub te laten beheren. <strong>Admin</strong> geeft volledige toegang tot dit beheerpaneel.</p>
+  </div>
+</section>

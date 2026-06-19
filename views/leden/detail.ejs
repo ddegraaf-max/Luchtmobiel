@@ -1,0 +1,75 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div class="flex" style="align-items:center; gap:20px;">
+      <% if (lid.logo_id) { %>
+        <img class="avatar avatar--lg" src="/media/<%= lid.logo_id %>" alt="">
+      <% } else { %>
+        <span class="avatar avatar--lg"><%= h.initialen(lid.bedrijf || lid.naam) %></span>
+      <% } %>
+      <div>
+        <span class="kicker" style="margin-bottom:6px;"><%= lid.branche || 'Lid' %></span>
+        <h1 style="margin:0;"><%= lid.naam %>
+          <% if (lid.rol === 'brigade') { %><span class="badge badge--brigade">Brigade</span><% } %>
+        </h1>
+        <% if (lid.bedrijf || lid.functie) { %>
+          <p style="margin:.4rem 0 0; color:var(--maroon); font-weight:600;"><%= [lid.functie, lid.bedrijf].filter(Boolean).join(' · ') %></p>
+        <% } %>
+      </div>
+    </div>
+    <a href="/leden" class="btn btn--ghost">← Ledengids</a>
+  </div>
+</div>
+
+<section class="section">
+  <div class="wrap">
+    <div class="detail-grid">
+      <div>
+        <% if (lid.bio) { %>
+          <h2>Over</h2>
+          <div class="prose"><%= lid.bio %></div>
+        <% } else { %>
+          <p class="muted">Dit lid heeft nog geen beschrijving toegevoegd.</p>
+        <% } %>
+
+        <% if (vacatures.length) { %>
+          <hr class="divider">
+          <h2>Vacatures van <%= lid.naam %></h2>
+          <div class="stack">
+            <% vacatures.forEach(function(v){ %>
+              <a href="/vacatures/<%= v.id %>" class="card" style="padding:16px 18px;">
+                <strong style="font-family:var(--font-display);"><%= v.titel %></strong>
+                <div class="meta"><%= [v.dienstverband, v.plaats].filter(Boolean).join(' · ') %></div>
+              </a>
+            <% }) %>
+          </div>
+        <% } %>
+
+        <% if (projecten.length) { %>
+          <hr class="divider">
+          <h2>Projecten van <%= lid.naam %></h2>
+          <div class="stack">
+            <% projecten.forEach(function(p){ %>
+              <a href="/projecten/<%= p.id %>" class="card" style="padding:16px 18px;">
+                <strong style="font-family:var(--font-display);"><%= p.titel %></strong>
+                <% if (p.steun_type) { %> <span class="badge badge--olive"><%= p.steun_type %></span><% } %>
+              </a>
+            <% }) %>
+          </div>
+        <% } %>
+      </div>
+
+      <aside class="zijbalk">
+        <dl style="margin:0;">
+          <% if (lid.plaats) { %><dt>Plaats</dt><dd><%= lid.plaats %></dd><% } %>
+          <% if (lid.branche) { %><dt>Branche</dt><dd><%= lid.branche %></dd><% } %>
+          <dt>E-mail</dt><dd><a href="mailto:<%= lid.email %>"><%= lid.email %></a></dd>
+          <% if (lid.telefoon) { %><dt>Telefoon</dt><dd><a href="tel:<%= lid.telefoon %>"><%= lid.telefoon %></a></dd><% } %>
+          <% if (lid.website) { %><dt>Website</dt><dd><a href="<%= lid.website %>" target="_blank" rel="noopener"><%= h.toonUrl(lid.website) %></a></dd><% } %>
+        </dl>
+        <% if (lid.website) { %>
+          <a href="<%= lid.website %>" target="_blank" rel="noopener" class="btn btn--primary btn--block" style="margin-top:18px;">Bezoek website</a>
+        <% } %>
+      </aside>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,148 @@
+<section class="hero hero--foto" style="background-image:url('https://images.unsplash.com/photo-1658419892513-b2a713c870ea?q=80&w=1600&auto=format&fit=crop');">
+  <div class="wrap">
+    <span class="kicker reveal">Besloten netwerk · sinds de baret</span>
+    <h1 class="reveal d1">Eén netwerk. Voor ondernemen én voor elkaar.</h1>
+    <p class="lede reveal d2">Het platform van de Business Club Luchtmobiel: presenteer jezelf en je bedrijf, deel vacatures, vind ondersteuning voor je projecten en draag bij aan veteranenzaken. Door leden, voor leden en de brigade.</p>
+    <div class="hero-acties reveal d3">
+      <% if (user) { %>
+        <a href="/leden" class="btn btn--light">Naar de ledengids</a>
+        <a href="/dashboard" class="btn btn--ghost">Mijn dashboard</a>
+      <% } else { %>
+        <a href="/registreren" class="btn btn--light">Word lid</a>
+        <a href="/over" class="btn btn--ghost">Hoe het werkt</a>
+      <% } %>
+    </div>
+
+    <div class="statbar reveal d4">
+      <div class="stat"><div class="getal"><%= stats.leden %></div><div class="label">Leden &amp; bedrijven</div></div>
+      <div class="stat"><div class="getal"><%= stats.vacatures %></div><div class="label">Openstaande vacatures</div></div>
+      <div class="stat"><div class="getal"><%= stats.projecten %></div><div class="label">Projecten met steunvraag</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <span class="kicker">Wat het platform biedt</span>
+    <h2>Vier modules, één doel</h2>
+    <div class="grid grid--auto" style="margin-top:32px;">
+      <a href="/leden" class="module">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 5.5a3 3 0 010 6M21 20c0-2.5-1.5-4.6-3.6-5.5"/></svg>
+        <h3>Ledengids</h3>
+        <p>Elk lid en bedrijf een eigen profiel met logo, expertise, website en contact. Doorzoekbaar op branche.</p>
+        <span class="pijl">Bekijk de leden →</span>
+      </a>
+      <a href="/vacatures" class="module">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+        <h3>Vacatures</h3>
+        <p>Plaats openstaande functies en vind talent binnen het netwerk — ook werk dat goed past bij veteranen.</p>
+        <span class="pijl">Bekijk vacatures →</span>
+      </a>
+      <a href="/projecten" class="module">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.5-9.5-9A5 5 0 0112 5a5 5 0 019.5 7C19 16.5 12 21 12 21z"/></svg>
+        <h3>Ondersteuningsprojecten</h3>
+        <p>Vraag steun voor een goed initiatief — financieel, met vrijwilligers of expertise — en meld je aan bij projecten van anderen.</p>
+        <span class="pijl">Bekijk projecten →</span>
+      </a>
+      <a href="/veteranen" class="module">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5z"/><path d="M9 12l2 2 4-4"/></svg>
+        <h3>Veteranenzaken</h3>
+        <p>Een eigen hub met hulpbronnen, contacten en passend werk. Verzorgd door de brigade en het bestuur.</p>
+        <span class="pijl">Naar de hub →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<% if (vacatures.length || projecten.length) { %>
+<section class="section section--tight" style="background:var(--bone-2); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+  <div class="wrap">
+    <div class="grid grid--2" style="gap:40px;">
+      <div>
+        <div class="flex between" style="margin-bottom:18px;">
+          <h2 style="margin:0;">Recente vacatures</h2>
+          <a href="/vacatures" class="muted" style="font-weight:600;">Alles →</a>
+        </div>
+        <div class="stack">
+          <% if (!vacatures.length) { %><p class="muted">Nog geen vacatures geplaatst.</p><% } %>
+          <% vacatures.forEach(function(v){ %>
+            <div class="card" style="padding:18px 20px;">
+              <div class="flex between">
+                <div>
+                  <a class="card-titel" href="<%= user ? '/vacatures/' + v.id : '/inloggen' %>" style="font-family:var(--font-display); font-weight:700; font-size:1.05rem;"><%= v.titel %></a>
+                  <div class="meta"><%= v.bedrijf || '' %><%= v.plaats ? ' · ' + v.plaats : '' %></div>
+                </div>
+                <% if (v.veteraan_vriendelijk) { %><span class="badge badge--maroon">Veteraan welkom</span><% } %>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+      <div>
+        <div class="flex between" style="margin-bottom:18px;">
+          <h2 style="margin:0;">Projecten met een steunvraag</h2>
+          <a href="/projecten" class="muted" style="font-weight:600;">Alles →</a>
+        </div>
+        <div class="stack">
+          <% if (!projecten.length) { %><p class="muted">Nog geen projecten geplaatst.</p><% } %>
+          <% projecten.forEach(function(p){ %>
+            <div class="card" style="padding:18px 20px;">
+              <div class="flex between" style="align-items:flex-start;">
+                <div>
+                  <a class="card-titel" href="<%= user ? '/projecten/' + p.id : '/inloggen' %>" style="font-family:var(--font-display); font-weight:700; font-size:1.05rem;"><%= p.titel %></a>
+                  <div class="meta"><%= h.kort(p.samenvatting, 90) %></div>
+                </div>
+                <% if (p.steun_type) { %><span class="badge badge--olive"><%= p.steun_type %></span><% } %>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<section class="beeldband" style="background-image:url('https://images.unsplash.com/photo-1758518730384-be3d205838e8?q=80&w=1600&auto=format&fit=crop');">
+  <div class="wrap">
+    <span class="kicker" style="color:var(--sand);">Zaken &amp; verbinding</span>
+    <h2>Korte lijnen, sterke afspraken.</h2>
+    <p>Binnen het netwerk doen leden zaken met elkaar, delen ze kansen en ondersteunen ze goede initiatieven. Vertrouwd, besloten en met een gedeelde achtergrond.</p>
+  </div>
+</section>
+
+<section class="section foto-sectie">
+  <div class="wrap">
+    <span class="kicker">De brigade</span>
+    <h2 style="margin-bottom:8px;">11 Luchtmobiele Brigade in beeld</h2>
+    <p class="muted" style="max-width:60ch; margin-bottom:26px;">Het netwerk is verbonden met de luchtmobiele brigade &mdash; snel, licht en overal inzetbaar.</p>
+    <div class="foto-galerij">
+      <figure>
+        <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/75TH_ANNIVERSARY_OF_OPERATION_MARKET_GARDEN_08.jpg/1024px-75TH_ANNIVERSARY_OF_OPERATION_MARKET_GARDEN_08.jpg" alt="Massale parachutesprong bij 75 jaar Market Garden" onerror="this.closest('figure').style.display='none';">
+        <figcaption>Massale sprong &mdash; 75 jaar Operatie Market Garden</figcaption>
+      </figure>
+      <figure>
+        <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/-75LiberationNL_-_11th_Mobile_Brigade_Commemoration_Jump_(48753997148).jpg/1024px--75LiberationNL_-_11th_Mobile_Brigade_Commemoration_Jump_(48753997148).jpg" alt="Parachutist van de luchtmobiele brigade" onerror="this.closest('figure').style.display='none';">
+        <figcaption>Parachutist tijdens een herdenkingssprong</figcaption>
+      </figure>
+      <figure>
+        <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/11_Luchtmobiele_Brigade_in_Iraq_with_Toyota_Land_Cruiser_(1).jpg/1024px-11_Luchtmobiele_Brigade_in_Iraq_with_Toyota_Land_Cruiser_(1).jpg" alt="Luchtmobiele militairen tijdens een missie" onerror="this.closest('figure').style.display='none';">
+        <figcaption>Op missie met lichte voertuigen</figcaption>
+      </figure>
+    </div>
+    <p style="margin-top:18px;"><a href="/eenheden" class="btn btn--ghost">Meer over de brigade</a></p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap center">
+    <span class="kicker" style="justify-content:center;">Doe mee</span>
+    <h2 style="max-width:20ch; margin:0 auto .6rem;">Klaar om je aan te sluiten bij het netwerk?</h2>
+    <p class="muted" style="max-width:48ch; margin:0 auto 1.8rem;">Maak in een paar minuten je profiel aan met de toegangscode van het bestuur. Daarna beheer je alles zelf.</p>
+    <% if (user) { %>
+      <a href="/profiel" class="btn btn--primary">Mijn profiel aanvullen</a>
+    <% } else { %>
+      <a href="/registreren" class="btn btn--primary">Word lid</a>
+    <% } %>
+  </div>
+</section>

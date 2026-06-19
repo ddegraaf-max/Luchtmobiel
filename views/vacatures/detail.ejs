@@ -1,0 +1,49 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker"><%= vacature.dienstverband || 'Vacature' %><% if (vacature.veteraan_vriendelijk) { %> · Veteraan welkom<% } %></span>
+      <h1 style="margin:0;"><%= vacature.titel %></h1>
+      <p><%= [vacature.bedrijf, vacature.plaats].filter(Boolean).join(' · ') %></p>
+    </div>
+    <a href="/vacatures" class="btn btn--ghost">← Alle vacatures</a>
+  </div>
+</div>
+
+<section class="section">
+  <div class="wrap">
+    <div class="detail-grid">
+      <div>
+        <% if (vacature.omschrijving) { %>
+          <div class="prose"><%= vacature.omschrijving %></div>
+        <% } else { %>
+          <p class="muted">Geen omschrijving toegevoegd. Neem contact op voor meer informatie.</p>
+        <% } %>
+
+        <% if (mag) { %>
+          <hr class="divider">
+          <div class="flex">
+            <a href="/vacatures/<%= vacature.id %>/bewerken" class="btn btn--ghost btn--sm">Bewerken</a>
+            <form action="/vacatures/<%= vacature.id %>/verwijderen" method="post" class="inline-form" data-bevestig="Deze vacature verwijderen?">
+              <button class="btn btn--danger btn--sm" type="submit">Verwijderen</button>
+            </form>
+          </div>
+        <% } %>
+      </div>
+
+      <aside class="zijbalk">
+        <dl style="margin:0 0 16px;">
+          <dt>Bedrijf</dt><dd><%= vacature.bedrijf || '—' %></dd>
+          <% if (vacature.plaats) { %><dt>Plaats</dt><dd><%= vacature.plaats %></dd><% } %>
+          <dt>Dienstverband</dt><dd><%= vacature.dienstverband || '—' %></dd>
+          <dt>Geplaatst door</dt><dd><a href="/leden/<%= vacature.plaatser_id %>"><%= vacature.plaatser %></a></dd>
+        </dl>
+        <% if (vacature.contact_email) { %>
+          <a href="mailto:<%= vacature.contact_email %>?subject=Reactie op vacature: <%= vacature.titel %>" class="btn btn--primary btn--block">Reageren via e-mail</a>
+        <% } %>
+        <% if (vacature.link) { %>
+          <a href="<%= vacature.link %>" target="_blank" rel="noopener" class="btn btn--ghost btn--block" style="margin-top:10px;">Meer informatie</a>
+        <% } %>
+      </aside>
+    </div>
+  </div>
+</section>

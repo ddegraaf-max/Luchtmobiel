@@ -1,0 +1,7 @@
+<% if (typeof flash !== 'undefined' && flash) { %>
+  <div class="wrap" style="padding-top:18px;">
+    <div class="flash flash--<%= flash.type === 'succes' ? 'succes' : (flash.type === 'fout' ? 'fout' : 'info') %>">
+      <%= flash.message %>
+    </div>
+  </div>
+<% } %>

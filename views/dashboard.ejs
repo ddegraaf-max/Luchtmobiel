@@ -1,0 +1,98 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Dashboard</span>
+      <h1>Welkom, <%= user.naam.split(' ')[0] %></h1>
+      <p>Beheer hier je profiel en je bijdragen aan het netwerk.</p>
+    </div>
+    <div class="flex">
+      <a href="/vacatures/nieuw" class="btn btn--ghost btn--sm">+ Vacature</a>
+      <a href="/projecten/nieuw" class="btn btn--primary btn--sm">+ Project</a>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="wrap">
+    <div class="grid grid--3" style="margin-bottom:36px;">
+      <a href="/profiel" class="module">
+        <h3>Mijn profiel</h3>
+        <p><%= profiel.bedrijf || 'Vul je bedrijfsgegevens aan' %></p>
+        <span class="pijl">Bewerken →</span>
+      </a>
+      <a href="/leden" class="module">
+        <h3>Ledengids</h3>
+        <p>Ontdek wie er nog meer in het netwerk zit.</p>
+        <span class="pijl">Bekijken →</span>
+      </a>
+      <a href="/veteranen" class="module">
+        <h3>Veteranenzaken</h3>
+        <p>Hulpbronnen en passend werk.</p>
+        <span class="pijl">Naar de hub →</span>
+      </a>
+    </div>
+
+    <div class="grid grid--2" style="gap:36px;">
+      <div>
+        <div class="flex between" style="margin-bottom:14px;">
+          <h2 style="margin:0;">Mijn vacatures</h2>
+          <a href="/vacatures/nieuw" style="font-weight:600;">+ Nieuw</a>
+        </div>
+        <% if (!vacatures.length) { %>
+          <p class="muted">Je hebt nog geen vacatures geplaatst.</p>
+        <% } else { %>
+          <div class="stack">
+            <% vacatures.forEach(function(v){ %>
+              <a href="/vacatures/<%= v.id %>" class="card" style="padding:14px 18px;">
+                <div class="flex between">
+                  <strong style="font-family:var(--font-display);"><%= v.titel %></strong>
+                  <span class="meta"><%= h.formatDatum(v.aangemaakt) %></span>
+                </div>
+              </a>
+            <% }) %>
+          </div>
+        <% } %>
+      </div>
+
+      <div>
+        <div class="flex between" style="margin-bottom:14px;">
+          <h2 style="margin:0;">Mijn projecten</h2>
+          <a href="/projecten/nieuw" style="font-weight:600;">+ Nieuw</a>
+        </div>
+        <% if (!projecten.length) { %>
+          <p class="muted">Je hebt nog geen projecten geplaatst.</p>
+        <% } else { %>
+          <div class="stack">
+            <% projecten.forEach(function(p){ %>
+              <a href="/projecten/<%= p.id %>" class="card" style="padding:14px 18px;">
+                <div class="flex between">
+                  <strong style="font-family:var(--font-display);"><%= p.titel %></strong>
+                  <% if (p.steun_type) { %><span class="badge badge--olive"><%= p.steun_type %></span><% } %>
+                </div>
+              </a>
+            <% }) %>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <hr class="divider" style="margin:40px 0;">
+
+    <h2>Aanmeldingen op jouw projecten</h2>
+    <% if (!aanmeldingen.length) { %>
+      <p class="muted">Nog geen aanmeldingen ontvangen.</p>
+    <% } else { %>
+      <div class="stack">
+        <% aanmeldingen.forEach(function(a){ %>
+          <div class="card" style="padding:16px 18px;">
+            <div class="flex between">
+              <strong><%= a.van_naam %></strong>
+              <span class="meta"><%= a.project_titel %> · <%= h.formatDatum(a.aangemaakt) %></span>
+            </div>
+            <% if (a.bericht) { %><p class="muted mb-0" style="margin-top:6px;"><%= a.bericht %></p><% } %>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</section>

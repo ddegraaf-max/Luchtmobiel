@@ -1,0 +1,38 @@
+<div class="auth-wrap">
+  <div class="auth-card">
+    <span class="kicker">Word lid</span>
+    <h1>Maak je account</h1>
+    <p class="muted">Sluit je aan bij het netwerk van de Business Club Luchtmobiel.</p>
+
+    <% if (fout) { %><div class="flash flash--fout"><%= fout %></div><% } %>
+
+    <form action="/registreren" method="post" class="stack">
+      <div class="veld">
+        <label for="naam">Naam *</label>
+        <input type="text" id="naam" name="naam" value="<%= waarden.naam || '' %>" required>
+      </div>
+      <div class="veld-rij">
+        <div class="veld"><label for="bedrijf">Bedrijf</label><input type="text" id="bedrijf" name="bedrijf" value="<%= waarden.bedrijf || '' %>"></div>
+        <div class="veld"><label for="functie">Functie</label><input type="text" id="functie" name="functie" value="<%= waarden.functie || '' %>"></div>
+      </div>
+      <div class="veld">
+        <label for="email">E-mailadres *</label>
+        <input type="email" id="email" name="email" value="<%= waarden.email || '' %>" required>
+      </div>
+      <div class="veld-rij">
+        <div class="veld"><label for="wachtwoord">Wachtwoord *</label><input type="password" id="wachtwoord" name="wachtwoord" required><span class="hint">Minimaal 8 tekens</span></div>
+        <div class="veld"><label for="wachtwoord2">Herhaal *</label><input type="password" id="wachtwoord2" name="wachtwoord2" required></div>
+      </div>
+      <% if (codeVereist) { %>
+      <div class="veld">
+        <label for="code">Toegangscode *</label>
+        <input type="text" id="code" name="code" required>
+        <span class="hint">Ontvangen van het bestuur</span>
+      </div>
+      <% } %>
+      <button type="submit" class="btn btn--primary btn--block">Account aanmaken</button>
+    </form>
+
+    <div class="auth-onder">Al lid? <a href="/inloggen">Log hier in</a></div>
+  </div>
+</div>

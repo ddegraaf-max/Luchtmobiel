@@ -1,0 +1,50 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Ledengids</span>
+      <h1>De leden &amp; bedrijven</h1>
+      <p><%= leden.length %> <%= leden.length === 1 ? 'profiel' : 'profielen' %> in het netwerk</p>
+    </div>
+    <a href="/profiel" class="btn btn--ghost">Mijn profiel bewerken</a>
+  </div>
+</div>
+
+<section class="section section--tight">
+  <div class="wrap">
+    <form method="get" class="filterbalk">
+      <input type="text" name="zoek" placeholder="Zoek op naam, bedrijf of expertise…" value="<%= zoek %>">
+      <select name="branche">
+        <option value="">Alle branches</option>
+        <% branches.forEach(function(b){ %>
+          <option value="<%= b %>" <%= branche === b ? 'selected' : '' %>><%= b %></option>
+        <% }) %>
+      </select>
+      <button type="submit" class="btn btn--primary">Filter</button>
+      <% if (zoek || branche) { %><a href="/leden" class="btn btn--ghost">Wis</a><% } %>
+    </form>
+
+    <% if (!leden.length) { %>
+      <div class="lege-staat"><p class="mb-0">Geen leden gevonden. Pas je zoekopdracht aan.</p></div>
+    <% } else { %>
+      <div class="grid grid--auto">
+        <% leden.forEach(function(l){ %>
+          <a href="/leden/<%= l.id %>" class="card lid-card" style="text-decoration:none;">
+            <% if (l.logo_id) { %>
+              <img class="avatar" src="/media/<%= l.logo_id %>" alt="">
+            <% } else { %>
+              <span class="avatar"><%= h.initialen(l.bedrijf || l.naam) %></span>
+            <% } %>
+            <div class="info">
+              <div class="naam"><%= l.naam %>
+                <% if (l.rol === 'brigade') { %><span class="badge badge--brigade" style="vertical-align:middle;">Brigade</span><% } %>
+              </div>
+              <% if (l.bedrijf) { %><div class="rol"><%= l.bedrijf %></div><% } %>
+              <% if (l.functie) { %><div class="sub"><%= l.functie %></div><% } %>
+              <% if (l.branche) { %><div style="margin-top:8px;"><span class="badge"><%= l.branche %></span></div><% } %>
+            </div>
+          </a>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</section>

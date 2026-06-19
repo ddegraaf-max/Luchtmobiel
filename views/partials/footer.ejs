@@ -1,0 +1,33 @@
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="naam">Business Club Luchtmobiel</div>
+        <p style="max-width:42ch; margin-top:10px;">Het besloten netwerk voor ondernemers, professionals en de brigade — met bijzondere aandacht voor veteranenzaken. Verbinden, ondernemen en ondersteunen.</p>
+      </div>
+      <div>
+        <h4>Platform</h4>
+        <a href="/leden">Ledengids</a>
+        <a href="/vacatures">Vacatures</a>
+        <a href="/projecten">Projecten</a>
+        <a href="/veteranen">Veteranenzaken</a>
+        <a href="/eenheden">De Brigade</a>
+      </div>
+      <div>
+        <h4>Account</h4>
+        <% if (user) { %>
+          <a href="/dashboard">Dashboard</a>
+          <a href="/profiel">Mijn profiel</a>
+        <% } else { %>
+          <a href="/registreren">Word lid</a>
+          <a href="/inloggen">Inloggen</a>
+        <% } %>
+        <a href="/over">Over het netwerk</a>
+      </div>
+    </div>
+    <div class="footer-onder">
+      <span>&copy; <%= new Date().getFullYear() %> Business Club Luchtmobiel</span>
+      <span>Verbinden · Ondernemen · Ondersteunen</span>
+    </div>
+  </div>
+</footer>

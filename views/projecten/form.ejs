@@ -1,0 +1,55 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Project</span>
+      <h1><%= title %></h1>
+    </div>
+    <a href="/projecten" class="btn btn--ghost">← Annuleren</a>
+  </div>
+</div>
+
+<section class="section">
+  <div class="wrap" style="max-width:760px;">
+    <% if (fout) { %><div class="flash flash--fout"><%= fout %></div><% } %>
+    <form action="<%= actie %>" method="post" enctype="multipart/form-data" class="form-card">
+      <div class="veld">
+        <label for="titel">Titel *</label>
+        <input type="text" id="titel" name="titel" value="<%= project.titel || '' %>" required>
+      </div>
+      <div class="veld">
+        <label for="samenvatting">Korte samenvatting</label>
+        <input type="text" id="samenvatting" name="samenvatting" value="<%= project.samenvatting || '' %>" placeholder="In één zin: waar gaat het om?">
+      </div>
+      <div class="veld-rij">
+        <div class="veld">
+          <label for="steun_type">Soort steun</label>
+          <select id="steun_type" name="steun_type">
+            <option value="">Kies…</option>
+            <% steuntypes.forEach(function(s){ %>
+              <option value="<%= s %>" <%= project.steun_type === s ? 'selected' : '' %>><%= s %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="veld"><label for="plaats">Plaats</label><input type="text" id="plaats" name="plaats" value="<%= project.plaats || '' %>"></div>
+      </div>
+      <div class="veld">
+        <label for="omschrijving">Omschrijving</label>
+        <textarea id="omschrijving" name="omschrijving" placeholder="Vertel over het project en wat je precies nodig hebt."><%= project.omschrijving || '' %></textarea>
+      </div>
+      <div class="veld">
+        <label for="doel">Concreet doel</label>
+        <input type="text" id="doel" name="doel" value="<%= project.doel || '' %>" placeholder="bijv. 10 vrijwilligers, of € 5.000">
+      </div>
+      <div class="veld">
+        <label for="afbeelding">Afbeelding</label>
+        <input type="file" id="afbeelding" name="afbeelding" accept="image/*">
+        <span class="hint">Optioneel. PNG of JPG, max 2 MB. Leeg laten = ongewijzigd.</span>
+      </div>
+      <div class="veld">
+        <label for="contact_email">Contact-e-mail</label>
+        <input type="email" id="contact_email" name="contact_email" value="<%= project.contact_email || '' %>">
+      </div>
+      <button type="submit" class="btn btn--primary">Opslaan</button>
+    </form>
+  </div>
+</section>
