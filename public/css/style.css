@@ -222,8 +222,9 @@ input[type=file] { font-size: .88rem; }
 .flash--fout   { background: rgba(160,40,40,.1); border-color: rgba(160,40,40,.4); color: #8a2020; }
 
 /* ---------- page header ---------- */
-.paginakop { background: linear-gradient(160deg, var(--maroon-deep) 0%, var(--maroon) 72%); color: var(--bone); padding: 56px 0 44px; position: relative; }
-.paginakop .wrap { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+.paginakop { background: linear-gradient(160deg, var(--maroon-deep) 0%, var(--maroon) 60%, #5a1c28 100%); color: var(--bone); padding: 56px 0 44px; position: relative; overflow: hidden; }
+.paginakop::after { content: ""; position: absolute; inset: 0; pointer-events: none; background-image: repeating-linear-gradient(135deg, rgba(255,255,255,.04) 0 1px, transparent 1px 22px); opacity: .6; }
+.paginakop .wrap { position: relative; z-index: 1; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
 .paginakop h1 { margin: 0; color: var(--white); }
 .paginakop .kicker { color: var(--sand); }
 .paginakop .kicker::before { background: var(--brass); }
@@ -440,8 +441,8 @@ input[type=file] { font-size: .88rem; }
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M18 20 L50 82 L82 20' fill='none' stroke='%23c8a24a' stroke-width='13' stroke-linecap='round' stroke-linejoin='round'/></svg>");
 }
 .hero--em::before {
-  width: 300px; height: 440px; opacity: .55;
-  background-image: url("/static/img/embleem-em.png");
+  width: 270px; height: 356px; opacity: .8; right: -6px;
+  background-image: url("/static/img/embleem-em-goud.png");
 }
 @media (max-width: 760px) { .hero--v::before, .hero--em::before { display: none; } }
 
@@ -479,3 +480,7 @@ input[type=file] { font-size: .88rem; }
 .embleem-duo img { width: 100%; max-width: 88px; height: 76px; object-fit: contain; display: block; margin: 0 auto; }
 .embleem-duo figcaption { font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-soft); margin-top: 3px; }
 @media (max-width: 720px) { .embleem-duo { flex-direction: row; gap: 20px; justify-content: flex-start; } }
+
+/* fotobalk met wijnrode tint (brigade in actie) */
+.beeldband--maroon::before { background: linear-gradient(90deg, rgba(74,20,29,.92) 0%, rgba(110,34,48,.55) 60%, rgba(110,34,48,.25) 100%); }
+.beeldband .kicker::before { background: var(--brass); }
