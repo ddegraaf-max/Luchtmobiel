@@ -386,7 +386,7 @@ input[type=file] { font-size: .88rem; }
 
 /* embleem-slot: officiële afbeelding met SVG-fallback */
 .embleem-wrap { width: 96px; height: 96px; }
-.embleem-foto { width: 96px; height: 96px; object-fit: contain; }
+.embleem-foto { width: 96px; height: 96px; object-fit: contain; border-radius: 8px; }
 @media (max-width: 720px) { .embleem-wrap { width: 78px; height: 78px; } .embleem-foto { width: 78px; height: 78px; } }
 
 /* Chinook-illustratie als blikvanger */
@@ -434,7 +434,27 @@ input[type=file] { font-size: .88rem; }
 /* bedrijfsomschrijving op ledenkaart */
 .lid-card .omschrijving { margin-top: 8px; font-size: .88rem; color: var(--ink-soft); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-/* clublogo in de header + gouden V ernaast */
-.brand-logo { height: 40px; width: auto; max-width: 200px; object-fit: contain; display: block; background: #fff; padding: 4px 9px; border-radius: 7px; box-shadow: var(--shadow); }
-.brand-v { width: 38px; height: 38px; flex: none; }
-@media (max-width: 560px) { .brand-logo { max-width: 130px; height: 36px; } .brand-v { width: 32px; height: 32px; } }
+/* clublogo (embleem met gouden V) in de header */
+.brand-logo { height: 48px; width: auto; display: block; }
+@media (max-width: 560px) { .brand-logo { height: 40px; } }
+
+/* compagnie-namen onder de bataljons */
+.compagnies { margin-top: 10px; font-size: .85rem; color: var(--ink-soft); }
+.compagnies strong { color: var(--maroon); }
+
+/* missie-tijdlijn */
+.missie-tijdlijn { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.missie { background: var(--bone); border: 1px solid var(--line); border-left: 3px solid var(--maroon); border-radius: var(--radius); padding: 18px 20px; }
+.missie .jaar { font-size: .76rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--brass); }
+.missie h3 { margin: 4px 0 8px; font-size: 1.1rem; }
+.missie p { margin: 0; font-size: .9rem; color: var(--ink-soft); }
+
+/* officiële emblemen op de ondersteunende-eenheid-kaarten */
+.kaart-embleem { height: 64px; width: auto; max-width: 84px; object-fit: contain; display: block; margin-bottom: 12px; }
+
+/* twee emblemen naast/onder elkaar bij Grenadiers en Jagers */
+.embleem-duo { display: flex; flex-direction: column; gap: 14px; }
+.embleem-duo figure { margin: 0; text-align: center; }
+.embleem-duo img { width: 100%; max-width: 88px; height: 76px; object-fit: contain; display: block; margin: 0 auto; }
+.embleem-duo figcaption { font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-soft); margin-top: 3px; }
+@media (max-width: 720px) { .embleem-duo { flex-direction: row; gap: 20px; justify-content: flex-start; } }
