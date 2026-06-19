@@ -222,10 +222,16 @@ input[type=file] { font-size: .88rem; }
 .flash--fout   { background: rgba(160,40,40,.1); border-color: rgba(160,40,40,.4); color: #8a2020; }
 
 /* ---------- page header ---------- */
-.paginakop { border-bottom: 1px solid var(--line); padding: 48px 0 36px; }
+.paginakop { background: linear-gradient(160deg, var(--maroon-deep) 0%, var(--maroon) 72%); color: var(--bone); padding: 56px 0 44px; position: relative; }
 .paginakop .wrap { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
-.paginakop h1 { margin: 0; }
-.paginakop p { color: var(--ink-soft); margin: .5rem 0 0; }
+.paginakop h1 { margin: 0; color: var(--white); }
+.paginakop .kicker { color: var(--sand); }
+.paginakop .kicker::before { background: var(--brass); }
+.paginakop p { color: rgba(244,239,229,.85); margin: .5rem 0 0; }
+.paginakop .btn--ghost { color: var(--bone); border-color: rgba(244,239,229,.45); }
+.paginakop .btn--ghost:hover { border-color: var(--bone); background: rgba(255,255,255,.08); }
+.paginakop .btn--primary { background: var(--brass); color: #2a1116; border-color: var(--brass); }
+.paginakop .btn--primary:hover { background: #c8a24a; border-color: #c8a24a; }
 
 /* ---------- filterbalk ---------- */
 .filterbalk { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 28px; }
@@ -291,14 +297,18 @@ input[type=file] { font-size: .88rem; }
   .zijbalk { position: static; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
 }
+.nav-mobiel-acties { display: none; }
 @media (max-width: 680px) {
-  .nav-links, .nav-cta .btn--ghost { display: none; }
+  .nav-links, .nav-cta .btn { display: none; }
   .nav-toggle { display: block; }
   .nav.open .nav-links {
     display: flex; flex-direction: column; position: absolute; top: 72px; left: 0; right: 0;
-    background: var(--bone); border-bottom: 1px solid var(--line); padding: 12px 24px; gap: 2px; align-items: stretch;
+    background: var(--bone); border-bottom: 1px solid var(--line); padding: 14px 24px 18px; gap: 2px; align-items: stretch;
+    box-shadow: var(--shadow); z-index: 60;
   }
-  .nav.open .nav-links a { padding: 12px; }
+  .nav.open .nav-links a { padding: 12px; border-radius: var(--radius); }
+  .nav-mobiel-acties { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; padding-top: 14px; border-top: 1px solid var(--line); }
+  .nav-mobiel-acties .btn, .nav-mobiel-acties .inline-form, .nav-mobiel-acties .inline-form .btn { width: 100%; }
   .grid--3, .grid--2, .statbar { grid-template-columns: 1fr; }
   .statbar { grid-template-columns: 1fr 1fr 1fr; }
   .stat { padding: 16px; }
@@ -306,6 +316,11 @@ input[type=file] { font-size: .88rem; }
   .veld-rij { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; }
   .section { padding: 52px 0; }
+  .hero .wrap { padding-top: 60px; padding-bottom: 60px; }
+  .hero h1 { font-size: 2rem; }
+  .hero p.lede { font-size: 1.05rem; }
+  .paginakop { padding: 40px 0 30px; }
+  .paginakop .wrap { align-items: flex-start; }
 }
 
 /* ============================================================
@@ -394,7 +409,7 @@ input[type=file] { font-size: .88rem; }
 .chinook-art { width: 100%; max-width: 560px; height: auto; margin: 0 auto; display: block; }
 .chinook-caption { color: var(--ink-soft); max-width: 50ch; margin: 18px auto 0; }
 .heli-vlucht svg { width: 100%; height: auto; display: block; }
-.baret-art { width: 150px; height: auto; display: block; margin: 0 auto 14px; }
+.baret-art { width: 100%; max-width: 300px; height: auto; display: block; margin: 0 auto 14px; }
 
 /* grote Chinook-foto */
 .chinook-foto-sectie { background: var(--bone-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
@@ -416,13 +431,19 @@ input[type=file] { font-size: .88rem; }
 
 /* gemerkte hero met gouden V (veteranen) */
 .hero--merk { position: relative; }
-.hero--merk::before {
-  content: ""; position: absolute; top: 50%; right: -40px; transform: translateY(-50%);
-  width: 380px; height: 380px; z-index: 0; opacity: .12; pointer-events: none;
-  background: no-repeat center / contain;
+.hero--v::before, .hero--em::before {
+  content: ""; position: absolute; top: 50%; right: -30px; transform: translateY(-50%);
+  z-index: 0; pointer-events: none; background: no-repeat center / contain;
+}
+.hero--v::before {
+  width: 360px; height: 360px; opacity: .15;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M18 20 L50 82 L82 20' fill='none' stroke='%23c8a24a' stroke-width='13' stroke-linecap='round' stroke-linejoin='round'/></svg>");
 }
-@media (max-width: 760px) { .hero--merk::before { display: none; } }
+.hero--em::before {
+  width: 300px; height: 440px; opacity: .55;
+  background-image: url("/static/img/embleem-em.png");
+}
+@media (max-width: 760px) { .hero--v::before, .hero--em::before { display: none; } }
 
 /* authentieke clubtekst-band */
 .belofte-band { background: linear-gradient(160deg, var(--maroon-deep), var(--maroon)); color: var(--bone); }

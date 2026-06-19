@@ -7,16 +7,25 @@
       </a>
 
       <div class="nav-links">
-        <a href="/leden" class="<%= path.startsWith('/leden') ? 'actief' : '' %>">Leden</a>
         <a href="/vacatures" class="<%= path.startsWith('/vacatures') ? 'actief' : '' %>">Vacatures</a>
         <a href="/projecten" class="<%= path.startsWith('/projecten') ? 'actief' : '' %>">Projecten</a>
         <a href="/veteranen" class="<%= path.startsWith('/veteranen') ? 'actief' : '' %>">Veteranenzaken</a>
         <a href="/eenheden" class="<%= path.startsWith('/eenheden') ? 'actief' : '' %>">De Brigade</a>
         <% if (user) { %>
+          <a href="/leden" class="<%= path.startsWith('/leden') ? 'actief' : '' %>">Leden</a>
           <a href="/dashboard" class="<%= path === '/dashboard' ? 'actief' : '' %>">Dashboard</a>
           <% if (user.rol === 'admin' || user.rol === 'brigade') { %><a href="/galerij/beheer" class="<%= path.startsWith('/galerij') ? 'actief' : '' %>">Galerij</a><% } %>
           <% if (user.rol === 'admin') { %><a href="/beheer" class="<%= path.startsWith('/beheer') ? 'actief' : '' %>">Beheer</a><% } %>
         <% } %>
+        <div class="nav-mobiel-acties">
+          <% if (user) { %>
+            <a href="/profiel" class="btn btn--ghost btn--sm">Mijn profiel</a>
+            <form action="/uitloggen" method="post" class="inline-form"><button class="btn btn--primary btn--sm" type="submit">Uitloggen</button></form>
+          <% } else { %>
+            <a href="/inloggen" class="btn btn--ghost btn--sm">Inloggen</a>
+            <a href="/registreren" class="btn btn--primary btn--sm">Word lid</a>
+          <% } %>
+        </div>
       </div>
 
       <div class="nav-cta">
