@@ -74,6 +74,16 @@ async function init() {
       auteur_id   INTEGER REFERENCES users(id) ON DELETE SET NULL,
       aangemaakt  TIMESTAMPTZ DEFAULT now()
     );
+
+    CREATE TABLE IF NOT EXISTS galerij (
+      id          SERIAL PRIMARY KEY,
+      media_id    INTEGER REFERENCES media(id) ON DELETE CASCADE,
+      pagina      TEXT NOT NULL DEFAULT 'brigade',
+      bijschrift  TEXT,
+      volgorde    INTEGER DEFAULT 0,
+      auteur_id   INTEGER REFERENCES users(id) ON DELETE SET NULL,
+      aangemaakt  TIMESTAMPTZ DEFAULT now()
+    );
   `);
 
   // Adminaccount seeden vanuit omgevingsvariabelen.

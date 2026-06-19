@@ -1,0 +1,64 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Beheer</span>
+      <h1>Galerij beheren</h1>
+      <p>Upload hier de eigen foto's van de club. Ze worden veilig in de database opgeslagen en verschijnen op de gekozen pagina.</p>
+    </div>
+    <a href="/dashboard" class="btn btn--ghost">Terug naar dashboard</a>
+  </div>
+</div>
+
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="grid" style="grid-template-columns: minmax(280px, 360px) 1fr; gap: 28px; align-items:start;">
+      <div class="card">
+        <h3 style="margin-top:0;">Foto toevoegen</h3>
+        <form action="/galerij" method="post" enctype="multipart/form-data">
+          <div class="veld">
+            <label for="pagina">Pagina</label>
+            <select id="pagina" name="pagina">
+              <% paginas.forEach(function(p){ %><option value="<%= p.key %>"><%= p.label %></option><% }) %>
+            </select>
+          </div>
+          <div class="veld">
+            <label for="bijschrift">Bijschrift (optioneel)</label>
+            <input type="text" id="bijschrift" name="bijschrift" placeholder="bijv. Baretuitreiking 2026">
+          </div>
+          <div class="veld">
+            <label for="foto">Afbeelding</label>
+            <input type="file" id="foto" name="foto" accept="image/png,image/jpeg,image/webp,image/gif" required>
+          </div>
+          <button type="submit" class="btn btn--primary btn--block">Uploaden</button>
+          <p class="muted" style="font-size:.8rem; margin:12px 0 0;">JPG, PNG of WebP — maximaal 6 MB per foto.</p>
+        </form>
+      </div>
+
+      <div>
+        <% if (!fotos.length) { %>
+          <div class="lege-staat"><p class="mb-0">Nog geen foto's geüpload. Voeg links je eerste foto toe.</p></div>
+        <% } else { %>
+          <% paginas.forEach(function(p){ %>
+            <% var groep = fotos.filter(function(f){ return f.pagina === p.key; }); %>
+            <% if (groep.length) { %>
+              <h3 style="margin:0 0 12px;"><%= p.label %> <span class="muted" style="font-weight:400;">(<%= groep.length %>)</span></h3>
+              <div class="foto-galerij" style="margin-bottom:28px;">
+                <% groep.forEach(function(f){ %>
+                  <figure>
+                    <img src="/media/<%= f.media_id %>" alt="<%= f.bijschrift || '' %>">
+                    <figcaption>
+                      <%= f.bijschrift || 'Zonder bijschrift' %>
+                      <form action="/galerij/<%= f.id %>/verwijderen" method="post" class="confirm-delete" style="margin-top:8px;">
+                        <button type="submit" class="btn btn--danger btn--sm">Verwijderen</button>
+                      </form>
+                    </figcaption>
+                  </figure>
+                <% }) %>
+              </div>
+            <% } %>
+          <% }) %>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,12 @@
+<% if (typeof fotos !== 'undefined' && fotos && fotos.length) { %>
+  <div class="foto-galerij">
+    <% fotos.forEach(function(f){ %>
+      <figure>
+        <img loading="lazy" src="/media/<%= f.media_id %>" alt="<%= f.bijschrift || 'Foto van de brigade' %>">
+        <% if (f.bijschrift) { %><figcaption><%= f.bijschrift %></figcaption><% } %>
+      </figure>
+    <% }) %>
+  </div>
+<% } else if (typeof user !== 'undefined' && user && (user.rol === 'admin' || user.rol === 'brigade')) { %>
+  <div class="lege-staat"><p class="mb-0">Nog geen foto's. <a href="/galerij/beheer">Voeg foto's toe &rarr;</a></p></div>
+<% } %>

@@ -8,12 +8,12 @@ router.get('/', requireLogin, async (req, res) => {
   const zoek = (req.query.zoek || '').trim();
   const branche = (req.query.branche || '').trim();
 
-  let sql = `SELECT id, naam, bedrijf, functie, branche, plaats, website, logo_id, rol
+  let sql = `SELECT id, naam, bedrijf, functie, branche, plaats, website, bio, logo_id, rol
              FROM users WHERE actief = true`;
   const params = [];
   if (zoek) {
     params.push(`%${zoek}%`);
-    sql += ` AND (naam ILIKE $${params.length} OR bedrijf ILIKE $${params.length} OR functie ILIKE $${params.length} OR branche ILIKE $${params.length})`;
+    sql += ` AND (naam ILIKE $${params.length} OR bedrijf ILIKE $${params.length} OR functie ILIKE $${params.length} OR branche ILIKE $${params.length} OR bio ILIKE $${params.length})`;
   }
   if (branche) {
     params.push(branche);

@@ -67,6 +67,7 @@ app.use('/projecten', require('./routes/projecten'));
 app.use('/veteranen', require('./routes/veteranen'));
 app.use('/media', require('./routes/media'));
 app.use('/beheer', require('./routes/beheer'));
+app.use('/galerij', require('./routes/galerij'));
 
 // 404
 app.use((req, res) => {

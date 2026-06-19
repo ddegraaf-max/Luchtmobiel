@@ -41,6 +41,7 @@
               <% if (l.bedrijf) { %><div class="rol"><%= l.bedrijf %></div><% } %>
               <% if (l.functie) { %><div class="sub"><%= l.functie %></div><% } %>
               <% if (l.branche) { %><div style="margin-top:8px;"><span class="badge"><%= l.branche %></span></div><% } %>
+              <% if (l.bio) { %><div class="omschrijving"><%= h.kort(l.bio, 110) %></div><% } %>
             </div>
           </a>
         <% }) %>

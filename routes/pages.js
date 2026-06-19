@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db/pool');
 const { requireLogin } = require('../middleware/auth');
+const { getGalerij } = require('../lib/galerij');
 
 // Homepage
 router.get('/', async (req, res) => {
@@ -30,7 +31,8 @@ router.get('/', async (req, res) => {
     console.error('[home]', err.message);
   }
 
-  res.render('home', { title: 'Het netwerk van de Luchtmobiele Brigade', stats, vacatures, projecten });
+  const galerij = await getGalerij('home');
+  res.render('home', { title: 'Het netwerk van de Luchtmobiele Brigade', stats, vacatures, projecten, galerij });
 });
 
 // Over / het netwerk
@@ -39,8 +41,9 @@ router.get('/over', (req, res) => {
 });
 
 // De Brigade — de drie eenheden en hun geschiedenis
-router.get('/eenheden', (req, res) => {
-  res.render('eenheden', { title: 'De Brigade' });
+router.get('/eenheden', async (req, res) => {
+  const galerij = await getGalerij('brigade');
+  res.render('eenheden', { title: 'De Brigade', galerij });
 });
 
 // Dashboard (besloten)

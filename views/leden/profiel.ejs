@@ -37,7 +37,39 @@
         <div class="veld"><label for="functie">Functie</label><input type="text" id="functie" name="functie" value="<%= profiel.functie || '' %>"></div>
       </div>
       <div class="veld-rij">
-        <div class="veld"><label for="branche">Branche</label><input type="text" id="branche" name="branche" value="<%= profiel.branche || '' %>" placeholder="bijv. Bouw, ICT, Advies"></div>
+        <div class="veld"><label for="branche">Branche</label>
+          <input type="text" id="branche" name="branche" value="<%= profiel.branche || '' %>" placeholder="Kies of typ je eigen branche" list="branche-opties">
+          <datalist id="branche-opties">
+            <option value="Bouw &amp; constructie"></option>
+            <option value="Installatietechniek"></option>
+            <option value="Vastgoed &amp; makelaardij"></option>
+            <option value="ICT &amp; software"></option>
+            <option value="Marketing &amp; communicatie"></option>
+            <option value="Advies &amp; consultancy"></option>
+            <option value="Financieel &amp; administratie"></option>
+            <option value="Juridisch"></option>
+            <option value="Verzekeringen"></option>
+            <option value="HR &amp; werving"></option>
+            <option value="Beveiliging"></option>
+            <option value="Logistiek &amp; transport"></option>
+            <option value="Productie &amp; industrie"></option>
+            <option value="Groothandel"></option>
+            <option value="Detailhandel"></option>
+            <option value="Horeca &amp; catering"></option>
+            <option value="Zorg &amp; welzijn"></option>
+            <option value="Sport &amp; gezondheid"></option>
+            <option value="Onderwijs &amp; training"></option>
+            <option value="Energie &amp; duurzaamheid"></option>
+            <option value="Automotive"></option>
+            <option value="Landbouw &amp; groen"></option>
+            <option value="Evenementen"></option>
+            <option value="Reizen &amp; recreatie"></option>
+            <option value="Kunst &amp; creatief"></option>
+            <option value="Defensie &amp; veiligheid"></option>
+            <option value="Overheid &amp; non-profit"></option>
+            <option value="Overig"></option>
+          </datalist>
+        </div>
         <div class="veld"><label for="plaats">Plaats</label><input type="text" id="plaats" name="plaats" value="<%= profiel.plaats || '' %>"></div>
       </div>
       <div class="veld-rij">

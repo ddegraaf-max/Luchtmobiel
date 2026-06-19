@@ -3,6 +3,7 @@ const router = express.Router();
 const pool = require('../db/pool');
 const { requireLogin, requireRedactie } = require('../middleware/auth');
 const { netteUrl } = require('../lib/helpers');
+const { getGalerij } = require('../lib/galerij');
 
 const CATEGORIEEN = ['Werk & loopbaan', 'Zorg & welzijn', 'Lotgenotencontact', 'Financieel & juridisch', 'Activiteiten', 'Overig'];
 
@@ -22,7 +23,8 @@ router.get('/', async (req, res) => {
       (perCat[c] = perCat[c] || []).push(r);
     });
     const magRedactie = req.session.user && ['admin', 'brigade'].includes(req.session.user.rol);
-    res.render('veteranen', { title: 'Veteranenzaken', perCat, vacatures, categorieen: CATEGORIEEN, magRedactie });
+    const galerij = await getGalerij('veteranen');
+    res.render('veteranen', { title: 'Veteranenzaken', perCat, vacatures, categorieen: CATEGORIEEN, magRedactie, galerij });
   } catch (err) {
     console.error('[veteranen]', err.message);
     res.status(500).render('error', { title: 'Fout', bericht: 'De veteranenhub kon niet worden geladen.' });
