@@ -5,7 +5,11 @@
       <h1>Werk binnen het netwerk</h1>
       <p><%= vacatures.length %> openstaande <%= vacatures.length === 1 ? 'vacature' : 'vacatures' %></p>
     </div>
-    <a href="/vacatures/nieuw" class="btn btn--primary">+ Vacature plaatsen</a>
+    <% if (user) { %>
+      <a href="/vacatures/nieuw" class="btn btn--primary">+ Vacature plaatsen</a>
+    <% } else { %>
+      <a href="/inloggen" class="btn btn--ghost">Inloggen om te plaatsen</a>
+    <% } %>
   </div>
 </div>
 
@@ -21,7 +25,7 @@
     <% if (!vacatures.length) { %>
       <div class="lege-staat">
         <p>Er staan nog geen vacatures online.</p>
-        <a href="/vacatures/nieuw" class="btn btn--primary">Plaats de eerste vacature</a>
+        <% if (user) { %><a href="/vacatures/nieuw" class="btn btn--primary">Plaats de eerste vacature</a><% } %>
       </div>
     <% } else { %>
       <div class="grid grid--auto">

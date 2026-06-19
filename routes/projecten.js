@@ -23,7 +23,7 @@ async function bewaarAfbeelding(file, uid) {
 }
 
 // Overzicht
-router.get('/', requireLogin, async (req, res) => {
+router.get('/', async (req, res) => {
   const type = (req.query.type || '').trim();
   let sql = `SELECT p.*, u.naam AS plaatser FROM projecten p JOIN users u ON u.id = p.user_id WHERE 1=1`;
   const params = [];
@@ -74,7 +74,7 @@ router.post('/nieuw', requireLogin, upload.single('afbeelding'), async (req, res
 });
 
 // Detail
-router.get('/:id', requireLogin, async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const project = (await pool.query(
       `SELECT p.*, u.naam AS plaatser FROM projecten p JOIN users u ON u.id = p.user_id WHERE p.id = $1`,
@@ -82,7 +82,8 @@ router.get('/:id', requireLogin, async (req, res) => {
     )).rows[0];
     if (!project) return res.status(404).render('error', { title: 'Niet gevonden', bericht: 'Dit project bestaat niet (meer).' });
 
-    const mag = req.session.user.id === project.user_id || req.session.user.rol === 'admin';
+    const u = req.session.user;
+    const mag = !!u && (u.id === project.user_id || u.rol === 'admin');
     const aanmeldingen = mag
       ? (await pool.query(
           `SELECT a.bericht, a.aangemaakt, u.naam, u.id AS uid FROM project_aanmeldingen a
@@ -90,10 +91,10 @@ router.get('/:id', requireLogin, async (req, res) => {
           [project.id]
         )).rows
       : [];
-    const alAangemeld = (await pool.query(
+    const alAangemeld = u ? (await pool.query(
       'SELECT 1 FROM project_aanmeldingen WHERE project_id = $1 AND user_id = $2',
-      [project.id, req.session.user.id]
-    )).rows.length > 0;
+      [project.id, u.id]
+    )).rows.length > 0 : false;
 
     res.render('projecten/detail', { title: project.titel, project, mag, aanmeldingen, alAangemeld });
   } catch (err) {

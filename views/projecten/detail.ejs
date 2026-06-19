@@ -64,14 +64,20 @@
         </dl>
 
         <% if (!mag) { %>
-          <% if (alAangemeld) { %>
-            <div class="flash flash--succes mb-0">Je hebt je aangemeld voor dit project.</div>
+          <% if (user) { %>
+            <% if (alAangemeld) { %>
+              <div class="flash flash--succes mb-0">Je hebt je aangemeld voor dit project.</div>
+            <% } else { %>
+              <h3 style="font-size:1rem;">Wil je helpen?</h3>
+              <form action="/projecten/<%= project.id %>/aanmelden" method="post" class="stack">
+                <textarea name="bericht" placeholder="Optioneel: hoe kun of wil je bijdragen?" style="min-height:90px;"></textarea>
+                <button type="submit" class="btn btn--primary btn--block">Aanmelden voor dit project</button>
+              </form>
+            <% } %>
           <% } else { %>
             <h3 style="font-size:1rem;">Wil je helpen?</h3>
-            <form action="/projecten/<%= project.id %>/aanmelden" method="post" class="stack">
-              <textarea name="bericht" placeholder="Optioneel: hoe kun of wil je bijdragen?" style="min-height:90px;"></textarea>
-              <button type="submit" class="btn btn--primary btn--block">Aanmelden voor dit project</button>
-            </form>
+            <p class="muted" style="margin-top:4px;">Log in als lid om je aan te melden voor dit project.</p>
+            <a href="/inloggen" class="btn btn--primary btn--block">Inloggen</a>
           <% } %>
         <% } %>
 

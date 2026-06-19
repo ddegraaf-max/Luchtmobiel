@@ -5,7 +5,11 @@
       <h1>Steun zoeken &amp; bieden</h1>
       <p><%= projecten.length %> <%= projecten.length === 1 ? 'project' : 'projecten' %> met een steunvraag</p>
     </div>
-    <a href="/projecten/nieuw" class="btn btn--primary">+ Project plaatsen</a>
+    <% if (user) { %>
+      <a href="/projecten/nieuw" class="btn btn--primary">+ Project plaatsen</a>
+    <% } else { %>
+      <a href="/inloggen" class="btn btn--ghost">Inloggen om te plaatsen</a>
+    <% } %>
   </div>
 </div>
 
@@ -24,7 +28,7 @@
     <% if (!projecten.length) { %>
       <div class="lege-staat">
         <p>Er staan nog geen projecten online.</p>
-        <a href="/projecten/nieuw" class="btn btn--primary">Plaats het eerste project</a>
+        <% if (user) { %><a href="/projecten/nieuw" class="btn btn--primary">Plaats het eerste project</a><% } %>
       </div>
     <% } else { %>
       <div class="grid grid--auto">

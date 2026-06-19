@@ -7,7 +7,7 @@ const { netteUrl, isEmail } = require('../lib/helpers');
 const DIENSTVERBANDEN = ['Fulltime', 'Parttime', 'Tijdelijk', 'Stage', 'Freelance/ZZP', 'Vrijwillig'];
 
 // Overzicht (besloten)
-router.get('/', requireLogin, async (req, res) => {
+router.get('/', async (req, res) => {
   const zoek = (req.query.zoek || '').trim();
   const alleenVeteraan = req.query.veteraan === '1';
 
@@ -70,14 +70,15 @@ router.post('/nieuw', requireLogin, async (req, res) => {
 });
 
 // Detail
-router.get('/:id', requireLogin, async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const vacature = (await pool.query(
       `SELECT v.*, u.naam AS plaatser, u.id AS plaatser_id FROM vacatures v JOIN users u ON u.id = v.user_id WHERE v.id = $1`,
       [req.params.id]
     )).rows[0];
     if (!vacature) return res.status(404).render('error', { title: 'Niet gevonden', bericht: 'Deze vacature bestaat niet (meer).' });
-    const mag = req.session.user.id === vacature.user_id || req.session.user.rol === 'admin';
+    const u = req.session.user;
+    const mag = !!u && (u.id === vacature.user_id || u.rol === 'admin');
     res.render('vacatures/detail', { title: vacature.titel, vacature, mag });
   } catch (err) {
     console.error('[vacature detail]', err.message);
