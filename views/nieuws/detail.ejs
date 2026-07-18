@@ -1,0 +1,26 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Van het bestuur</span>
+      <h1><%= bericht.titel %></h1>
+      <p><%= h.formatDatum(bericht.aangemaakt) %><%= bericht.auteur ? ' · ' + bericht.auteur : '' %><% if (!bericht.gepubliceerd) { %> · concept<% } %></p>
+    </div>
+    <a href="/nieuws" class="btn btn--ghost">← Nieuws</a>
+  </div>
+</div>
+
+<section class="section">
+  <div class="wrap" style="max-width:760px;">
+    <% if (bericht.inhoud) { %>
+      <div class="prose"><% bericht.inhoud.split(/\n\n+/).forEach(function(par){ %><p><%= par %></p><% }) %></div>
+    <% } %>
+    <% if (magBeheren) { %>
+      <div class="flex" style="gap:8px; margin-top:24px;">
+        <a href="/nieuws/<%= bericht.id %>/bewerken" class="btn btn--ghost btn--sm">Bewerken</a>
+        <form action="/nieuws/<%= bericht.id %>/verwijderen" method="post" class="inline-form" onsubmit="return confirm('Bericht verwijderen?');">
+          <button class="btn btn--ghost btn--sm" type="submit">Verwijderen</button>
+        </form>
+      </div>
+    <% } %>
+  </div>
+</section>

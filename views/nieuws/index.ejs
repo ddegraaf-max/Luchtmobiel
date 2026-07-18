@@ -1,0 +1,27 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Van het bestuur</span>
+      <h1>Nieuws</h1>
+    </div>
+    <% if (magBeheren) { %><a href="/nieuws/nieuw" class="btn btn--primary">+ Bericht</a><% } %>
+  </div>
+</div>
+
+<section class="section section--tight">
+  <div class="wrap" style="max-width:760px;">
+    <% if (!berichten.length) { %>
+      <div class="lege-staat"><p>Er is nog geen nieuws geplaatst.</p></div>
+    <% } else { %>
+      <div class="stack" style="gap:18px;">
+        <% berichten.forEach(function(n){ %>
+          <a href="/nieuws/<%= n.id %>" class="card" style="display:block;">
+            <div class="meta"><%= h.formatDatum(n.aangemaakt) %><%= n.auteur ? ' · ' + n.auteur : '' %><% if (!n.gepubliceerd) { %> · <span class="badge">concept</span><% } %></div>
+            <div style="font-family:var(--font-display); font-weight:700; font-size:1.2rem; margin:4px 0 6px; color:var(--ink);"><%= n.titel %></div>
+            <p class="muted mb-0"><%= h.kort(n.inhoud, 160) %></p>
+          </a>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</section>

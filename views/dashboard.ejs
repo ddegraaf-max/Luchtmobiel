@@ -78,6 +78,25 @@
 
     <hr class="divider" style="margin:40px 0;">
 
+    <h2>Mijn aanmeldingen (evenementen)</h2>
+    <% if (!mijnEvenementen.length) { %>
+      <p class="muted">Je hebt je nog niet aangemeld voor evenementen. <a href="/agenda">Bekijk de agenda →</a></p>
+    <% } else { %>
+      <div class="stack">
+        <% mijnEvenementen.forEach(function(e){ %>
+          <a href="/agenda/<%= e.id %>" class="card" style="padding:14px 18px;">
+            <div class="flex between">
+              <strong style="font-family:var(--font-display);"><%= e.titel %></strong>
+              <span class="meta"><%= h.formatDatumLang(e.start_op) %> · <%= h.formatTijd(e.start_op) %><%= e.aantal > 1 ? ' · ' + e.aantal + ' pers.' : '' %></span>
+            </div>
+            <% if (e.locatie) { %><div class="meta" style="margin-top:4px;">📍 <%= e.locatie %></div><% } %>
+          </a>
+        <% }) %>
+      </div>
+    <% } %>
+
+    <hr class="divider" style="margin:40px 0;">
+
     <h2>Aanmeldingen op jouw projecten</h2>
     <% if (!aanmeldingen.length) { %>
       <p class="muted">Nog geen aanmeldingen ontvangen.</p>

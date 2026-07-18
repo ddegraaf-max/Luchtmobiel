@@ -11,6 +11,7 @@ router.get('/', async (req, res) => {
   let vacatures = [];
   let projecten = [];
   let evenementen = [];
+  let nieuws = [];
   try {
     const s = await pool.query(`
       SELECT
@@ -35,12 +36,16 @@ router.get('/', async (req, res) => {
        FROM evenementen WHERE COALESCE(eind_op, start_op) >= $1 ORDER BY start_op ASC LIMIT 3`,
       [isoLokaal(new Date())]
     )).rows;
+
+    nieuws = (await pool.query(
+      `SELECT id, titel, inhoud, aangemaakt FROM nieuws WHERE gepubliceerd = true ORDER BY aangemaakt DESC LIMIT 3`
+    )).rows;
   } catch (err) {
     console.error('[home]', err.message);
   }
 
   const galerij = await getGalerij('home');
-  res.render('home', { title: 'Het netwerk van de Luchtmobiele Brigade', stats, vacatures, projecten, evenementen, galerij });
+  res.render('home', { title: 'Het netwerk van de Luchtmobiele Brigade', stats, vacatures, projecten, evenementen, nieuws, galerij });
 });
 
 // Over / het netwerk
@@ -76,7 +81,14 @@ router.get('/dashboard', requireLogin, async (req, res) => {
       [uid]
     )).rows;
 
-    res.render('dashboard', { title: 'Mijn dashboard', profiel, vacatures, projecten, aanmeldingen });
+    const mijnEvenementen = (await pool.query(
+      `SELECT e.id, e.titel, e.start_op, e.eind_op, e.locatie, a.aantal
+       FROM evenement_aanmeldingen a JOIN evenementen e ON e.id = a.evenement_id
+       WHERE a.user_id = $1 ORDER BY e.start_op ASC`,
+      [uid]
+    )).rows;
+
+    res.render('dashboard', { title: 'Mijn dashboard', profiel, vacatures, projecten, aanmeldingen, mijnEvenementen });
   } catch (err) {
     console.error('[dashboard]', err.message);
     res.status(500).render('error', { title: 'Fout', bericht: 'Het dashboard kon niet worden geladen.' });

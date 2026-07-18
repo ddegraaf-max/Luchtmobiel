@@ -112,6 +112,20 @@ async function init() {
     );
   `);
 
+  // Uitbreidingen (idempotent)
+  await pool.query(`ALTER TABLE galerij ADD COLUMN IF NOT EXISTS evenement_id INTEGER REFERENCES evenementen(id) ON DELETE CASCADE;`);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS nieuws (
+      id           SERIAL PRIMARY KEY,
+      titel        TEXT NOT NULL,
+      inhoud       TEXT,
+      gepubliceerd BOOLEAN NOT NULL DEFAULT true,
+      auteur_id    INTEGER REFERENCES users(id) ON DELETE SET NULL,
+      aangemaakt   TIMESTAMPTZ DEFAULT now(),
+      bijgewerkt   TIMESTAMPTZ DEFAULT now()
+    );
+  `);
+
   // Adminaccount seeden vanuit omgevingsvariabelen.
   const adminEmail = (process.env.ADMIN_EMAIL || '').trim().toLowerCase();
   const adminPass = process.env.ADMIN_PASSWORD;
@@ -173,6 +187,21 @@ async function init() {
   } catch (err) {
     console.error('[db] Seeden evenementen mislukt:', err.message);
   }
+
+  // Voorbeeld-nieuwsbericht seeden.
+  try {
+    const n = (await pool.query('SELECT COUNT(*)::int AS n FROM nieuws')).rows[0].n;
+    if (n === 0) {
+      const admin = (await pool.query("SELECT id FROM users WHERE rol='admin' ORDER BY id LIMIT 1")).rows[0];
+      await pool.query(
+        `INSERT INTO nieuws (titel, inhoud, auteur_id) VALUES ($1,$2,$3)`,
+        ['Welkom op het vernieuwde platform',
+         'Fijn dat je er bent! Op dit platform vind je de agenda met onze evenementen, de ledengids, vacatures en projecten, en alles rond veteranenzaken.\n\nHoud de agenda in de gaten voor de eerstvolgende activiteiten en meld je direct aan. Tot snel!',
+         admin ? admin.id : null]
+      );
+      console.log('[db] Voorbeeld-nieuwsbericht geseed.');
+    }
+  } catch (err) { console.error('[db] Seeden nieuws mislukt:', err.message); }
 
   console.log('[db] Initialisatie voltooid.');
 }

@@ -3,7 +3,8 @@ const router = express.Router();
 const multer = require('multer');
 const pool = require('../db/pool');
 const { requireLogin, requireRedactie } = require('../middleware/auth');
-const { isoLokaal } = require('../lib/helpers');
+const { isoLokaal, formatDatumLang, formatTijd } = require('../lib/helpers');
+const { sendMail, mailLayout, escHtml } = require('../lib/mail');
 
 const CATEGORIEEN = ['Ceremonieel', 'Sportief', 'Excursie', 'Netwerk', 'Overig'];
 
@@ -127,7 +128,12 @@ router.get('/:id', async (req, res) => {
 
     const plaatsenVrij = evenement.max_plaatsen ? Math.max(0, evenement.max_plaatsen - bezet) : null;
 
-    res.render('agenda/detail', { title: evenement.titel, evenement, bezet, deelnemers, mijnAanmelding, plaatsenVrij, magBeheren });
+    const fotos = (await pool.query(
+      'SELECT id, media_id, bijschrift FROM galerij WHERE evenement_id = $1 ORDER BY volgorde, id',
+      [evenement.id]
+    )).rows;
+
+    res.render('agenda/detail', { title: evenement.titel, evenement, bezet, deelnemers, mijnAanmelding, plaatsenVrij, magBeheren, fotos });
   } catch (err) {
     console.error('[agenda detail]', err.message);
     res.status(500).render('error', { title: 'Fout', bericht: 'Het evenement kon niet worden geladen.' });
@@ -164,6 +170,32 @@ router.post('/:id/aanmelden', requireLogin, async (req, res) => {
       [ev.id, req.session.user.id, aantal, opmerking]
     );
     req.session.flash = { type: 'succes', message: 'Je aanmelding is genoteerd. Tot dan!' };
+
+    // E-mailnotificaties (niet-blokkerend)
+    try {
+      const u = req.session.user;
+      const wanneer = `${formatDatumLang(ev.start_op)} om ${formatTijd(ev.start_op)} uur`;
+      const waar = ev.locatie ? `<br><strong>Waar:</strong> ${escHtml(ev.locatie)}` : '';
+      await sendMail({
+        to: u.email,
+        subject: `Aanmelding bevestigd — ${ev.titel}`,
+        html: mailLayout(`Je bent aangemeld voor ${escHtml(ev.titel)}`,
+          `<p>Beste ${escHtml(u.naam)},</p>
+           <p>Je aanmelding is genoteerd. We zien je graag!</p>
+           <p><strong>Wanneer:</strong> ${wanneer}${waar}<br><strong>Aantal personen:</strong> ${aantal}</p>`)
+      });
+      if (process.env.MAIL_BESTUUR) {
+        await sendMail({
+          to: process.env.MAIL_BESTUUR,
+          replyTo: u.email,
+          subject: `Nieuwe aanmelding — ${ev.titel}`,
+          html: mailLayout('Nieuwe aanmelding',
+            `<p><strong>${escHtml(u.naam)}</strong>${u.bedrijf ? ' (' + escHtml(u.bedrijf) + ')' : ''} heeft zich aangemeld voor <strong>${escHtml(ev.titel)}</strong> met ${aantal} perso(o)n(en).</p>
+             ${opmerking ? '<p><strong>Opmerking:</strong> ' + escHtml(opmerking) + '</p>' : ''}`)
+        });
+      }
+    } catch (mailErr) { console.error('[agenda mail]', mailErr.message); }
+
     res.redirect('/agenda/' + ev.id);
   } catch (err) {
     console.error('[agenda aanmelden]', err.message);
@@ -227,6 +259,83 @@ router.post('/:id/verwijderen', requireRedactie, async (req, res) => {
     console.error('[agenda verwijderen]', err.message);
   }
   res.redirect('/agenda');
+});
+
+// iCal-download (.ics) om in je eigen agenda te zetten
+router.get('/:id/ical', async (req, res) => {
+  try {
+    const ev = (await pool.query('SELECT * FROM evenementen WHERE id = $1', [req.params.id])).rows[0];
+    if (!ev) return res.status(404).send('Niet gevonden');
+    const compact = (s) => s.replace(/[-:]/g, '') + '00';
+    const dtstart = compact(ev.start_op);
+    let dtend;
+    if (ev.eind_op) dtend = compact(ev.eind_op);
+    else {
+      const [d, t] = ev.start_op.split('T');
+      const [Y, M, D] = d.split('-').map(Number);
+      const [h, mi] = t.split(':').map(Number);
+      const e = new Date(Y, M - 1, D, h, mi); e.setHours(e.getHours() + 2);
+      const p = (n) => String(n).padStart(2, '0');
+      dtend = `${e.getFullYear()}${p(e.getMonth() + 1)}${p(e.getDate())}T${p(e.getHours())}${p(e.getMinutes())}00`;
+    }
+    const esc = (s) => String(s || '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
+    const stamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    const ics = [
+      'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//BCLMB//Agenda//NL', 'CALSCALE:GREGORIAN',
+      'BEGIN:VEVENT',
+      `UID:evenement-${ev.id}@bclmb`,
+      `DTSTAMP:${stamp}`,
+      `DTSTART:${dtstart}`,
+      `DTEND:${dtend}`,
+      `SUMMARY:${esc(ev.titel)}`,
+      ev.locatie ? `LOCATION:${esc(ev.locatie)}` : '',
+      ev.omschrijving ? `DESCRIPTION:${esc(ev.omschrijving)}` : '',
+      'END:VEVENT', 'END:VCALENDAR'
+    ].filter(Boolean).join('\r\n');
+    res.setHeader('Content-Type', 'text/calendar; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="evenement-${ev.id}.ics"`);
+    res.send(ics);
+  } catch (err) {
+    console.error('[agenda ical]', err.message);
+    res.status(500).send('Kon agenda-bestand niet maken.');
+  }
+});
+
+// Foto toevoegen aan een evenement (beheer)
+router.post('/:id/foto', requireRedactie, upload.single('foto'), async (req, res) => {
+  try {
+    const ev = (await pool.query('SELECT id FROM evenementen WHERE id = $1', [req.params.id])).rows[0];
+    if (!ev) return res.redirect('/agenda');
+    if (!req.file) {
+      req.session.flash = { type: 'fout', message: 'Kies een geldige afbeelding (JPG/PNG/WebP).' };
+      return res.redirect('/agenda/' + ev.id);
+    }
+    const m = await pool.query(
+      'INSERT INTO media (mime, data, eigenaar_id) VALUES ($1,$2,$3) RETURNING id',
+      [req.file.mimetype, req.file.buffer, req.session.user.id]
+    );
+    await pool.query(
+      'INSERT INTO galerij (media_id, pagina, evenement_id, bijschrift, auteur_id) VALUES ($1,$2,$3,$4,$5)',
+      [m.rows[0].id, 'evenement', ev.id, (req.body.bijschrift || '').trim() || null, req.session.user.id]
+    );
+    req.session.flash = { type: 'succes', message: 'Foto toegevoegd.' };
+  } catch (err) {
+    console.error('[agenda foto]', err.message);
+    req.session.flash = { type: 'fout', message: 'Uploaden mislukt.' };
+  }
+  res.redirect('/agenda/' + req.params.id);
+});
+
+// Evenement-foto verwijderen (beheer)
+router.post('/:id/foto/:fotoId/verwijderen', requireRedactie, async (req, res) => {
+  try {
+    const g = (await pool.query('SELECT media_id FROM galerij WHERE id = $1 AND evenement_id = $2', [req.params.fotoId, req.params.id])).rows[0];
+    if (g) await pool.query('DELETE FROM media WHERE id = $1', [g.media_id]);
+    req.session.flash = { type: 'succes', message: 'Foto verwijderd.' };
+  } catch (err) {
+    console.error('[agenda foto verwijderen]', err.message);
+  }
+  res.redirect('/agenda/' + req.params.id);
 });
 
 module.exports = router;

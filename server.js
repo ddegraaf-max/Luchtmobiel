@@ -65,6 +65,7 @@ app.use('/leden', require('./routes/leden'));
 app.use('/vacatures', require('./routes/vacatures'));
 app.use('/projecten', require('./routes/projecten'));
 app.use('/agenda', require('./routes/agenda'));
+app.use('/nieuws', require('./routes/nieuws'));
 app.use('/veteranen', require('./routes/veteranen'));
 app.use('/media', require('./routes/media'));
 app.use('/beheer', require('./routes/beheer'));

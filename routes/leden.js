@@ -7,6 +7,7 @@ const { requireLogin } = require('../middleware/auth');
 router.get('/', requireLogin, async (req, res) => {
   const zoek = (req.query.zoek || '').trim();
   const branche = (req.query.branche || '').trim();
+  const plaats = (req.query.plaats || '').trim();
 
   let sql = `SELECT id, naam, bedrijf, functie, branche, plaats, website, bio, logo_id, rol
              FROM users WHERE actief = true`;
@@ -19,6 +20,10 @@ router.get('/', requireLogin, async (req, res) => {
     params.push(branche);
     sql += ` AND branche = $${params.length}`;
   }
+  if (plaats) {
+    params.push(plaats);
+    sql += ` AND plaats = $${params.length}`;
+  }
   sql += ' ORDER BY naam ASC';
 
   try {
@@ -26,7 +31,10 @@ router.get('/', requireLogin, async (req, res) => {
     const branches = (await pool.query(
       `SELECT DISTINCT branche FROM users WHERE branche IS NOT NULL AND branche <> '' ORDER BY branche`
     )).rows.map((r) => r.branche);
-    res.render('leden/index', { title: 'Ledengids', leden, branches, zoek, branche });
+    const plaatsen = (await pool.query(
+      `SELECT DISTINCT plaats FROM users WHERE plaats IS NOT NULL AND plaats <> '' ORDER BY plaats`
+    )).rows.map((r) => r.plaats);
+    res.render('leden/index', { title: 'Ledengids', leden, branches, plaatsen, zoek, branche, plaats });
   } catch (err) {
     console.error('[leden]', err.message);
     res.status(500).render('error', { title: 'Fout', bericht: 'De ledengids kon niet worden geladen.' });

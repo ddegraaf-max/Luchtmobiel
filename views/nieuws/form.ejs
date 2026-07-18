@@ -1,0 +1,27 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div><span class="kicker">Van het bestuur</span><h1><%= title %></h1></div>
+    <a href="/nieuws" class="btn btn--ghost">← Nieuws</a>
+  </div>
+</div>
+
+<section class="section section--tight">
+  <div class="wrap" style="max-width:720px;">
+    <% if (fout) { %><div class="flash flash--fout"><%= fout %></div><% } %>
+    <form action="<%= actie %>" method="post" class="form-card stack">
+      <div class="veld">
+        <label for="titel">Titel *</label>
+        <input type="text" id="titel" name="titel" value="<%= bericht.titel || '' %>" required autofocus>
+      </div>
+      <div class="veld">
+        <label for="inhoud">Bericht</label>
+        <textarea id="inhoud" name="inhoud" rows="10" placeholder="Schrijf hier het nieuwsbericht. Laat een lege regel tussen alinea's."><%= bericht.inhoud || '' %></textarea>
+      </div>
+      <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+        <input type="checkbox" name="gepubliceerd" style="width:auto;" <%= (bericht.gepubliceerd === undefined || bericht.gepubliceerd) ? 'checked' : '' %>>
+        Direct publiceren (uit = concept, alleen zichtbaar voor beheer)
+      </label>
+      <button type="submit" class="btn btn--primary">Opslaan</button>
+    </form>
+  </div>
+</section>

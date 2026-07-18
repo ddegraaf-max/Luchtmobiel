@@ -19,8 +19,14 @@
           <option value="<%= b %>" <%= branche === b ? 'selected' : '' %>><%= b %></option>
         <% }) %>
       </select>
+      <select name="plaats">
+        <option value="">Alle plaatsen</option>
+        <% plaatsen.forEach(function(p){ %>
+          <option value="<%= p %>" <%= plaats === p ? 'selected' : '' %>><%= p %></option>
+        <% }) %>
+      </select>
       <button type="submit" class="btn btn--primary">Filter</button>
-      <% if (zoek || branche) { %><a href="/leden" class="btn btn--ghost">Wis</a><% } %>
+      <% if (zoek || branche || plaats) { %><a href="/leden" class="btn btn--ghost">Wis</a><% } %>
     </form>
 
     <% if (!leden.length) { %>

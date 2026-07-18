@@ -83,6 +83,26 @@
 </section>
 <% } %>
 
+<% if (nieuws.length) { %>
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="flex between" style="align-items:baseline; margin-bottom:22px;">
+      <div><span class="kicker">Van het bestuur</span><h2 style="margin:6px 0 0;">Nieuws</h2></div>
+      <a href="/nieuws" class="muted" style="font-weight:600;">Alle berichten →</a>
+    </div>
+    <div class="grid grid--auto">
+      <% nieuws.forEach(function(n){ %>
+        <a href="/nieuws/<%= n.id %>" class="card" style="display:block;">
+          <div class="meta"><%= h.formatDatum(n.aangemaakt) %></div>
+          <div style="font-family:var(--font-display); font-weight:700; font-size:1.1rem; margin:4px 0 6px; color:var(--ink);"><%= n.titel %></div>
+          <p class="muted mb-0"><%= h.kort(n.inhoud, 120) %></p>
+        </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
 <% if (vacatures.length || projecten.length) { %>
 <section class="section section--tight" style="background:var(--bone-2); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
   <div class="wrap">

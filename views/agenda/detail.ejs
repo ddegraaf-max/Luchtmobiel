@@ -26,6 +26,34 @@
         <p class="muted">Nog geen verdere omschrijving. Houd de agenda in de gaten voor meer details.</p>
       <% } %>
 
+      <% if (fotos.length || magBeheren) { %>
+        <h3 style="margin-top:30px;">Foto's</h3>
+        <% if (fotos.length) { %>
+          <div class="foto-galerij">
+            <% fotos.forEach(function(f){ %>
+              <figure>
+                <img loading="lazy" src="/media/<%= f.media_id %>" alt="<%= f.bijschrift || '' %>">
+                <% if (f.bijschrift) { %><figcaption><%= f.bijschrift %></figcaption><% } %>
+                <% if (magBeheren) { %>
+                  <form action="/agenda/<%= evenement.id %>/foto/<%= f.id %>/verwijderen" method="post" onsubmit="return confirm('Foto verwijderen?');" style="margin-top:6px;">
+                    <button class="btn btn--ghost btn--sm" type="submit">Verwijderen</button>
+                  </form>
+                <% } %>
+              </figure>
+            <% }) %>
+          </div>
+        <% } else { %>
+          <p class="muted">Nog geen foto's bij dit evenement.</p>
+        <% } %>
+        <% if (magBeheren) { %>
+          <form action="/agenda/<%= evenement.id %>/foto" method="post" enctype="multipart/form-data" class="card" style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <input type="file" name="foto" accept="image/*" required style="flex:1; min-width:200px;">
+            <input type="text" name="bijschrift" placeholder="Bijschrift (optioneel)" style="flex:1; min-width:180px;">
+            <button class="btn btn--primary btn--sm" type="submit">Foto toevoegen</button>
+          </form>
+        <% } %>
+      <% } %>
+
       <% if (magBeheren) { %>
         <div class="card" style="margin-top:26px;">
           <div class="flex between" style="align-items:center;">
@@ -85,6 +113,7 @@
           <% } %>
         <% } %>
       </div>
+      <a href="/agenda/<%= evenement.id %>/ical" class="btn btn--ghost btn--block" style="margin-top:14px;">📅 Zet in mijn agenda</a>
     </aside>
   </div>
 </section>
