@@ -3,6 +3,7 @@ const router = express.Router();
 const pool = require('../db/pool');
 const { requireLogin } = require('../middleware/auth');
 const { netteUrl, isEmail } = require('../lib/helpers');
+const { sendMail, mailLayout, escHtml } = require('../lib/mail');
 
 const DIENSTVERBANDEN = ['Fulltime', 'Parttime', 'Tijdelijk', 'Stage', 'Freelance/ZZP', 'Vrijwillig'];
 
@@ -59,6 +60,17 @@ router.post('/nieuw', requireLogin, async (req, res) => {
        veteraan_vriendelijk === 'on']
     );
     req.session.flash = { type: 'succes', message: 'Je vacature staat online.' };
+    if (process.env.MAIL_BESTUUR) {
+      try {
+        await sendMail({
+          to: process.env.MAIL_BESTUUR,
+          replyTo: req.session.user.email,
+          subject: `Nieuwe vacature — ${titel.trim()}`,
+          html: mailLayout('Nieuwe vacature geplaatst',
+            `<p><strong>${escHtml(req.session.user.naam)}</strong> plaatste een vacature: <strong>${escHtml(titel.trim())}</strong>${bedrijf ? ' bij ' + escHtml(bedrijf) : ''}.</p>`)
+        });
+      } catch (e) { console.error('[vacature mail]', e.message); }
+    }
     res.redirect('/vacatures/' + rows[0].id);
   } catch (err) {
     console.error('[vacature nieuw]', err.message);

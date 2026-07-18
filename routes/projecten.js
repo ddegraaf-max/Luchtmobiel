@@ -4,6 +4,7 @@ const multer = require('multer');
 const pool = require('../db/pool');
 const { requireLogin } = require('../middleware/auth');
 const { netteUrl, isEmail } = require('../lib/helpers');
+const { sendMail, mailLayout, escHtml } = require('../lib/mail');
 
 const STEUNTYPES = ['Financieel', 'Vrijwilligers', 'Expertise', 'Materiaal', 'Bekendheid', 'Overig'];
 
@@ -63,6 +64,17 @@ router.post('/nieuw', requireLogin, upload.single('afbeelding'), async (req, res
        doel || null, plaats || null, afbId, contact_email && isEmail(contact_email) ? contact_email.trim() : null]
     );
     req.session.flash = { type: 'succes', message: 'Je project staat online.' };
+    if (process.env.MAIL_BESTUUR) {
+      try {
+        await sendMail({
+          to: process.env.MAIL_BESTUUR,
+          replyTo: req.session.user.email,
+          subject: `Nieuw project — ${titel.trim()}`,
+          html: mailLayout('Nieuw project geplaatst',
+            `<p><strong>${escHtml(req.session.user.naam)}</strong> plaatste een project met steunvraag: <strong>${escHtml(titel.trim())}</strong>${steun_type ? ' (' + escHtml(steun_type) + ')' : ''}.</p>`)
+        });
+      } catch (e) { console.error('[project mail]', e.message); }
+    }
     res.redirect('/projecten/' + rows[0].id);
   } catch (err) {
     console.error('[project nieuw]', err.message);

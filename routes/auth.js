@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const pool = require('../db/pool');
 const { isEmail } = require('../lib/helpers');
+const { sendMail, mailLayout, escHtml } = require('../lib/mail');
 
 // --- Registreren ---
 router.get('/registreren', (req, res) => {
@@ -44,6 +45,28 @@ router.post('/registreren', async (req, res) => {
     );
     req.session.user = rows[0];
     req.session.flash = { type: 'succes', message: 'Welkom! Vul je profiel aan zodat andere leden je kunnen vinden.' };
+
+    // E-mail (niet-blokkerend)
+    try {
+      await sendMail({
+        to: rows[0].email,
+        subject: 'Welkom bij de Business Club Luchtmobiel',
+        html: mailLayout(`Welkom, ${escHtml(naam.trim())}!`,
+          `<p>Je account is aangemaakt — fijn dat je je aansluit bij het netwerk van de Business Club Luchtmobiel.</p>
+           <p>Vul je profiel aan zodat andere leden je kunnen vinden, bekijk de agenda en meld je aan voor de eerstvolgende evenementen.</p>`)
+      });
+      if (process.env.MAIL_BESTUUR) {
+        await sendMail({
+          to: process.env.MAIL_BESTUUR,
+          replyTo: rows[0].email,
+          subject: 'Nieuw lid aangemeld',
+          html: mailLayout('Nieuw lid',
+            `<p><strong>${escHtml(naam.trim())}</strong>${bedrijf ? ' (' + escHtml(bedrijf) + ')' : ''} heeft een account aangemaakt.</p>
+             <p>E-mail: ${escHtml(email.trim().toLowerCase())}</p>`)
+        });
+      }
+    } catch (mailErr) { console.error('[registratie mail]', mailErr.message); }
+
     res.redirect('/profiel');
   } catch (err) {
     console.error(err);
