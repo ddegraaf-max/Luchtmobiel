@@ -437,8 +437,8 @@ input[type=file] { font-size: .88rem; }
   z-index: 0; pointer-events: none; background: no-repeat center / contain;
 }
 .hero--v::before {
-  width: 210px; height: 380px; opacity: .85; right: 20px;
-  background-image: url("/static/img/veteranen-v.png?v=1");
+  width: 165px; height: 300px; opacity: .8; right: 24px;
+  background-image: url("/static/img/veteranen-v.png?v=4");
 }
 .hero--em::before {
   width: 270px; height: 356px; opacity: .8; right: -6px;
