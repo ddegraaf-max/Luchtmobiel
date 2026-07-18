@@ -437,8 +437,8 @@ input[type=file] { font-size: .88rem; }
   z-index: 0; pointer-events: none; background: no-repeat center / contain;
 }
 .hero--v::before {
-  width: 320px; height: 320px; opacity: .8;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M18 20 L50 82 L82 20' fill='none' stroke='%23cda44a' stroke-width='13' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  width: 210px; height: 380px; opacity: .85; right: 20px;
+  background-image: url("/static/img/veteranen-v.png?v=1");
 }
 .hero--em::before {
   width: 270px; height: 356px; opacity: .8; right: -6px;
