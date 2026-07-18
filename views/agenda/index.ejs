@@ -1,0 +1,61 @@
+<% var magBeheren = user && (user.rol === 'admin' || user.rol === 'brigade'); %>
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Agenda</span>
+      <h1>Evenementen &amp; activiteiten</h1>
+      <p><%= verleden ? 'Terugblik op eerdere activiteiten' : evenementen.length + ' ' + (evenementen.length === 1 ? 'aankomend evenement' : 'aankomende evenementen') %></p>
+    </div>
+    <% if (magBeheren) { %>
+      <a href="/agenda/nieuw" class="btn btn--primary">+ Evenement</a>
+    <% } %>
+  </div>
+</div>
+
+<section class="section section--tight">
+  <div class="wrap">
+    <form method="get" class="filterbalk">
+      <select name="categorie" onchange="this.form.submit()">
+        <option value="">Alle categorieën</option>
+        <% categorieen.forEach(function(c){ %>
+          <option value="<%= c %>" <%= categorie === c ? 'selected' : '' %>><%= c %></option>
+        <% }) %>
+      </select>
+      <% if (verleden) { %><input type="hidden" name="tonen" value="verleden"><% } %>
+      <div style="margin-left:auto; display:flex; gap:8px;">
+        <a href="/agenda<%= categorie ? '?categorie=' + categorie : '' %>" class="btn <%= verleden ? 'btn--ghost' : 'btn--primary' %> btn--sm">Aankomend</a>
+        <a href="/agenda?tonen=verleden<%= categorie ? '&categorie=' + categorie : '' %>" class="btn <%= verleden ? 'btn--primary' : 'btn--ghost' %> btn--sm">Geweest</a>
+      </div>
+    </form>
+
+    <% if (!evenementen.length) { %>
+      <div class="lege-staat">
+        <p><%= verleden ? 'Er zijn nog geen afgelopen evenementen.' : 'Er staan nog geen evenementen in de agenda.' %></p>
+        <% if (magBeheren && !verleden) { %><a href="/agenda/nieuw" class="btn btn--primary">Voeg het eerste evenement toe</a><% } %>
+      </div>
+    <% } else { %>
+      <div class="agenda-lijst">
+        <% evenementen.forEach(function(e){ var dk = h.formatDatumKort(e.start_op).split(' '); %>
+          <div class="agenda-item">
+            <div class="datumchip">
+              <span class="dag"><%= dk[0] %></span>
+              <span class="maand"><%= dk[1] %></span>
+            </div>
+            <div>
+              <% if (e.categorie) { %><span class="badge badge--olive" style="margin-bottom:6px;"><%= e.categorie %></span><% } %>
+              <a class="titel" href="/agenda/<%= e.id %>" style="display:block;"><%= e.titel %></a>
+              <div class="meta-rij">
+                <span>🕑 <%= h.formatTijd(e.start_op) %><%= e.eind_op ? '–' + h.formatTijd(e.eind_op) : '' %></span>
+                <% if (e.locatie) { %><span>📍 <%= e.locatie %></span><% } %>
+                <% if (e.aanmelden && e.max_plaatsen) { %><span><%= Math.max(0, e.max_plaatsen - e.bezet) %> plaatsen vrij</span><% } %>
+              </div>
+            </div>
+            <div class="agenda-actie">
+              <a href="/agenda/<%= e.id %>" class="btn btn--ghost btn--sm">Bekijk</a>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</section>

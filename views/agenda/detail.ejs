@@ -1,0 +1,90 @@
+<% var isToekomst = h.isToekomst(evenement.eind_op || evenement.start_op); %>
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker"><%= evenement.categorie || 'Evenement' %></span>
+      <h1><%= evenement.titel %></h1>
+      <div class="detail-hero-meta">
+        <span>🗓 <%= h.formatDatumLang(evenement.start_op) %></span>
+        <span>🕑 <%= h.formatTijd(evenement.start_op) %><%= evenement.eind_op ? '–' + h.formatTijd(evenement.eind_op) : ' uur' %></span>
+        <% if (evenement.locatie) { %><span>📍 <%= evenement.locatie %></span><% } %>
+      </div>
+    </div>
+    <a href="/agenda" class="btn btn--ghost">← Agenda</a>
+  </div>
+</div>
+
+<section class="section">
+  <div class="wrap detail-grid">
+    <div>
+      <% if (evenement.afbeelding_id) { %>
+        <img src="/media/<%= evenement.afbeelding_id %>" alt="" style="width:100%; border-radius:var(--radius); margin-bottom:24px;">
+      <% } %>
+      <% if (evenement.omschrijving) { %>
+        <div class="prose"><% evenement.omschrijving.split(/\n\n+/).forEach(function(par){ %><p><%= par %></p><% }) %></div>
+      <% } else { %>
+        <p class="muted">Nog geen verdere omschrijving. Houd de agenda in de gaten voor meer details.</p>
+      <% } %>
+
+      <% if (magBeheren) { %>
+        <div class="card" style="margin-top:26px;">
+          <div class="flex between" style="align-items:center;">
+            <strong>Beheer</strong>
+            <div style="display:flex; gap:8px;">
+              <a href="/agenda/<%= evenement.id %>/bewerken" class="btn btn--ghost btn--sm">Bewerken</a>
+              <form action="/agenda/<%= evenement.id %>/verwijderen" method="post" class="inline-form" onsubmit="return confirm('Dit evenement verwijderen?');">
+                <button class="btn btn--ghost btn--sm" type="submit">Verwijderen</button>
+              </form>
+            </div>
+          </div>
+          <% if (deelnemers.length) { %>
+            <h4 style="margin:18px 0 8px;">Aanmeldingen (<%= bezet %>)</h4>
+            <ul style="list-style:none; padding:0; margin:14px 0 0; display:grid; gap:12px;">
+              <% deelnemers.forEach(function(d){ %>
+                <li><strong><%= d.naam %></strong><%= d.aantal > 1 ? ' (' + d.aantal + ' pers.)' : '' %><% if (d.bedrijf) { %> · <span class="muted"><%= d.bedrijf %></span><% } %><% if (d.opmerking) { %><br><span class="muted">“<%= d.opmerking %>”</span><% } %></li>
+              <% }) %>
+            </ul>
+          <% } else { %>
+            <p class="muted" style="margin-top:14px;">Nog geen aanmeldingen.</p>
+          <% } %>
+        </div>
+      <% } %>
+    </div>
+
+    <aside class="zijbalk">
+      <div class="card">
+        <h3 style="margin-top:0;">Aanmelden</h3>
+        <% if (!evenement.aanmelden) { %>
+          <p class="muted">Voor dit evenement is aanmelden niet nodig — iedereen is welkom.</p>
+        <% } else if (!isToekomst) { %>
+          <p class="muted">Dit evenement is geweest.</p>
+        <% } else { %>
+          <% if (evenement.max_plaatsen) { %>
+            <p class="meta" style="margin-bottom:12px;"><strong><%= plaatsenVrij %></strong> van <%= evenement.max_plaatsen %> plaatsen vrij</p>
+          <% } %>
+          <% if (!user) { %>
+            <p class="muted">Log in als lid om je aan te melden.</p>
+            <a href="/inloggen" class="btn btn--primary btn--block">Inloggen</a>
+          <% } else if (mijnAanmelding) { %>
+            <div class="flash flash--succes" style="margin-bottom:14px;">Je bent aangemeld<%= mijnAanmelding.aantal > 1 ? ' met ' + mijnAanmelding.aantal + ' personen' : '' %>.</div>
+            <form action="/agenda/<%= evenement.id %>/afmelden" method="post" class="inline-form">
+              <button class="btn btn--ghost btn--block" type="submit">Afmelden</button>
+            </form>
+          <% } else { %>
+            <form action="/agenda/<%= evenement.id %>/aanmelden" method="post" class="stack">
+              <div class="veld">
+                <label for="aantal">Aantal personen</label>
+                <input type="number" id="aantal" name="aantal" value="1" min="1" max="10">
+              </div>
+              <div class="veld">
+                <label for="opmerking">Opmerking (optioneel)</label>
+                <input type="text" id="opmerking" name="opmerking" placeholder="Bijv. dieetwens of vraag">
+              </div>
+              <button type="submit" class="btn btn--primary btn--block">Ik kom</button>
+            </form>
+          <% } %>
+        <% } %>
+      </div>
+    </aside>
+  </div>
+</section>

@@ -484,3 +484,65 @@ input[type=file] { font-size: .88rem; }
 /* fotobalk met wijnrode tint (brigade in actie) */
 .beeldband--maroon::before { background: linear-gradient(90deg, rgba(74,20,29,.92) 0%, rgba(110,34,48,.55) 60%, rgba(110,34,48,.25) 100%); }
 .beeldband .kicker::before { background: var(--brass); }
+
+/* ============================================================
+   Mobiele tekst-fixes — betere leesbaarheid op smalle schermen
+   ============================================================ */
+body { overflow-wrap: break-word; }
+h1, h2, h3, .hero h1, .paginakop h1, .beeldband h2 { overflow-wrap: break-word; }
+
+@media (max-width: 680px) {
+  html, body { overflow-x: hidden; }              /* geen horizontale schuif */
+  .nav { gap: 14px; }
+  .brand { gap: 9px; }
+  .brand .naam { font-size: .86rem; }
+  .brand .naam small { font-size: .52rem; letter-spacing: .12em; }
+  .paginakop h1 { font-size: 1.7rem; }
+  .beeldband { min-height: 260px; }
+  .beeldband .wrap { padding: 44px 24px; }
+  .beeldband h2 { font-size: 1.5rem; }
+  .stat .getal { font-size: 1.5rem; }
+  .stat .label { letter-spacing: .08em; font-size: .64rem; }
+  .missie-tijdlijn { grid-template-columns: 1fr; }
+}
+@media (max-width: 400px) {
+  .brand .naam { font-size: .8rem; }
+  .brand .naam small { display: none; }           /* subtitel weg op kleinste schermen */
+  .statbar { grid-template-columns: 1fr 1fr; }
+  .hero h1 { font-size: 1.75rem; }
+  .paginakop h1 { font-size: 1.5rem; }
+}
+
+/* ============================================================
+   Agenda & evenementen
+   ============================================================ */
+.agenda-lijst { display: grid; gap: 16px; }
+.agenda-item { display: grid; grid-template-columns: 92px 1fr auto; gap: 22px; align-items: center;
+  background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 22px; }
+.agenda-item:hover { border-color: var(--line-strong); }
+.datumchip { background: linear-gradient(160deg, var(--maroon-deep), var(--maroon)); color: var(--bone);
+  border-radius: var(--radius); text-align: center; padding: 12px 8px; line-height: 1; }
+.datumchip .dag { font-family: var(--font-display); font-weight: 800; font-size: 1.7rem; display: block; }
+.datumchip .maand { text-transform: uppercase; letter-spacing: .12em; font-size: .66rem; font-weight: 700; margin-top: 5px; display: block; }
+.agenda-item .titel { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; color: var(--ink); }
+.agenda-item .meta-rij { color: var(--ink-soft); font-size: .9rem; margin-top: 5px; display: flex; flex-wrap: wrap; gap: 3px 16px; }
+.agenda-actie { text-align: right; white-space: nowrap; }
+.agenda-teaser { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.agenda-teaser .kaartje { display: flex; gap: 16px; align-items: center; background: var(--white);
+  border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+.agenda-teaser .datumchip { min-width: 66px; }
+.detail-hero-meta { display: flex; flex-wrap: wrap; gap: 6px 20px; color: rgba(244,239,229,.92); margin-top: 12px; font-weight: 600; }
+@media (max-width: 620px) {
+  .agenda-item { grid-template-columns: 60px 1fr; }
+  .agenda-item .datumchip .dag { font-size: 1.35rem; }
+  .agenda-actie { grid-column: 1 / -1; text-align: left; margin-top: 4px; }
+}
+
+/* clublogo boven inlog/registratie */
+.auth-logo { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px; }
+.auth-logo img { height: 76px; width: auto; }
+.auth-logo span { font-family: var(--font-display); font-weight: 800; font-size: 1rem; color: var(--maroon); letter-spacing: -.01em; }
+.auth-card { text-align: center; }
+.auth-card form, .auth-card .veld { text-align: left; }
+.agenda-teaser .kaartje { color: var(--ink); }
+.agenda-teaser .kaartje:hover { border-color: var(--line-strong); text-decoration: none; }

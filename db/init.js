@@ -1,5 +1,6 @@
 const pool = require('./pool');
 const bcrypt = require('bcryptjs');
+const { isoLokaal } = require('../lib/helpers');
 
 async function init() {
   await pool.query(`
@@ -84,6 +85,31 @@ async function init() {
       auteur_id   INTEGER REFERENCES users(id) ON DELETE SET NULL,
       aangemaakt  TIMESTAMPTZ DEFAULT now()
     );
+
+    CREATE TABLE IF NOT EXISTS evenementen (
+      id            SERIAL PRIMARY KEY,
+      titel         TEXT NOT NULL,
+      categorie     TEXT,
+      omschrijving  TEXT,
+      locatie       TEXT,
+      start_op      TEXT NOT NULL,
+      eind_op       TEXT,
+      aanmelden     BOOLEAN NOT NULL DEFAULT true,
+      max_plaatsen  INTEGER,
+      afbeelding_id INTEGER REFERENCES media(id) ON DELETE SET NULL,
+      auteur_id     INTEGER REFERENCES users(id) ON DELETE SET NULL,
+      aangemaakt    TIMESTAMPTZ DEFAULT now()
+    );
+
+    CREATE TABLE IF NOT EXISTS evenement_aanmeldingen (
+      id            SERIAL PRIMARY KEY,
+      evenement_id  INTEGER REFERENCES evenementen(id) ON DELETE CASCADE,
+      user_id       INTEGER REFERENCES users(id) ON DELETE CASCADE,
+      aantal        INTEGER NOT NULL DEFAULT 1,
+      opmerking     TEXT,
+      aangemaakt    TIMESTAMPTZ DEFAULT now(),
+      UNIQUE (evenement_id, user_id)
+    );
   `);
 
   // Adminaccount seeden vanuit omgevingsvariabelen.
@@ -107,6 +133,45 @@ async function init() {
     }
   } else {
     console.warn('[db] ADMIN_EMAIL/ADMIN_PASSWORD niet ingesteld; geen admin geseed.');
+  }
+
+  // Voorbeeld-evenementen seeden (alleen als er nog geen agenda is).
+  try {
+    const telling = (await pool.query('SELECT COUNT(*)::int AS n FROM evenementen')).rows[0].n;
+    if (telling === 0) {
+      const admin = (await pool.query("SELECT id FROM users WHERE rol = 'admin' ORDER BY id LIMIT 1")).rows[0];
+      const auteurId = admin ? admin.id : null;
+      const overDagen = (dagen, uur, min) => {
+        const d = new Date();
+        d.setDate(d.getDate() + dagen);
+        d.setHours(uur, min, 0, 0);
+        return isoLokaal(d);
+      };
+      const voorbeelden = [
+        ['BCLMB Sportdag', 'Sportief',
+         'Sportieve teamdag voor leden en de brigade — militaire hindernisbaan, teamspellen en een gezamenlijke afsluiting.',
+         'Oranjekazerne, Schaarsbergen', overDagen(25, 10, 0), overDagen(25, 16, 0), true, 60],
+        ['Baretuitreiking', 'Ceremonieel',
+         'Bijzonder moment waarop nieuwe luchtmobiele militairen hun rode baret ontvangen. Als club zijn we hierbij aanwezig.',
+         'Oranjekazerne, Schaarsbergen', overDagen(45, 14, 0), null, true, null],
+        ['Excursie Falcon Leap', 'Excursie',
+         'Bezoek aan de grote internationale para-oefening Falcon Leap op en rond de Ginkelse Heide.',
+         'Ginkelse Heide, Ede', overDagen(75, 9, 30), overDagen(75, 13, 0), true, 40],
+        ['Relatie-event op de kazerne', 'Netwerk',
+         'Netwerkavond voor leden en relaties, met een kijkje achter de schermen bij de brigade en volop gelegenheid om bij te praten.',
+         'Oranjekazerne, Schaarsbergen', overDagen(110, 17, 0), overDagen(110, 21, 0), true, 80]
+      ];
+      for (const v of voorbeelden) {
+        await pool.query(
+          `INSERT INTO evenementen (titel, categorie, omschrijving, locatie, start_op, eind_op, aanmelden, max_plaatsen, auteur_id)
+           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
+          [...v, auteurId]
+        );
+      }
+      console.log('[db] Voorbeeld-evenementen geseed.');
+    }
+  } catch (err) {
+    console.error('[db] Seeden evenementen mislukt:', err.message);
   }
 
   console.log('[db] Initialisatie voltooid.');

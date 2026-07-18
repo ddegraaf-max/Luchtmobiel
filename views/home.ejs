@@ -54,6 +54,35 @@
   </div>
 </section>
 
+<% if (evenementen.length) { %>
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="flex between" style="align-items:baseline; margin-bottom:22px;">
+      <div>
+        <span class="kicker">Agenda</span>
+        <h2 style="margin:6px 0 0;">Aankomende evenementen</h2>
+      </div>
+      <a href="/agenda" class="muted" style="font-weight:600;">Hele agenda →</a>
+    </div>
+    <div class="agenda-teaser">
+      <% evenementen.forEach(function(e){ var dk = h.formatDatumKort(e.start_op).split(' '); %>
+        <a href="/agenda/<%= e.id %>" class="kaartje">
+          <div class="datumchip">
+            <span class="dag"><%= dk[0] %></span>
+            <span class="maand"><%= dk[1] %></span>
+          </div>
+          <div>
+            <% if (e.categorie) { %><span class="badge badge--olive" style="margin-bottom:4px;"><%= e.categorie %></span><% } %>
+            <div style="font-family:var(--font-display); font-weight:700;"><%= e.titel %></div>
+            <div class="meta" style="margin-top:2px;"><%= h.formatTijd(e.start_op) %><%= e.locatie ? ' · ' + e.locatie : '' %></div>
+          </div>
+        </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
 <% if (vacatures.length || projecten.length) { %>
 <section class="section section--tight" style="background:var(--bone-2); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
   <div class="wrap">

@@ -3,12 +3,14 @@ const router = express.Router();
 const pool = require('../db/pool');
 const { requireLogin } = require('../middleware/auth');
 const { getGalerij } = require('../lib/galerij');
+const { isoLokaal } = require('../lib/helpers');
 
 // Homepage
 router.get('/', async (req, res) => {
   let stats = { leden: 0, vacatures: 0, projecten: 0 };
   let vacatures = [];
   let projecten = [];
+  let evenementen = [];
   try {
     const s = await pool.query(`
       SELECT
@@ -27,12 +29,18 @@ router.get('/', async (req, res) => {
       `SELECT p.id, p.titel, p.samenvatting, p.steun_type, p.afbeelding_id, p.aangemaakt
        FROM projecten p ORDER BY p.aangemaakt DESC LIMIT 3`
     )).rows;
+
+    evenementen = (await pool.query(
+      `SELECT id, titel, categorie, start_op, eind_op, locatie
+       FROM evenementen WHERE COALESCE(eind_op, start_op) >= $1 ORDER BY start_op ASC LIMIT 3`,
+      [isoLokaal(new Date())]
+    )).rows;
   } catch (err) {
     console.error('[home]', err.message);
   }
 
   const galerij = await getGalerij('home');
-  res.render('home', { title: 'Het netwerk van de Luchtmobiele Brigade', stats, vacatures, projecten, galerij });
+  res.render('home', { title: 'Het netwerk van de Luchtmobiele Brigade', stats, vacatures, projecten, evenementen, galerij });
 });
 
 // Over / het netwerk
