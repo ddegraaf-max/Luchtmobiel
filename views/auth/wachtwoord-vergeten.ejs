@@ -1,0 +1,35 @@
+<div class="auth-wrap">
+  <div class="auth-card">
+    <a href="/" class="auth-logo">
+      <img src="/static/img/logo.png?v=2" alt="Business Club Luchtmobiel embleem">
+      <span>Business Club Luchtmobiel</span>
+    </a>
+    <span class="kicker">Wachtwoord vergeten</span>
+    <h1>Wachtwoord herstellen</h1>
+
+    <% if (verzonden) { %>
+      <div class="flash flash--succes" style="text-align:left;">
+        Als <strong><%= waarden.email %></strong> bij ons bekend is, ontvang je binnen enkele minuten een e-mail met een herstellink. Kijk ook in je spammap. De link is 1 uur geldig.
+      </div>
+      <div class="auth-onder"><a href="/inloggen">Terug naar inloggen</a></div>
+    <% } else { %>
+      <p class="muted">Vul je e-mailadres in. Je ontvangt dan een link waarmee je een nieuw wachtwoord kiest.</p>
+
+      <% if (!mailOk) { %>
+        <div class="flash flash--info" style="text-align:left;">Wachtwoord herstellen per e-mail is nog niet ingeschakeld. Neem contact op met het bestuur via <a href="mailto:info@bclmb.nl">info@bclmb.nl</a>.</div>
+      <% } %>
+      <% if (fout) { %><div class="flash flash--fout"><%= fout %></div><% } %>
+
+      <form action="/wachtwoord-vergeten" method="post" class="stack">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div class="veld">
+          <label for="email">E-mailadres</label>
+          <input type="email" id="email" name="email" value="<%= waarden.email || '' %>" required autofocus autocomplete="email">
+        </div>
+        <button type="submit" class="btn btn--primary btn--block" <%= mailOk ? '' : 'disabled' %>>Verstuur herstellink</button>
+      </form>
+
+      <div class="auth-onder"><a href="/inloggen">Terug naar inloggen</a> · <a href="/registreren">Word lid</a></div>
+    <% } %>
+  </div>
+</div>

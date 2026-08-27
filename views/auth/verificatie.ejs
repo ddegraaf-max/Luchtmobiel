@@ -1,0 +1,28 @@
+<div class="auth-wrap">
+  <div class="auth-card">
+    <a href="/" class="auth-logo">
+      <img src="/static/img/logo.png?v=2" alt="Business Club Luchtmobiel embleem">
+      <span>Business Club Luchtmobiel</span>
+    </a>
+    <span class="kicker">Tweestapsverificatie</span>
+    <h1>Bevestig dat jij het bent</h1>
+    <p class="muted">Open je authenticator-app en voer de 6-cijferige code in.</p>
+
+    <% if (fout) { %><div class="flash flash--fout"><%= fout %></div><% } %>
+
+    <form action="/inloggen/verificatie" method="post" class="stack">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="veld">
+        <label for="code">Code</label>
+        <input type="text" id="code" name="code" class="code-input" inputmode="numeric" autocomplete="one-time-code" placeholder="123 456" required autofocus maxlength="12">
+        <span class="hint">Geen toegang tot je app? Voer hier een van je herstelcodes in (bijv. ABCDE-FGHJK).</span>
+      </div>
+      <button type="submit" class="btn btn--primary btn--block">Verifiëren</button>
+    </form>
+
+    <form action="/inloggen/verificatie/annuleren" method="post" class="auth-onder">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button type="submit" class="link-knop">Annuleren en terug naar inloggen</button>
+    </form>
+  </div>
+</div>

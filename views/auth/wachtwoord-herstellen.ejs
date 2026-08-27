@@ -1,0 +1,29 @@
+<div class="auth-wrap">
+  <div class="auth-card">
+    <a href="/" class="auth-logo">
+      <img src="/static/img/logo.png?v=2" alt="Business Club Luchtmobiel embleem">
+      <span>Business Club Luchtmobiel</span>
+    </a>
+    <span class="kicker">Wachtwoord herstellen</span>
+    <h1>Kies een nieuw wachtwoord</h1>
+    <p class="muted">Na het opslaan word je op alle apparaten uitgelogd en kun je met je nieuwe wachtwoord inloggen.</p>
+
+    <% if (fout) { %><div class="flash flash--fout"><%= fout %></div><% } %>
+
+    <form action="/wachtwoord-herstellen/<%= token %>" method="post" class="stack">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="veld">
+        <label for="wachtwoord">Nieuw wachtwoord</label>
+        <input type="password" id="wachtwoord" name="wachtwoord" required minlength="8" autocomplete="new-password" autofocus>
+        <span class="hint">Minimaal 8 tekens</span>
+      </div>
+      <div class="veld">
+        <label for="wachtwoord2">Herhaal nieuw wachtwoord</label>
+        <input type="password" id="wachtwoord2" name="wachtwoord2" required minlength="8" autocomplete="new-password">
+      </div>
+      <button type="submit" class="btn btn--primary btn--block">Wachtwoord opslaan</button>
+    </form>
+
+    <div class="auth-onder"><a href="/inloggen">Terug naar inloggen</a></div>
+  </div>
+</div>
