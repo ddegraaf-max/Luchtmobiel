@@ -10,16 +10,17 @@
 
 <section class="section section--tight">
   <div class="wrap">
-    <div class="statbar" style="margin-top:0; margin-bottom:32px;">
+    <div class="statbar statbar--4" style="margin-top:0; margin-bottom:32px;">
       <div class="stat"><div class="getal"><%= stats.leden %></div><div class="label">Leden</div></div>
       <div class="stat"><div class="getal"><%= stats.vacatures %></div><div class="label">Vacatures</div></div>
       <div class="stat"><div class="getal"><%= stats.projecten %></div><div class="label">Projecten</div></div>
+      <div class="stat"><div class="getal"><%= stats.met_tfa %></div><div class="label">Met 2FA</div></div>
     </div>
 
     <div style="overflow-x:auto;">
       <table class="tabel">
         <thead>
-          <tr><th>Naam</th><th>E-mail</th><th>Rol</th><th>Status</th><th>Acties</th></tr>
+          <tr><th>Naam</th><th>E-mail</th><th>Rol</th><th>Status</th><th>2FA</th><th>Acties</th></tr>
         </thead>
         <tbody>
           <% leden.forEach(function(l){ %>
@@ -34,7 +35,8 @@
                   <span class="badge badge--brigade">Jij (admin)</span>
                 <% } else { %>
                   <form action="/beheer/lid/<%= l.id %>/rol" method="post" class="inline-form">
-                    <select name="rol" onchange="this.form.submit()">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <select name="rol" data-auto-submit aria-label="Rol van <%= l.naam %>">
                       <option value="lid" <%= l.rol === 'lid' ? 'selected' : '' %>>Lid</option>
                       <option value="brigade" <%= l.rol === 'brigade' ? 'selected' : '' %>>Brigade</option>
                       <option value="admin" <%= l.rol === 'admin' ? 'selected' : '' %>>Admin</option>
@@ -46,13 +48,28 @@
                 <% if (l.actief) { %><span class="badge badge--olive">Actief</span><% } else { %><span class="badge">Inactief</span><% } %>
               </td>
               <td>
+                <% if (l.totp_ingeschakeld) { %>
+                  <span class="badge badge--olive" title="Tweestapsverificatie ingeschakeld">Aan</span>
+                  <% if (l.id !== user.id) { %>
+                    <form action="/beheer/lid/<%= l.id %>/2fa-reset" method="post" class="inline-form" data-bevestig="Tweestapsverificatie van <%= l.naam %> uitschakelen? Doe dit alleen als dit lid geen toegang meer heeft tot de authenticator-app en geen herstelcodes heeft.">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                      <button class="btn btn--ghost btn--sm" type="submit" title="2FA resetten">Reset</button>
+                    </form>
+                  <% } %>
+                <% } else { %>
+                  <span class="badge">Uit</span>
+                <% } %>
+              </td>
+              <td>
                 <% if (l.id !== user.id) { %>
                   <div class="flex" style="gap:6px;">
                     <form action="/beheer/lid/<%= l.id %>/status" method="post" class="inline-form">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                       <button class="btn btn--ghost btn--sm" type="submit"><%= l.actief ? 'Deactiveren' : 'Activeren' %></button>
                     </form>
                     <form action="/beheer/lid/<%= l.id %>/verwijderen" method="post" class="inline-form" data-bevestig="Dit lid definitief verwijderen? Alle vacatures en projecten van dit lid verdwijnen ook.">
-                      <button class="btn btn--danger btn--sm" type="submit">×</button>
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                      <button class="btn btn--danger btn--sm" type="submit" aria-label="Verwijderen">×</button>
                     </form>
                   </div>
                 <% } else { %>
@@ -64,6 +81,6 @@
         </tbody>
       </table>
     </div>
-    <p class="muted" style="margin-top:16px; font-size:.85rem;">Tip: zet een lid op <strong>Brigade</strong> om die persoon de veteranenhub te laten beheren. <strong>Admin</strong> geeft volledige toegang tot dit beheerpaneel.</p>
+    <p class="muted" style="margin-top:16px; font-size:.85rem;">Tip: zet een lid op <strong>Brigade</strong> om die persoon de veteranenhub te laten beheren. <strong>Admin</strong> geeft volledige toegang tot dit beheerpaneel. Met <strong>Reset</strong> schakel je de tweestapsverificatie van een lid uit dat zijn telefoon en herstelcodes kwijt is.</p>
   </div>
 </section>

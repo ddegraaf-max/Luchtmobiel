@@ -16,8 +16,10 @@ async function attachUser(req, res, next) {
     );
     const u = rows[0];
     if (!u || !u.actief) {
-      return req.session.destroy(() => {
-        res.clearCookie('connect.sid');
+      // Account bestaat niet meer of is gedeactiveerd: uitloggen met een verse,
+      // lege sessie (regenerate i.p.v. destroy, zodat req.session blijft bestaan).
+      return req.session.regenerate((err) => {
+        if (err) console.error('[auth] sessie vernieuwen mislukt:', err.message);
         next();
       });
     }

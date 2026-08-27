@@ -15,7 +15,7 @@
 <section class="section section--tight">
   <div class="wrap">
     <form method="get" class="filterbalk">
-      <select name="categorie" onchange="this.form.submit()">
+      <select name="categorie" data-auto-submit>
         <option value="">Alle categorieën</option>
         <% categorieen.forEach(function(c){ %>
           <option value="<%= c %>" <%= categorie === c ? 'selected' : '' %>><%= c %></option>

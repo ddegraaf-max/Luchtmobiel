@@ -35,7 +35,7 @@
                 <img loading="lazy" src="/media/<%= f.media_id %>" alt="<%= f.bijschrift || '' %>">
                 <% if (f.bijschrift) { %><figcaption><%= f.bijschrift %></figcaption><% } %>
                 <% if (magBeheren) { %>
-                  <form action="/agenda/<%= evenement.id %>/foto/<%= f.id %>/verwijderen" method="post" onsubmit="return confirm('Foto verwijderen?');" style="margin-top:6px;">
+                  <form action="/agenda/<%= evenement.id %>/foto/<%= f.id %>/verwijderen" method="post" data-bevestig="Foto verwijderen?" style="margin-top:6px;"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <button class="btn btn--ghost btn--sm" type="submit">Verwijderen</button>
                   </form>
                 <% } %>
@@ -46,7 +46,7 @@
           <p class="muted">Nog geen foto's bij dit evenement.</p>
         <% } %>
         <% if (magBeheren) { %>
-          <form action="/agenda/<%= evenement.id %>/foto" method="post" enctype="multipart/form-data" class="card" style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+          <form action="/agenda/<%= evenement.id %>/foto?_csrf=<%= csrfToken %>" method="post" enctype="multipart/form-data" class="card" style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <input type="file" name="foto" accept="image/*" required style="flex:1; min-width:200px;">
             <input type="text" name="bijschrift" placeholder="Bijschrift (optioneel)" style="flex:1; min-width:180px;">
             <button class="btn btn--primary btn--sm" type="submit">Foto toevoegen</button>
@@ -60,7 +60,7 @@
             <strong>Beheer</strong>
             <div style="display:flex; gap:8px;">
               <a href="/agenda/<%= evenement.id %>/bewerken" class="btn btn--ghost btn--sm">Bewerken</a>
-              <form action="/agenda/<%= evenement.id %>/verwijderen" method="post" class="inline-form" onsubmit="return confirm('Dit evenement verwijderen?');">
+              <form action="/agenda/<%= evenement.id %>/verwijderen" method="post" class="inline-form" data-bevestig="Dit evenement verwijderen?"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <button class="btn btn--ghost btn--sm" type="submit">Verwijderen</button>
               </form>
             </div>
@@ -95,11 +95,11 @@
             <a href="/inloggen" class="btn btn--primary btn--block">Inloggen</a>
           <% } else if (mijnAanmelding) { %>
             <div class="flash flash--succes" style="margin-bottom:14px;">Je bent aangemeld<%= mijnAanmelding.aantal > 1 ? ' met ' + mijnAanmelding.aantal + ' personen' : '' %>.</div>
-            <form action="/agenda/<%= evenement.id %>/afmelden" method="post" class="inline-form">
+            <form action="/agenda/<%= evenement.id %>/afmelden" method="post" class="inline-form"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
               <button class="btn btn--ghost btn--block" type="submit">Afmelden</button>
             </form>
           <% } else { %>
-            <form action="/agenda/<%= evenement.id %>/aanmelden" method="post" class="stack">
+            <form action="/agenda/<%= evenement.id %>/aanmelden" method="post" class="stack"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
               <div class="veld">
                 <label for="aantal">Aantal personen</label>
                 <input type="number" id="aantal" name="aantal" value="1" min="1" max="10">

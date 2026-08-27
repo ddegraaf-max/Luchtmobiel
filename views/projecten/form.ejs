@@ -11,7 +11,7 @@
 <section class="section">
   <div class="wrap" style="max-width:760px;">
     <% if (fout) { %><div class="flash flash--fout"><%= fout %></div><% } %>
-    <form action="<%= actie %>" method="post" enctype="multipart/form-data" class="form-card">
+    <form action="<%= actie %>?_csrf=<%= csrfToken %>" method="post" enctype="multipart/form-data" class="form-card"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <div class="veld">
         <label for="titel">Titel *</label>
         <input type="text" id="titel" name="titel" value="<%= project.titel || '' %>" required>

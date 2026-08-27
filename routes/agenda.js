@@ -1,40 +1,37 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
 const pool = require('../db/pool');
-const { requireLogin, requireRedactie } = require('../middleware/auth');
+const { requireLogin, requireRedactie, idParams } = require('../middleware/auth');
 const { isoLokaal, formatDatumLang, formatTijd } = require('../lib/helpers');
 const { sendMail, mailLayout, escHtml } = require('../lib/mail');
+const { afbeelding, bewaarAfbeelding } = require('../lib/upload');
 
 const CATEGORIEEN = ['Ceremonieel', 'Sportief', 'Excursie', 'Netwerk', 'Overig'];
 
-const upload = multer({
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 2 * 1024 * 1024 },
-  fileFilter: (req, file, cb) => cb(null, /^image\/(png|jpe?g|webp|gif)$/.test(file.mimetype))
-});
+idParams(router, ['id', 'fotoId']);
+const uploadAfbeelding = afbeelding('afbeelding', { maxMb: 2 });
+const uploadFoto = afbeelding('foto', { maxMb: 6 });
 
-async function bewaarAfbeelding(file, uid) {
-  if (!file) return null;
-  const m = await pool.query(
-    'INSERT INTO media (mime, data, eigenaar_id) VALUES ($1,$2,$3) RETURNING id',
-    [file.mimetype, file.buffer, uid]
-  );
-  return m.rows[0].id;
-}
-
+const DATUMTIJD = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/;
 function leesFormulier(body) {
   const maxp = parseInt(body.max_plaatsen, 10);
-  return {
-    titel: (body.titel || '').trim(),
+  const start = typeof body.start_op === 'string' ? body.start_op.trim() : '';
+  const eind = (typeof body.eind_op === 'string' ? body.eind_op.trim() : '') || null;
+  const d = {
+    titel: typeof body.titel === 'string' ? body.titel.trim().slice(0, 200) : '',
     categorie: CATEGORIEEN.includes(body.categorie) ? body.categorie : null,
-    omschrijving: body.omschrijving || null,
-    locatie: body.locatie || null,
-    start_op: (body.start_op || '').trim(),
-    eind_op: (body.eind_op || '').trim() || null,
+    omschrijving: typeof body.omschrijving === 'string' && body.omschrijving.trim() ? body.omschrijving.slice(0, 10000) : null,
+    locatie: typeof body.locatie === 'string' && body.locatie.trim() ? body.locatie.trim().slice(0, 200) : null,
+    start_op: DATUMTIJD.test(start) ? start : '',
+    eind_op: eind && DATUMTIJD.test(eind) ? eind : null,
     aanmelden: body.aanmelden === 'on' || body.aanmelden === 'true' || body.aanmelden === '1',
     max_plaatsen: Number.isFinite(maxp) && maxp > 0 ? maxp : null
   };
+  if (!d.titel || !d.start_op) d.fout = 'Vul minimaal een titel en een geldige startdatum/tijd in.';
+  else if (eind && !d.eind_op) d.fout = 'De einddatum/tijd is ongeldig.';
+  else if (d.eind_op && d.eind_op < d.start_op) d.fout = 'Het einde ligt vóór het begin.';
+  else d.fout = null;
+  return d;
 }
 
 // Overzicht
@@ -70,12 +67,12 @@ router.get('/nieuw', requireRedactie, (req, res) => {
   });
 });
 
-router.post('/nieuw', requireRedactie, upload.single('afbeelding'), async (req, res) => {
+router.post('/nieuw', requireRedactie, uploadAfbeelding, async (req, res) => {
   const d = leesFormulier(req.body);
-  if (!d.titel || !d.start_op) {
+  if (d.fout || req.uploadFout) {
     return res.status(400).render('agenda/form', {
       title: 'Evenement toevoegen', evenement: req.body, categorieen: CATEGORIEEN,
-      actie: '/agenda/nieuw', fout: 'Vul minimaal een titel en een startdatum/tijd in.'
+      actie: '/agenda/nieuw', fout: req.uploadFout || d.fout
     });
   }
   try {
@@ -225,14 +222,14 @@ router.get('/:id/bewerken', requireRedactie, async (req, res) => {
   });
 });
 
-router.post('/:id/bewerken', requireRedactie, upload.single('afbeelding'), async (req, res) => {
+router.post('/:id/bewerken', requireRedactie, uploadAfbeelding, async (req, res) => {
   const bestaand = (await pool.query('SELECT * FROM evenementen WHERE id = $1', [req.params.id])).rows[0];
   if (!bestaand) return res.status(404).render('error', { title: 'Niet gevonden', bericht: 'Dit evenement bestaat niet.' });
   const d = leesFormulier(req.body);
-  if (!d.titel || !d.start_op) {
+  if (d.fout || req.uploadFout) {
     return res.status(400).render('agenda/form', {
       title: 'Evenement bewerken', evenement: { ...bestaand, ...req.body }, categorieen: CATEGORIEEN,
-      actie: '/agenda/' + bestaand.id + '/bewerken', fout: 'Vul minimaal een titel en een startdatum/tijd in.'
+      actie: '/agenda/' + bestaand.id + '/bewerken', fout: req.uploadFout || d.fout
     });
   }
   try {
@@ -273,7 +270,7 @@ router.get('/:id/ical', async (req, res) => {
     else {
       const [d, t] = ev.start_op.split('T');
       const [Y, M, D] = d.split('-').map(Number);
-      const [h, mi] = t.split(':').map(Number);
+      const [h, mi] = (t || '00:00').split(':').map(Number);
       const e = new Date(Y, M - 1, D, h, mi); e.setHours(e.getHours() + 2);
       const p = (n) => String(n).padStart(2, '0');
       dtend = `${e.getFullYear()}${p(e.getMonth() + 1)}${p(e.getDate())}T${p(e.getHours())}${p(e.getMinutes())}00`;
@@ -302,21 +299,19 @@ router.get('/:id/ical', async (req, res) => {
 });
 
 // Foto toevoegen aan een evenement (beheer)
-router.post('/:id/foto', requireRedactie, upload.single('foto'), async (req, res) => {
+router.post('/:id/foto', requireRedactie, uploadFoto, async (req, res) => {
   try {
     const ev = (await pool.query('SELECT id FROM evenementen WHERE id = $1', [req.params.id])).rows[0];
     if (!ev) return res.redirect('/agenda');
-    if (!req.file) {
-      req.session.flash = { type: 'fout', message: 'Kies een geldige afbeelding (JPG/PNG/WebP).' };
+    if (!req.file || req.uploadFout) {
+      req.session.flash = { type: 'fout', message: req.uploadFout || 'Kies een geldige afbeelding (JPG/PNG/WebP).' };
       return res.redirect('/agenda/' + ev.id);
     }
-    const m = await pool.query(
-      'INSERT INTO media (mime, data, eigenaar_id) VALUES ($1,$2,$3) RETURNING id',
-      [req.file.mimetype, req.file.buffer, req.session.user.id]
-    );
+    const mediaId = await bewaarAfbeelding(req.file, req.session.user.id);
+    const bijschrift = typeof req.body.bijschrift === 'string' ? req.body.bijschrift.trim().slice(0, 200) : '';
     await pool.query(
       'INSERT INTO galerij (media_id, pagina, evenement_id, bijschrift, auteur_id) VALUES ($1,$2,$3,$4,$5)',
-      [m.rows[0].id, 'evenement', ev.id, (req.body.bijschrift || '').trim() || null, req.session.user.id]
+      [mediaId, 'evenement', ev.id, bijschrift || null, req.session.user.id]
     );
     req.session.flash = { type: 'succes', message: 'Foto toegevoegd.' };
   } catch (err) {

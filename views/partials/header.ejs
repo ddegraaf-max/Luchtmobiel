@@ -22,7 +22,7 @@
         <div class="nav-mobiel-acties">
           <% if (user) { %>
             <a href="/profiel" class="btn btn--ghost btn--sm">Mijn profiel</a>
-            <form action="/uitloggen" method="post" class="inline-form"><button class="btn btn--primary btn--sm" type="submit">Uitloggen</button></form>
+            <form action="/uitloggen" method="post" class="inline-form"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="btn btn--primary btn--sm" type="submit">Uitloggen</button></form>
           <% } else { %>
             <a href="/inloggen" class="btn btn--ghost btn--sm">Inloggen</a>
             <a href="/registreren" class="btn btn--primary btn--sm">Word lid</a>
@@ -33,7 +33,7 @@
       <div class="nav-cta">
         <% if (user) { %>
           <a href="/profiel" class="btn btn--ghost btn--sm">Mijn profiel</a>
-          <form action="/uitloggen" method="post" class="inline-form">
+          <form action="/uitloggen" method="post" class="inline-form"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <button class="btn btn--primary btn--sm" type="submit">Uitloggen</button>
           </form>
         <% } else { %>

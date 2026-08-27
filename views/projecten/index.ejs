@@ -16,7 +16,7 @@
 <section class="section section--tight">
   <div class="wrap">
     <form method="get" class="filterbalk">
-      <select name="type" onchange="this.form.submit()">
+      <select name="type" data-auto-submit>
         <option value="">Alle soorten steun</option>
         <% steuntypes.forEach(function(s){ %>
           <option value="<%= s %>" <%= type === s ? 'selected' : '' %>><%= s %></option>

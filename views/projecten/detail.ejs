@@ -31,7 +31,7 @@
           <hr class="divider">
           <div class="flex">
             <a href="/projecten/<%= project.id %>/bewerken" class="btn btn--ghost btn--sm">Bewerken</a>
-            <form action="/projecten/<%= project.id %>/verwijderen" method="post" class="inline-form" data-bevestig="Dit project verwijderen?">
+            <form action="/projecten/<%= project.id %>/verwijderen" method="post" class="inline-form" data-bevestig="Dit project verwijderen?"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
               <button class="btn btn--danger btn--sm" type="submit">Verwijderen</button>
             </form>
           </div>
@@ -69,7 +69,7 @@
               <div class="flash flash--succes mb-0">Je hebt je aangemeld voor dit project.</div>
             <% } else { %>
               <h3 style="font-size:1rem;">Wil je helpen?</h3>
-              <form action="/projecten/<%= project.id %>/aanmelden" method="post" class="stack">
+              <form action="/projecten/<%= project.id %>/aanmelden" method="post" class="stack"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <textarea name="bericht" placeholder="Optioneel: hoe kun of wil je bijdragen?" style="min-height:90px;"></textarea>
                 <button type="submit" class="btn btn--primary btn--block">Aanmelden voor dit project</button>
               </form>

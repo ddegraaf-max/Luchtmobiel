@@ -23,7 +23,7 @@
           <hr class="divider">
           <div class="flex">
             <a href="/vacatures/<%= vacature.id %>/bewerken" class="btn btn--ghost btn--sm">Bewerken</a>
-            <form action="/vacatures/<%= vacature.id %>/verwijderen" method="post" class="inline-form" data-bevestig="Deze vacature verwijderen?">
+            <form action="/vacatures/<%= vacature.id %>/verwijderen" method="post" class="inline-form" data-bevestig="Deze vacature verwijderen?"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
               <button class="btn btn--danger btn--sm" type="submit">Verwijderen</button>
             </form>
           </div>

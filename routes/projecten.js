@@ -1,27 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
 const pool = require('../db/pool');
-const { requireLogin } = require('../middleware/auth');
+const { requireLogin, idParams } = require('../middleware/auth');
 const { netteUrl, isEmail } = require('../lib/helpers');
 const { sendMail, mailLayout, escHtml } = require('../lib/mail');
+const { afbeelding, bewaarAfbeelding } = require('../lib/upload');
 
 const STEUNTYPES = ['Financieel', 'Vrijwilligers', 'Expertise', 'Materiaal', 'Bekendheid', 'Overig'];
 
-const upload = multer({
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 2 * 1024 * 1024 },
-  fileFilter: (req, file, cb) => cb(null, /^image\/(png|jpe?g|webp|gif)$/.test(file.mimetype))
-});
-
-async function bewaarAfbeelding(file, uid) {
-  if (!file) return null;
-  const m = await pool.query(
-    'INSERT INTO media (mime, data, eigenaar_id) VALUES ($1,$2,$3) RETURNING id',
-    [file.mimetype, file.buffer, uid]
-  );
-  return m.rows[0].id;
-}
+idParams(router);
+const uploadAfbeelding = afbeelding('afbeelding', { maxMb: 2 });
 
 // Overzicht
 router.get('/', async (req, res) => {
@@ -47,12 +35,12 @@ router.get('/nieuw', requireLogin, (req, res) => {
   });
 });
 
-router.post('/nieuw', requireLogin, upload.single('afbeelding'), async (req, res) => {
+router.post('/nieuw', requireLogin, uploadAfbeelding, async (req, res) => {
   const { titel, samenvatting, omschrijving, steun_type, doel, plaats, contact_email } = req.body;
-  if (!titel) {
+  if (typeof titel !== 'string' || !titel.trim() || req.uploadFout) {
     return res.status(400).render('projecten/form', {
       title: 'Project plaatsen', project: req.body, steuntypes: STEUNTYPES,
-      actie: '/projecten/nieuw', fout: 'Geef het project minimaal een titel.'
+      actie: '/projecten/nieuw', fout: req.uploadFout || 'Geef het project minimaal een titel.'
     });
   }
   try {
@@ -149,13 +137,17 @@ router.get('/:id/bewerken', requireLogin, async (req, res) => {
   });
 });
 
-router.post('/:id/bewerken', requireLogin, upload.single('afbeelding'), async (req, res) => {
+router.post('/:id/bewerken', requireLogin, uploadAfbeelding, async (req, res) => {
   const project = (await pool.query('SELECT * FROM projecten WHERE id = $1', [req.params.id])).rows[0];
   if (!project) return res.status(404).render('error', { title: 'Niet gevonden', bericht: 'Dit project bestaat niet.' });
   if (req.session.user.id !== project.user_id && req.session.user.rol !== 'admin')
     return res.status(403).render('error', { title: 'Geen toegang', bericht: 'Je mag dit project niet bewerken.' });
 
   const { titel, samenvatting, omschrijving, steun_type, doel, plaats, contact_email } = req.body;
+  if (typeof titel !== 'string' || !titel.trim() || req.uploadFout) {
+    req.session.flash = { type: 'fout', message: req.uploadFout || 'Geef het project minimaal een titel.' };
+    return res.redirect('/projecten/' + project.id + '/bewerken');
+  }
   const afbId = (await bewaarAfbeelding(req.file, req.session.user.id)) || project.afbeelding_id;
   await pool.query(
     `UPDATE projecten SET titel=$1, samenvatting=$2, omschrijving=$3, steun_type=$4, doel=$5, plaats=$6, afbeelding_id=$7, contact_email=$8 WHERE id=$9`,

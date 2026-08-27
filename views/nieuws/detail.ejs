@@ -17,7 +17,7 @@
     <% if (magBeheren) { %>
       <div class="flex" style="gap:8px; margin-top:24px;">
         <a href="/nieuws/<%= bericht.id %>/bewerken" class="btn btn--ghost btn--sm">Bewerken</a>
-        <form action="/nieuws/<%= bericht.id %>/verwijderen" method="post" class="inline-form" onsubmit="return confirm('Bericht verwijderen?');">
+        <form action="/nieuws/<%= bericht.id %>/verwijderen" method="post" class="inline-form" data-bevestig="Bericht verwijderen?"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <button class="btn btn--ghost btn--sm" type="submit">Verwijderen</button>
         </form>
       </div>

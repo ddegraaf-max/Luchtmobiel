@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db/pool');
-const { requireLogin, requireRedactie } = require('../middleware/auth');
+const { requireLogin, requireRedactie, idParams } = require('../middleware/auth');
+
+idParams(router);
 const { netteUrl } = require('../lib/helpers');
 const { getGalerij } = require('../lib/galerij');
 
@@ -34,7 +36,7 @@ router.get('/', async (req, res) => {
 // Resource toevoegen (brigade/admin)
 router.post('/resource', requireLogin, requireRedactie, async (req, res) => {
   const { titel, categorie, omschrijving, link } = req.body;
-  if (titel) {
+  if (typeof titel === 'string' && titel.trim()) {
     await pool.query(
       'INSERT INTO veteraan_resources (titel, categorie, omschrijving, link, auteur_id) VALUES ($1,$2,$3,$4,$5)',
       [titel.trim(), categorie || 'Overig', omschrijving || null, link ? netteUrl(link) : null, req.session.user.id]

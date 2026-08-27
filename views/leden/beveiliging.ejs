@@ -1,0 +1,95 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Mijn account</span>
+      <h1>Beveiliging</h1>
+      <p>Wachtwoord, tweestapsverificatie en ingelogde apparaten.</p>
+    </div>
+    <a href="/profiel" class="btn btn--ghost">← Mijn profiel</a>
+  </div>
+</div>
+
+<section class="section">
+  <div class="wrap" style="max-width:760px;">
+    <% if (fout) { %><div class="flash flash--fout"><%= fout %></div><% } %>
+
+    <!-- Tweestapsverificatie -->
+    <div class="form-card">
+      <div class="flex between" style="align-items:flex-start; margin-bottom:8px;">
+        <h3 style="margin:0;">Tweestapsverificatie (authenticator-app)</h3>
+        <% if (profiel.totp_ingeschakeld) { %>
+          <span class="badge badge--olive">Ingeschakeld</span>
+        <% } else { %>
+          <span class="badge">Uit</span>
+        <% } %>
+      </div>
+      <p class="muted">Naast je wachtwoord vul je bij het inloggen een code in uit een app zoals Google Authenticator, Microsoft Authenticator, Authy of 1Password. Zo kan niemand met alleen je wachtwoord in je account.</p>
+
+      <% if (profiel.totp_ingeschakeld) { %>
+        <p>Je hebt nog <strong><%= aantalCodes %></strong> ongebruikte herstelcode<%= aantalCodes === 1 ? '' : 's' %>. Herstelcodes gebruik je om in te loggen als je je telefoon kwijt bent.</p>
+        <% if (aantalCodes <= 2) { %><div class="flash flash--info">Je herstelcodes zijn bijna op. Maak hieronder nieuwe aan.</div><% } %>
+
+        <details class="details">
+          <summary>Nieuwe herstelcodes maken</summary>
+          <form action="/profiel/beveiliging/2fa/herstelcodes" method="post" class="stack" style="margin-top:14px;">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <p class="muted" style="margin:0;">Je huidige herstelcodes vervallen. Bevestig met je wachtwoord en een code uit je app.</p>
+            <div class="veld-rij">
+              <div class="veld"><label for="hc-ww">Wachtwoord</label><input type="password" id="hc-ww" name="wachtwoord" required autocomplete="current-password"></div>
+              <div class="veld"><label for="hc-code">Code uit app</label><input type="text" id="hc-code" name="code" inputmode="numeric" autocomplete="one-time-code" required></div>
+            </div>
+            <button type="submit" class="btn btn--ghost">Nieuwe herstelcodes maken</button>
+          </form>
+        </details>
+
+        <details class="details">
+          <summary>Tweestapsverificatie uitschakelen</summary>
+          <form action="/profiel/beveiliging/2fa/uitschakelen" method="post" class="stack" style="margin-top:14px;" data-bevestig="Weet je zeker dat je tweestapsverificatie wilt uitschakelen? Je account is dan minder goed beveiligd.">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <p class="muted" style="margin:0;">Bevestig met je wachtwoord en een code uit je app (of een herstelcode).</p>
+            <div class="veld-rij">
+              <div class="veld"><label for="uit-ww">Wachtwoord</label><input type="password" id="uit-ww" name="wachtwoord" required autocomplete="current-password"></div>
+              <div class="veld"><label for="uit-code">Code</label><input type="text" id="uit-code" name="code" inputmode="numeric" autocomplete="one-time-code" required></div>
+            </div>
+            <button type="submit" class="btn btn--danger">Uitschakelen</button>
+          </form>
+        </details>
+      <% } else if (!sleutelOk) { %>
+        <div class="flash flash--info mb-0">Tweestapsverificatie is nog niet beschikbaar op dit platform. De beheerder moet eerst de variabele <code>ENCRYPTIE_SLEUTEL</code> (of <code>SESSION_SECRET</code>) instellen.</div>
+      <% } else { %>
+        <form action="/profiel/beveiliging/2fa/start" method="post" class="stack">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <div class="veld" style="margin:0;">
+            <label for="start-ww">Bevestig met je wachtwoord</label>
+            <input type="password" id="start-ww" name="wachtwoord" required autocomplete="current-password">
+          </div>
+          <button type="submit" class="btn btn--primary">Authenticator instellen</button>
+        </form>
+      <% } %>
+    </div>
+
+    <!-- Wachtwoord wijzigen -->
+    <div class="form-card" style="margin-top:24px;">
+      <h3>Wachtwoord wijzigen</h3>
+      <form action="/profiel/beveiliging/wachtwoord" method="post">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div class="veld"><label for="huidig">Huidig wachtwoord</label><input type="password" id="huidig" name="huidig" required autocomplete="current-password"></div>
+        <div class="veld-rij">
+          <div class="veld"><label for="nieuw">Nieuw wachtwoord</label><input type="password" id="nieuw" name="nieuw" required minlength="8" autocomplete="new-password"><span class="hint">Minimaal 8 tekens</span></div>
+          <div class="veld"><label for="nieuw2">Herhaal nieuw</label><input type="password" id="nieuw2" name="nieuw2" required minlength="8" autocomplete="new-password"></div>
+        </div>
+        <button type="submit" class="btn btn--ghost">Wachtwoord wijzigen</button>
+      </form>
+    </div>
+
+    <!-- Sessies -->
+    <div class="form-card" style="margin-top:24px;">
+      <h3>Ingelogde apparaten</h3>
+      <p class="muted">Ben je ergens ingelogd gebleven (bijv. op een gedeelde computer)? Log dan overal uit, behalve hier.</p>
+      <form action="/profiel/beveiliging/sessies" method="post">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button type="submit" class="btn btn--ghost">Uitloggen op alle andere apparaten</button>
+      </form>
+    </div>
+  </div>
+</section>

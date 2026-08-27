@@ -126,6 +126,23 @@ async function init() {
     );
   `);
 
+  // Beveiliging: tweestapsverificatie en wachtwoord-herstel (idempotent)
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS totp_secret TEXT;`);
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS totp_ingeschakeld BOOLEAN NOT NULL DEFAULT false;`);
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS totp_laatste_stap BIGINT;`);
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS backup_codes TEXT[] NOT NULL DEFAULT '{}';`);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS wachtwoord_resets (
+      id          SERIAL PRIMARY KEY,
+      user_id     INTEGER REFERENCES users(id) ON DELETE CASCADE,
+      token_hash  TEXT UNIQUE NOT NULL,
+      verloopt_op TIMESTAMPTZ NOT NULL,
+      gebruikt_op TIMESTAMPTZ,
+      aangemaakt  TIMESTAMPTZ DEFAULT now()
+    );
+  `);
+  await pool.query(`CREATE INDEX IF NOT EXISTS wachtwoord_resets_user_idx ON wachtwoord_resets(user_id);`);
+
   // Adminaccount seeden vanuit omgevingsvariabelen.
   const adminEmail = (process.env.ADMIN_EMAIL || '').trim().toLowerCase();
   const adminPass = process.env.ADMIN_PASSWORD;
@@ -134,7 +151,7 @@ async function init() {
   if (adminEmail && adminPass) {
     const { rows } = await pool.query('SELECT id, rol FROM users WHERE email = $1', [adminEmail]);
     if (rows.length === 0) {
-      const hash = await bcrypt.hash(adminPass, 10);
+      const hash = await bcrypt.hash(adminPass, 12);
       await pool.query(
         `INSERT INTO users (naam, email, wachtwoord_hash, rol, actief)
          VALUES ($1, $2, $3, 'admin', true)`,

@@ -1,0 +1,27 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Beveiliging</span>
+      <h1><%= kop %></h1>
+      <p>Bewaar je herstelcodes goed.</p>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="wrap" style="max-width:760px;">
+    <div class="flash flash--succes">Tweestapsverificatie staat aan voor je account.</div>
+
+    <div class="form-card herstelcodes-kaart">
+      <h3 style="margin-top:0;">Jouw herstelcodes</h3>
+      <p class="muted"><%= intro %></p>
+      <ul class="herstelcodes">
+        <% codes.forEach(function(c){ %><li><code><%= c %></code></li><% }) %>
+      </ul>
+      <div class="flex" style="margin-top:20px;">
+        <button type="button" class="btn btn--ghost" data-print>Afdrukken</button>
+        <a href="/profiel/beveiliging" class="btn btn--primary">Ik heb ze bewaard</a>
+      </div>
+    </div>
+  </div>
+</section>

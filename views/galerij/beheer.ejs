@@ -14,7 +14,7 @@
     <div class="grid" style="grid-template-columns: minmax(280px, 360px) 1fr; gap: 28px; align-items:start;">
       <div class="card">
         <h3 style="margin-top:0;">Foto toevoegen</h3>
-        <form action="/galerij" method="post" enctype="multipart/form-data">
+        <form action="/galerij?_csrf=<%= csrfToken %>" method="post" enctype="multipart/form-data"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <div class="veld">
             <label for="pagina">Pagina</label>
             <select id="pagina" name="pagina">
@@ -48,7 +48,7 @@
                     <img src="/media/<%= f.media_id %>" alt="<%= f.bijschrift || '' %>">
                     <figcaption>
                       <%= f.bijschrift || 'Zonder bijschrift' %>
-                      <form action="/galerij/<%= f.id %>/verwijderen" method="post" class="confirm-delete" style="margin-top:8px;">
+                      <form action="/galerij/<%= f.id %>/verwijderen" method="post" data-bevestig="Deze foto verwijderen?" style="margin-top:8px;"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         <button type="submit" class="btn btn--danger btn--sm">Verwijderen</button>
                       </form>
                     </figcaption>

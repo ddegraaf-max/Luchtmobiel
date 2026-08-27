@@ -1,17 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
 const pool = require('../db/pool');
-const { requireRedactie } = require('../middleware/auth');
+const { requireRedactie, idParams } = require('../middleware/auth');
+const { afbeelding, bewaarAfbeelding } = require('../lib/upload');
 
-const upload = multer({
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 6 * 1024 * 1024 },
-  fileFilter: (req, file, cb) => {
-    if (/^image\/(png|jpe?g|webp|gif)$/.test(file.mimetype)) cb(null, true);
-    else cb(null, false);
-  }
-});
+idParams(router);
+const uploadFoto = afbeelding('foto', { maxMb: 6 });
 
 const PAGINAS = [
   { key: 'home', label: 'Homepage' },
@@ -31,23 +25,22 @@ router.get('/beheer', requireRedactie, async (req, res) => {
 });
 
 // Foto toevoegen
-router.post('/', requireRedactie, upload.single('foto'), async (req, res) => {
+router.post('/', requireRedactie, uploadFoto, async (req, res) => {
   try {
-    if (!req.file) {
-      req.session.flash = { type: 'fout', message: 'Kies een geldige afbeelding (JPG/PNG/WebP, max 6MB).' };
+    if (req.uploadFout || !req.file) {
+      req.session.flash = { type: 'fout', message: req.uploadFout || 'Kies een geldige afbeelding (JPG/PNG/WebP, max 6MB).' };
       return res.redirect('/galerij/beheer');
     }
     const pagina = PAGINAS.some(p => p.key === req.body.pagina) ? req.body.pagina : 'brigade';
-    const m = await pool.query(
-      'INSERT INTO media (mime, data, eigenaar_id) VALUES ($1, $2, $3) RETURNING id',
-      [req.file.mimetype, req.file.buffer, req.session.user.id]
-    );
+    const bijschrift = typeof req.body.bijschrift === 'string' ? req.body.bijschrift.trim().slice(0, 200) : '';
+    const mediaId = await bewaarAfbeelding(req.file, req.session.user.id);
     await pool.query(
       'INSERT INTO galerij (media_id, pagina, bijschrift, auteur_id) VALUES ($1, $2, $3, $4)',
-      [m.rows[0].id, pagina, (req.body.bijschrift || '').trim() || null, req.session.user.id]
+      [mediaId, pagina, bijschrift || null, req.session.user.id]
     );
     req.session.flash = { type: 'succes', message: 'Foto toegevoegd aan de galerij.' };
   } catch (e) {
+    console.error('[galerij upload]', e.message);
     req.session.flash = { type: 'fout', message: 'Uploaden mislukt. Probeer het opnieuw.' };
   }
   res.redirect('/galerij/beheer');

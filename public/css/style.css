@@ -546,3 +546,28 @@ h1, h2, h3, .hero h1, .paginakop h1, .beeldband h2 { overflow-wrap: break-word; 
 .auth-card form, .auth-card .veld { text-align: left; }
 .agenda-teaser .kaartje { color: var(--ink); }
 .agenda-teaser .kaartje:hover { border-color: var(--line-strong); text-decoration: none; }
+
+/* ============================================================
+   Beveiliging: 2FA, herstelcodes, wachtwoord vergeten
+   ============================================================ */
+.code-input { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 1.35rem; letter-spacing: .28em; text-align: center; }
+.link-knop { background: none; border: none; padding: 0; color: var(--maroon); font: inherit; font-size: .9rem; cursor: pointer; text-decoration: underline; }
+.details { border-top: 1px solid var(--line); padding: 14px 0 6px; }
+.details summary { cursor: pointer; font-weight: 700; color: var(--maroon); }
+.stappen { padding-left: 1.3em; margin: 0; display: grid; gap: 22px; }
+.stappen li { padding-left: .3em; }
+.stappen li::marker { color: var(--maroon); font-weight: 800; font-family: var(--font-display); }
+.qr-blok { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; margin-top: 12px; }
+.qr-blok img { width: 200px; height: 200px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); padding: 6px; }
+.geheim { display: inline-block; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 1rem; letter-spacing: .08em; background: var(--bone-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 8px 12px; user-select: all; word-break: break-all; }
+.herstelcodes { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
+.herstelcodes code { display: block; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 1.05rem; letter-spacing: .08em; background: var(--bone-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px; text-align: center; user-select: all; }
+.statbar--4 { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 680px) { .statbar--4 { grid-template-columns: 1fr 1fr; } }
+.logo-kiezer__beeld { position: relative; flex: none; }
+.avatar[hidden], .avatar[hidden] { display: none !important; }
+@media print {
+  .site-header, .site-footer, .heli-knop, .paginakop, .flash, .btn, [data-print] { display: none !important; }
+  .herstelcodes-kaart { border: none; padding: 0; }
+  body { background: #fff; }
+}

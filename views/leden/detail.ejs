@@ -12,7 +12,7 @@
           <% if (lid.rol === 'brigade') { %><span class="badge badge--brigade">Brigade</span><% } %>
         </h1>
         <% if (lid.bedrijf || lid.functie) { %>
-          <p style="margin:.4rem 0 0; color:var(--maroon); font-weight:600;"><%= [lid.functie, lid.bedrijf].filter(Boolean).join(' · ') %></p>
+          <p style="margin:.4rem 0 0; color:var(--sand); font-weight:600;"><%= [lid.functie, lid.bedrijf].filter(Boolean).join(' · ') %></p>
         <% } %>
       </div>
     </div>

@@ -1,0 +1,52 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Beveiliging</span>
+      <h1>Authenticator instellen</h1>
+      <p>Drie stappen en je account is extra beveiligd.</p>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="wrap" style="max-width:760px;">
+    <% if (fout) { %><div class="flash flash--fout"><%= fout %></div><% } %>
+
+    <div class="form-card">
+      <ol class="stappen">
+        <li>
+          <strong>Installeer een authenticator-app</strong> op je telefoon als je die nog niet hebt: bijvoorbeeld Google Authenticator, Microsoft Authenticator, Authy of 1Password.
+        </li>
+        <li>
+          <strong>Scan de QR-code</strong> met de app (kies "account toevoegen").
+          <div class="qr-blok">
+            <img src="<%= qr %>" alt="QR-code voor de authenticator-app" width="240" height="240">
+            <div>
+              <p class="muted" style="margin:0 0 6px;">Scannen lukt niet? Voer deze sleutel handmatig in:</p>
+              <code class="geheim"><%= geheim %></code>
+              <p class="muted" style="font-size:.8rem; margin:8px 0 0;">Type: op tijd gebaseerd (TOTP) · 6 cijfers · 30 seconden</p>
+            </div>
+          </div>
+        </li>
+        <li>
+          <strong>Voer de code in</strong> die de app nu laat zien.
+          <form action="/profiel/beveiliging/2fa" method="post" class="stack" style="margin-top:12px;">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <div class="veld" style="margin:0; max-width:260px;">
+              <label for="code">Code uit de app</label>
+              <input type="text" id="code" name="code" class="code-input" inputmode="numeric" autocomplete="one-time-code" placeholder="123 456" required autofocus maxlength="7">
+            </div>
+            <div class="flex">
+              <button type="submit" class="btn btn--primary">Inschakelen</button>
+            </div>
+          </form>
+        </li>
+      </ol>
+    </div>
+
+    <form action="/profiel/beveiliging/2fa/annuleren" method="post" style="margin-top:16px;">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button type="submit" class="link-knop">Annuleren</button>
+    </form>
+  </div>
+</section>

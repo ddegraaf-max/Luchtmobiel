@@ -17,7 +17,7 @@
   <div class="wrap">
     <form method="get" class="filterbalk">
       <input type="text" name="zoek" placeholder="Zoek op functie, bedrijf of plaats…" value="<%= zoek %>">
-      <label class="check" style="flex:none;"><input type="checkbox" name="veteraan" value="1" <%= alleenVeteraan ? 'checked' : '' %> onchange="this.form.submit()"> Alleen veteraanvriendelijk</label>
+      <label class="check" style="flex:none;"><input type="checkbox" name="veteraan" value="1" <%= alleenVeteraan ? 'checked' : '' %> data-auto-submit> Alleen veteraanvriendelijk</label>
       <button type="submit" class="btn btn--primary">Filter</button>
       <% if (zoek || alleenVeteraan) { %><a href="/vacatures" class="btn btn--ghost">Wis</a><% } %>
     </form>

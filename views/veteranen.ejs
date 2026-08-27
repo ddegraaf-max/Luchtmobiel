@@ -25,7 +25,7 @@
                     <% if (r.link) { %><a href="<%= r.link %>" target="_blank" rel="noopener" style="font-weight:600; font-size:.9rem;"><%= h.toonUrl(r.link) %> →</a><% } %>
                   </div>
                   <% if (magRedactie) { %>
-                    <form action="/veteranen/resource/<%= r.id %>/verwijderen" method="post" class="inline-form" data-bevestig="Deze hulpbron verwijderen?">
+                    <form action="/veteranen/resource/<%= r.id %>/verwijderen" method="post" class="inline-form" data-bevestig="Deze hulpbron verwijderen?"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
                       <button class="btn btn--danger btn--sm" type="submit">×</button>
                     </form>
                   <% } %>
@@ -54,7 +54,7 @@
           <div class="zijbalk">
             <span class="kicker" style="margin-bottom:10px;">Redactie</span>
             <h3 style="margin-top:0; font-size:1.05rem;">Hulpbron toevoegen</h3>
-            <form action="/veteranen/resource" method="post" class="stack">
+            <form action="/veteranen/resource" method="post" class="stack"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
               <div class="veld" style="margin:0;"><label for="titel">Titel</label><input type="text" id="titel" name="titel" required></div>
               <div class="veld" style="margin:0;">
                 <label for="categorie">Categorie</label>

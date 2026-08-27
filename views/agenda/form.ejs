@@ -12,7 +12,7 @@
   <div class="wrap" style="max-width:720px;">
     <% if (fout) { %><div class="flash flash--fout"><%= fout %></div><% } %>
 
-    <form action="<%= actie %>" method="post" enctype="multipart/form-data" class="form-card stack">
+    <form action="<%= actie %>?_csrf=<%= csrfToken %>" method="post" enctype="multipart/form-data" class="form-card stack"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <div class="veld">
         <label for="titel">Titel *</label>
         <input type="text" id="titel" name="titel" value="<%= evenement.titel || '' %>" required autofocus>

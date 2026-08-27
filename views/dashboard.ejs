@@ -14,6 +14,12 @@
 
 <section class="section">
   <div class="wrap">
+    <% if (!profiel.totp_ingeschakeld) { %>
+      <div class="flash flash--info" style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:center;">
+        <span>🔐 Beveilig je account extra met een authenticator-app (tweestapsverificatie).</span>
+        <a href="/profiel/beveiliging" class="btn btn--primary btn--sm">Nu instellen</a>
+      </div>
+    <% } %>
     <div class="grid grid--3" style="margin-bottom:36px;">
       <a href="/profiel" class="module">
         <h3>Mijn profiel</h3>

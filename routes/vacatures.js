@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db/pool');
-const { requireLogin } = require('../middleware/auth');
+const { requireLogin, idParams } = require('../middleware/auth');
 const { netteUrl, isEmail } = require('../lib/helpers');
 const { sendMail, mailLayout, escHtml } = require('../lib/mail');
+
+idParams(router);
 
 const DIENSTVERBANDEN = ['Fulltime', 'Parttime', 'Tijdelijk', 'Stage', 'Freelance/ZZP', 'Vrijwillig'];
 
@@ -44,7 +46,7 @@ router.get('/nieuw', requireLogin, (req, res) => {
 // Nieuw opslaan
 router.post('/nieuw', requireLogin, async (req, res) => {
   const { titel, bedrijf, plaats, dienstverband, omschrijving, link, contact_email, veteraan_vriendelijk } = req.body;
-  if (!titel) {
+  if (typeof titel !== 'string' || !titel.trim()) {
     return res.status(400).render('vacatures/form', {
       title: 'Vacature plaatsen', vacature: req.body, dienstverbanden: DIENSTVERBANDEN,
       actie: '/vacatures/nieuw', fout: 'Geef de vacature minimaal een titel.'
@@ -118,6 +120,10 @@ router.post('/:id/bewerken', requireLogin, async (req, res) => {
     return res.status(403).render('error', { title: 'Geen toegang', bericht: 'Je mag deze vacature niet bewerken.' });
 
   const { titel, bedrijf, plaats, dienstverband, omschrijving, link, contact_email, veteraan_vriendelijk } = req.body;
+  if (typeof titel !== 'string' || !titel.trim()) {
+    req.session.flash = { type: 'fout', message: 'Geef de vacature minimaal een titel.' };
+    return res.redirect('/vacatures/' + vacature.id + '/bewerken');
+  }
   await pool.query(
     `UPDATE vacatures SET titel=$1, bedrijf=$2, plaats=$3, dienstverband=$4, omschrijving=$5, link=$6, contact_email=$7, veteraan_vriendelijk=$8 WHERE id=$9`,
     [titel.trim(), bedrijf || null, plaats || null, dienstverband || null, omschrijving || null,

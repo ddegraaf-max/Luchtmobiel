@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db/pool');
-const { requireLogin } = require('../middleware/auth');
+const { requireLogin, idParams } = require('../middleware/auth');
+
+idParams(router);
 
 // Ledengids (besloten)
 router.get('/', requireLogin, async (req, res) => {

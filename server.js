@@ -45,6 +45,18 @@ app.set('layout', 'partials/layout');
 // Beveiligingsheaders (CSP, HSTS, nosniff, ...)
 app.use(headers);
 
+// Basis-locals meteen zetten, zodat óók een foutpagina die vroeg in de keten
+// wordt gerenderd (te groot verzoek, CSRF-fout, ...) altijd kan worden opgebouwd.
+app.use((req, res, next) => {
+  res.locals.h = helpers;
+  res.locals.siteNaam = 'Business Club Luchtmobiel';
+  res.locals.user = null;
+  res.locals.path = req.path;
+  res.locals.csrfToken = '';
+  res.locals.flash = null;
+  next();
+});
+
 // Body parsing
 app.use(express.urlencoded({ extended: false, limit: '2mb', parameterLimit: 200 }));
 
@@ -73,10 +85,10 @@ app.use(attachUser);
 app.use(csrf);
 app.use(geenCacheVoorIngelogd);
 app.use((req, res, next) => {
-  res.locals.h = helpers;
-  res.locals.flash = req.session.flash || null;
-  delete req.session.flash;
-  res.locals.siteNaam = 'Business Club Luchtmobiel';
+  if (req.session) {
+    res.locals.flash = req.session.flash || null;
+    delete req.session.flash;
+  }
   next();
 });
 

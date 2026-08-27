@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db/pool');
-const { requireRedactie } = require('../middleware/auth');
+const { requireRedactie, idParams } = require('../middleware/auth');
+
+idParams(router);
 
 function magBeheren(req) {
   const u = req.session.user;

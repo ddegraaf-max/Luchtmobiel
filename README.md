@@ -12,6 +12,7 @@ Een besloten netwerk waar leden (en de brigade) **zelf** alles beheren: hun prof
 - **Veteranenzaken** — een hub met hulpbronnen en passend werk, beheerd door de brigade en het bestuur.
 - **Zelfservice** — leden registreren met een toegangscode en beheren daarna alles zelf. Jij hoeft niets goed te keuren.
 - **Beheer** — jij bepaalt rollen (lid / brigade / admin) en kunt leden activeren of verwijderen.
+- **Veilig inloggen** — wachtwoord vergeten via e-mail, tweestapsverificatie met een authenticator-app (Google/Microsoft Authenticator, Authy, 1Password), herstelcodes, en bescherming tegen brute force en CSRF.
 
 Afbeeldingen worden in de **database** opgeslagen (niet op schijf), zodat ze een Railway-deploy altijd overleven.
 
@@ -44,8 +45,15 @@ Ga naar je app-service → tabblad **Variables** en voeg toe:
 | `ADMIN_NAAM` | jouw naam, bijv. `Daniël de Graaf` |
 | `REGISTRATIE_CODE` | de toegangscode voor nieuwe leden, bijv. `LUCHTMOBIEL` |
 | `NODE_ENV` | `production` |
+| `APP_URL` | het adres van de site, bijv. `https://jouw-app.up.railway.app` (voor links in e-mails) |
+| `ENCRYPTIE_SLEUTEL` | (aanbevolen) nog een lange willekeurige tekst; hiermee worden 2FA-geheimen versleuteld. Daarna **niet meer wijzigen** |
+| `RESEND_API_KEY` | API-sleutel van [resend.com](https://resend.com) voor e-mail (welkomstmail, wachtwoord vergeten, meldingen) |
+| `MAIL_VAN` | afzender, bijv. `BCLMB <noreply@bclmb.nl>` (domein in Resend verifiëren) |
+| `MAIL_BESTUUR` | (optioneel) e-mailadres van het bestuur voor meldingen over nieuwe leden, vacatures en aanmeldingen |
 
 > `DATABASE_URL` staat er al door stap 3 — die laat je met rust.
+>
+> **Let op:** `SESSION_SECRET` en `ENCRYPTIE_SLEUTEL` zijn geheimen. Wijzig je `ENCRYPTIE_SLEUTEL` (of `SESSION_SECRET` als je geen aparte encryptiesleutel hebt), dan werken de authenticator-apps van leden niet meer en moeten zij met een herstelcode inloggen of door jou gereset worden.
 
 ### Stap 5 — Starten en openen
 1. Railway bouwt en start de app automatisch (`npm start`).
@@ -85,6 +93,28 @@ Gebruik bij voorkeur een PNG met transparante achtergrond (vierkant, bijv. 300×
 
 > **Belangrijk over rechten:** de officiële emblemen zijn beschermd beeldmateriaal van Defensie. Vraag het juiste, gelicentieerde beeld en toestemming op bij het regiment / de traditiecommissie, bij 11 Luchtmobiele Brigade of via het Mediacentrum Defensie. Als aan de brigade verbonden businessclub heb je daar doorgaans korte lijnen voor.
 
+## Beveiliging: wachtwoord vergeten & tweestapsverificatie
+
+### Wachtwoord vergeten
+Op de inlogpagina staat **Wachtwoord vergeten?**. Een lid vult zijn e-mailadres in en krijgt een link die 1 uur geldig is en één keer werkt. Hiervoor moet e-mail zijn ingesteld (`RESEND_API_KEY` en bij voorkeur `APP_URL`). Zonder e-mailinstelling ziet het lid een melding om contact op te nemen met het bestuur.
+
+### Tweestapsverificatie (authenticator-app)
+Elk lid kan onder **Mijn profiel → Beveiliging** een authenticator-app koppelen:
+1. Wachtwoord bevestigen, QR-code scannen met de app, code invoeren.
+2. Het lid krijgt **8 herstelcodes** te zien (eenmalig). Daarmee kan het lid inloggen als de telefoon kwijt is.
+3. Bij het inloggen wordt na het wachtwoord om de 6-cijferige code gevraagd.
+
+Is een lid zowel de telefoon als de herstelcodes kwijt? Dan klik je in **Beheer** bij dat lid op **Reset** (kolom 2FA). Het lid krijgt hiervan een e-mail en kan daarna opnieuw een authenticator instellen.
+
+Doe dit als beheerder ook zelf: jouw account heeft de meeste rechten.
+
+### Wat er verder is beveiligd
+- Wachtwoorden met bcrypt (12 rondes); 2FA-geheimen versleuteld (AES-256-GCM); van herstelcodes en herstellinks alleen een hash in de database.
+- Bescherming tegen brute force (limiet op inlog-, registratie-, herstel- en 2FA-pogingen).
+- CSRF-tokens op alle formulieren, veilige HTTP-headers (CSP, HSTS, nosniff, geen framing).
+- Nieuwe sessie-id bij inloggen; bij wachtwoordwijziging of -herstel worden andere apparaten uitgelogd; deactiveren door de beheerder werkt direct.
+- Geüploade afbeeldingen worden op inhoud gecontroleerd (alleen echte JPG/PNG/WebP/GIF, geen SVG).
+
 ## De toegangscode aanpassen
 Wil je de code wijzigen (bijv. na een nieuwe ledenwerving)? Pas de variabele `REGISTRATIE_CODE` op Railway aan en de app gebruikt direct de nieuwe code.
 Laat je `REGISTRATIE_CODE` helemaal leeg, dan mag iedereen zonder code registreren.
@@ -96,11 +126,13 @@ Laat je `REGISTRATIE_CODE` helemaal leeg, dan mag iedereen zonder code registrer
 2. Kopieer `.env.example` naar `.env` en vul de waarden in.
 3. `npm install`
 4. `npm start` → open http://localhost:3000
+5. `npm test` draait de unit-tests.
 
 ---
 
 ## Techniek in het kort
 - **Node.js + Express** met **EJS**-templates.
 - **PostgreSQL** voor alle data; sessies en afbeeldingen staan óók in de database (deploy-bestendig).
-- Wachtwoorden veilig opgeslagen met **bcrypt**.
+- Wachtwoorden veilig opgeslagen met **bcrypt**; tweestapsverificatie (TOTP, RFC 6238) zonder externe dienst.
+- Tests: `npm test` (TOTP-testvectoren, versleuteling, herstelcodes, uploads).
 - `trust proxy` + veilige cookies in productie (voorkomt https/cookie-problemen op Railway).
