@@ -152,6 +152,27 @@
 </section>
 <% } %>
 
+<% if (partners.length) { %>
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="flex between" style="align-items:baseline; margin-bottom:22px;">
+      <div><span class="kicker">Partners &amp; initiatieven</span><h2 style="margin:6px 0 0;">Samen sterker</h2></div>
+      <a href="/partners" class="muted" style="font-weight:600;">Alle partners →</a>
+    </div>
+    <div class="partner-strip">
+      <% partners.forEach(function(p){ %>
+        <a href="/partners/<%= p.id %>" title="<%= p.samenvatting || p.naam %>">
+          <div class="partner-logo">
+            <% if (p.logo_id) { %><img src="/media/<%= p.logo_id %>" alt="Logo <%= p.naam %>" loading="lazy"><% } else { %><span class="initialen"><%= h.initialen(p.naam) %></span><% } %>
+          </div>
+          <span><%= p.naam %></span>
+        </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
 <section class="beeldband" style="background-image:url('https://images.unsplash.com/photo-1758518730384-be3d205838e8?q=80&w=1600&auto=format&fit=crop');">
   <div class="wrap">
     <span class="kicker" style="color:var(--sand);">Zaken &amp; verbinding</span>

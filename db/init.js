@@ -126,6 +126,27 @@ async function init() {
     );
   `);
 
+  // Partners & initiatieven
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS partners (
+      id              SERIAL PRIMARY KEY,
+      naam            TEXT NOT NULL,
+      categorie       TEXT,
+      samenvatting    TEXT,
+      omschrijving    TEXT,
+      website         TEXT,
+      contact_email   TEXT,
+      logo_id         INTEGER REFERENCES media(id) ON DELETE SET NULL,
+      uitgelicht      BOOLEAN NOT NULL DEFAULT false,
+      gepubliceerd    BOOLEAN NOT NULL DEFAULT true,
+      volgorde        INTEGER NOT NULL DEFAULT 0,
+      aangedragen_door INTEGER REFERENCES users(id) ON DELETE SET NULL,
+      auteur_id       INTEGER REFERENCES users(id) ON DELETE SET NULL,
+      aangemaakt      TIMESTAMPTZ DEFAULT now(),
+      bijgewerkt      TIMESTAMPTZ DEFAULT now()
+    );
+  `);
+
   // Beveiliging: tweestapsverificatie en wachtwoord-herstel (idempotent)
   await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS totp_secret TEXT;`);
   await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS totp_ingeschakeld BOOLEAN NOT NULL DEFAULT false;`);

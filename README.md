@@ -10,6 +10,7 @@ Een besloten netwerk waar leden (en de brigade) **zelf** alles beheren: hun prof
 - **Vacatures** — leden plaatsen en beheren zelf hun vacatures; markeer ze als "veteraanvriendelijk".
 - **Ondersteuningsprojecten** — vraag steun (financieel, vrijwilligers, expertise…) en meld je aan bij projecten van anderen.
 - **Veteranenzaken** — een hub met hulpbronnen en passend werk, beheerd door de brigade en het bestuur.
+- **Partners & initiatieven** — publieke pagina met organisaties, stichtingen, sponsors en initiatieven (logo, omschrijving, website), gefilterd op categorie; uitgelichte partners staan ook op de homepage. Leden kunnen zelf een initiatief aandragen; dat komt als concept bij het bestuur/de brigade terecht om aan te vullen en te publiceren.
 - **Zelfservice** — leden registreren met een toegangscode en beheren daarna alles zelf. Jij hoeft niets goed te keuren.
 - **Beheer** — jij bepaalt rollen (lid / brigade / admin) en kunt leden activeren of verwijderen.
 - **Veilig inloggen** — wachtwoord vergeten via e-mail, tweestapsverificatie met een authenticator-app (Google/Microsoft Authenticator, Authy, 1Password), herstelcodes, en bescherming tegen brute force en CSRF.
@@ -50,6 +51,9 @@ Ga naar je app-service → tabblad **Variables** en voeg toe:
 | `RESEND_API_KEY` | API-sleutel van [resend.com](https://resend.com) voor e-mail (welkomstmail, wachtwoord vergeten, meldingen) |
 | `MAIL_VAN` | afzender, bijv. `BCLMB <noreply@bclmb.nl>` (domein in Resend verifiëren) |
 | `MAIL_BESTUUR` | (optioneel) e-mailadres van het bestuur voor meldingen over nieuwe leden, vacatures en aanmeldingen |
+| `SOCIAL_LINKEDIN` | (optioneel) link naar de LinkedIn-pagina van de club; verschijnt als icoon in de footer en op "Over het netwerk" |
+| `SOCIAL_FACEBOOK` | (optioneel) link naar de Facebook-pagina |
+| `SOCIAL_INSTAGRAM` | (optioneel) link naar het Instagram-account |
 | `TURNSTILE_SITE_KEY` | (optioneel) site-sleutel van je Cloudflare Turnstile-widget (robot-controle), zie hieronder |
 | `TURNSTILE_SECRET_KEY` | (optioneel) geheime sleutel van dezelfde Turnstile-widget |
 
@@ -75,7 +79,7 @@ Ga naar je app-service → tabblad **Variables** en voeg toe:
 
 ### Rollen
 - **Lid** — standaard. Beheert eigen profiel, vacatures en projecten.
-- **Brigade** — krijgt een herkenbaar kenmerk én mag de veteranenhub vullen met hulpbronnen.
+- **Brigade** — krijgt een herkenbaar kenmerk én mag de veteranenhub, de agenda, het nieuws, de galerij en de partnerpagina beheren.
 - **Admin** — volledige toegang, inclusief het beheerpaneel. (Dat ben jij.)
 
 Je wijzigt rollen via **Beheer** (alleen zichtbaar voor admins).

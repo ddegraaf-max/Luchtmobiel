@@ -45,6 +45,14 @@
       <p class="muted mb-0">De Luchtmobiele Brigade gebruikt het platform mee: officiële accounts krijgen een herkenbaar kenmerk en kunnen de veteranenhub vullen met hulpbronnen en contacten.</p>
     </div>
 
+    <% if (social.linkedin || social.facebook || social.instagram) { %>
+      <div class="card" style="margin-top:20px;">
+        <h3>Volg ons</h3>
+        <p class="muted">Blijf op de hoogte van evenementen, nieuws en initiatieven via onze socialemediakanalen.</p>
+        <%- include('partials/social', { variant: 'social--licht' }) %>
+      </div>
+    <% } %>
+
     <div class="center" style="margin-top:40px;">
       <% if (!user) { %><a href="/registreren" class="btn btn--primary">Word lid</a><% } else { %><a href="/leden" class="btn btn--primary">Naar de ledengids</a><% } %>
     </div>

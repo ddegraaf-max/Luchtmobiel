@@ -1,0 +1,75 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Partners &amp; initiatieven</span>
+      <h1>Samen sterker</h1>
+      <p>Organisaties, stichtingen en initiatieven die we als netwerk graag onder de aandacht brengen.</p>
+    </div>
+    <% if (magBeheren) { %><a href="/partners/nieuw" class="btn btn--primary">+ Partner</a><% } %>
+  </div>
+</div>
+
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="filterchips">
+      <a href="/partners" class="<%= categorie ? '' : 'actief' %>">Alles</a>
+      <% categorieen.forEach(function(c){ %>
+        <a href="/partners?categorie=<%= encodeURIComponent(c) %>" class="<%= categorie === c ? 'actief' : '' %>"><%= c %></a>
+      <% }) %>
+    </div>
+
+    <% if (!partners.length) { %>
+      <div class="lege-staat">
+        <p><%= categorie ? 'Geen partners in deze categorie.' : 'Er zijn nog geen partners of initiatieven geplaatst.' %></p>
+        <% if (magBeheren && !categorie) { %><a href="/partners/nieuw" class="btn btn--primary">Voeg de eerste partner toe</a><% } %>
+      </div>
+    <% } else { %>
+      <div class="grid grid--auto">
+        <% partners.forEach(function(p){ %>
+          <a href="/partners/<%= p.id %>" class="card partner-kaart">
+            <div class="partner-logo">
+              <% if (p.logo_id) { %>
+                <img src="/media/<%= p.logo_id %>" alt="Logo <%= p.naam %>" loading="lazy">
+              <% } else { %>
+                <span class="initialen"><%= h.initialen(p.naam) %></span>
+              <% } %>
+            </div>
+            <div class="flex" style="gap:6px;">
+              <% if (p.categorie) { %><span class="badge badge--olive"><%= p.categorie %></span><% } %>
+              <% if (p.uitgelicht) { %><span class="badge badge--maroon">Uitgelicht</span><% } %>
+              <% if (!p.gepubliceerd) { %><span class="badge"><%= p.aangedragen_door ? 'Aangedragen' : 'Concept' %></span><% } %>
+            </div>
+            <div class="card-titel" style="font-family:var(--font-display); font-weight:700; font-size:1.15rem;"><%= p.naam %></div>
+            <% if (p.samenvatting) { %><p class="muted mb-0" style="flex:1;"><%= p.samenvatting %></p><% } %>
+            <% if (!p.gepubliceerd && p.aangedragen_naam) { %><div class="meta">Aangedragen door <%= p.aangedragen_naam %></div><% } %>
+            <span style="font-weight:700; color:var(--maroon); margin-top:auto;">Bekijk →</span>
+          </a>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<section class="section section--tight" id="aandragen" style="background:var(--bone-2); border-top:1px solid var(--line);">
+  <div class="wrap" style="max-width:760px;">
+    <span class="kicker">Ken je een initiatief?</span>
+    <h2 style="margin-bottom:8px;">Draag een partner of initiatief aan</h2>
+    <p class="muted">Een stichting, veteraneninitiatief, sponsor of bedrijf dat een plek op deze pagina verdient? Laat het weten; het bestuur beoordeelt de suggestie en plaatst het initiatief.</p>
+    <% if (user) { %>
+      <form action="/partners/aandragen" method="post" class="form-card stack">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div class="veld-rij">
+          <div class="veld" style="margin:0;"><label for="ad-naam">Naam van het initiatief *</label><input type="text" id="ad-naam" name="naam" required maxlength="150"></div>
+          <div class="veld" style="margin:0;"><label for="ad-website">Website</label><input type="text" id="ad-website" name="website" placeholder="www.voorbeeld.nl" maxlength="300"></div>
+        </div>
+        <div class="veld" style="margin:0;">
+          <label for="ad-toelichting">Waarom past dit bij ons netwerk?</label>
+          <textarea id="ad-toelichting" name="toelichting" maxlength="2000" style="min-height:110px;" placeholder="Kort: wat doet het initiatief en waarom verdient het aandacht?"></textarea>
+        </div>
+        <div><button type="submit" class="btn btn--primary">Aandragen</button></div>
+      </form>
+    <% } else { %>
+      <p><a href="/inloggen" class="btn btn--primary">Log in om een initiatief aan te dragen</a></p>
+    <% } %>
+  </div>
+</section>

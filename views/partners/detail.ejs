@@ -1,0 +1,60 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div class="flex" style="align-items:center; gap:20px;">
+      <% if (partner.logo_id) { %>
+        <img class="partner-detail-logo" src="/media/<%= partner.logo_id %>" alt="Logo <%= partner.naam %>">
+      <% } else { %>
+        <span class="avatar avatar--lg"><%= h.initialen(partner.naam) %></span>
+      <% } %>
+      <div>
+        <span class="kicker" style="margin-bottom:6px;"><%= partner.categorie || 'Partner' %><% if (partner.uitgelicht) { %> · Uitgelicht<% } %><% if (!partner.gepubliceerd) { %> · <%= partner.aangedragen_door ? 'aangedragen' : 'concept' %><% } %></span>
+        <h1 style="margin:0;"><%= partner.naam %></h1>
+        <% if (partner.samenvatting) { %><p style="margin:.4rem 0 0; color:var(--sand); font-weight:600;"><%= partner.samenvatting %></p><% } %>
+      </div>
+    </div>
+    <a href="/partners" class="btn btn--ghost">← Alle partners</a>
+  </div>
+</div>
+
+<section class="section">
+  <div class="wrap">
+    <div class="detail-grid">
+      <div>
+        <% if (partner.omschrijving) { %>
+          <div class="prose"><% partner.omschrijving.split(/\n\n+/).forEach(function(par){ %><p><%= par %></p><% }) %></div>
+        <% } else { %>
+          <p class="muted">Nog geen omschrijving toegevoegd.<% if (partner.website) { %> Bekijk de website voor meer informatie.<% } %></p>
+        <% } %>
+
+        <% if (magBeheren) { %>
+          <hr class="divider">
+          <% if (!partner.gepubliceerd) { %>
+            <div class="flash flash--info">Dit initiatief is nog niet gepubliceerd<%= partner.aangedragen_naam ? ' — aangedragen door ' + partner.aangedragen_naam : '' %>. Vul het aan en vink "Publiceren" aan om het op de site te tonen.</div>
+          <% } %>
+          <div class="flex">
+            <a href="/partners/<%= partner.id %>/bewerken" class="btn btn--ghost btn--sm">Bewerken</a>
+            <form action="/partners/<%= partner.id %>/verwijderen" method="post" class="inline-form" data-bevestig="Deze partner verwijderen?">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <button class="btn btn--danger btn--sm" type="submit">Verwijderen</button>
+            </form>
+          </div>
+        <% } %>
+      </div>
+
+      <aside class="zijbalk">
+        <dl style="margin:0 0 16px;">
+          <% if (partner.categorie) { %><dt>Categorie</dt><dd><%= partner.categorie %></dd><% } %>
+          <% if (partner.website) { %><dt>Website</dt><dd><a href="<%= partner.website %>" target="_blank" rel="noopener"><%= h.toonUrl(partner.website) %></a></dd><% } %>
+          <% if (partner.contact_email) { %><dt>Contact</dt><dd><a href="mailto:<%= partner.contact_email %>"><%= partner.contact_email %></a></dd><% } %>
+          <dt>Geplaatst op</dt><dd><%= h.formatDatum(partner.aangemaakt) %></dd>
+        </dl>
+        <% if (partner.website) { %>
+          <a href="<%= partner.website %>" target="_blank" rel="noopener" class="btn btn--primary btn--block">Bezoek website</a>
+        <% } %>
+        <% if (partner.contact_email) { %>
+          <a href="mailto:<%= partner.contact_email %>" class="btn btn--ghost btn--block" style="margin-top:10px;">Neem contact op</a>
+        <% } %>
+      </aside>
+    </div>
+  </div>
+</section>

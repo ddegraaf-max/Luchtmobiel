@@ -37,6 +37,13 @@ if (!sessionSecret) {
   }
 }
 
+// Socialemedia-links (footer en Over-pagina); leeg = niet tonen.
+const SOCIAL = {
+  linkedin: helpers.netteUrl(process.env.SOCIAL_LINKEDIN || ''),
+  facebook: helpers.netteUrl(process.env.SOCIAL_FACEBOOK || ''),
+  instagram: helpers.netteUrl(process.env.SOCIAL_INSTAGRAM || '')
+};
+
 // Views
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -56,6 +63,7 @@ app.use((req, res, next) => {
   res.locals.csrfToken = '';
   res.locals.flash = null;
   res.locals.turnstileSiteKey = turnstile.actief() ? turnstile.siteKey() : '';
+  res.locals.social = SOCIAL;
   next();
 });
 
@@ -104,6 +112,7 @@ app.use('/vacatures', require('./routes/vacatures'));
 app.use('/projecten', require('./routes/projecten'));
 app.use('/agenda', require('./routes/agenda'));
 app.use('/nieuws', require('./routes/nieuws'));
+app.use('/partners', require('./routes/partners'));
 app.use('/veteranen', require('./routes/veteranen'));
 app.use('/media', require('./routes/media'));
 app.use('/beheer', require('./routes/beheer'));

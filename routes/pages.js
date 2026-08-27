@@ -12,6 +12,7 @@ router.get('/', async (req, res) => {
   let projecten = [];
   let evenementen = [];
   let nieuws = [];
+  let partners = [];
   try {
     const s = await pool.query(`
       SELECT
@@ -40,12 +41,17 @@ router.get('/', async (req, res) => {
     nieuws = (await pool.query(
       `SELECT id, titel, inhoud, aangemaakt FROM nieuws WHERE gepubliceerd = true ORDER BY aangemaakt DESC LIMIT 3`
     )).rows;
+
+    partners = (await pool.query(
+      `SELECT id, naam, categorie, samenvatting, logo_id FROM partners
+       WHERE gepubliceerd = true AND uitgelicht = true ORDER BY volgorde ASC, naam ASC LIMIT 6`
+    )).rows;
   } catch (err) {
     console.error('[home]', err.message);
   }
 
   const galerij = await getGalerij('home');
-  res.render('home', { title: 'Het netwerk van de Luchtmobiele Brigade', stats, vacatures, projecten, evenementen, nieuws, galerij });
+  res.render('home', { title: 'Het netwerk van de Luchtmobiele Brigade', stats, vacatures, projecten, evenementen, nieuws, partners, galerij });
 });
 
 // Over / het netwerk
