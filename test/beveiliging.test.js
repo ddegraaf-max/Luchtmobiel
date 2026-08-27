@@ -91,6 +91,40 @@ test('afbeeldingen worden herkend aan de inhoud', () => {
   assert.equal(detecteerAfbeelding(Buffer.alloc(3)), null);
 });
 
+test('turnstile: uit zonder sleutels, verificatie met gemockte siteverify', async () => {
+  const ts = require('../lib/turnstile');
+  delete process.env.TURNSTILE_SITE_KEY;
+  delete process.env.TURNSTILE_SECRET_KEY;
+  assert.equal(ts.actief(), false);
+  assert.deepEqual(await ts.controleer(undefined), { ok: true }, 'uitgeschakeld = altijd ok');
+
+  process.env.TURNSTILE_SITE_KEY = 'site-key';
+  process.env.TURNSTILE_SECRET_KEY = 'geheime-key';
+  const origFetch = globalThis.fetch;
+  let laatsteUrl, laatsteBody;
+  globalThis.fetch = async (url, opts) => {
+    laatsteUrl = String(url); laatsteBody = opts.body;
+    const token = opts.body.get('response');
+    return { json: async () => (token === 'goed' ? { success: true } : { success: false, 'error-codes': ['invalid-input-response'] }) };
+  };
+  try {
+    assert.equal(ts.actief(), true);
+    assert.equal((await ts.controleer('goed', '1.2.3.4')).ok, true);
+    assert.match(laatsteUrl, /challenges\.cloudflare\.com\/turnstile\/v0\/siteverify/);
+    assert.equal(laatsteBody.get('secret'), 'geheime-key');
+    assert.equal(laatsteBody.get('remoteip'), '1.2.3.4');
+    assert.equal((await ts.controleer('fout')).ok, false);
+    assert.equal((await ts.controleer('')).reden, 'geen-token');
+    assert.equal((await ts.controleer(undefined)).reden, 'geen-token');
+    globalThis.fetch = async () => { throw new Error('netwerk kapot'); };
+    assert.deepEqual(await ts.controleer('goed'), { ok: false, reden: 'netwerk' }, 'netwerkfout = geweigerd, geen crash');
+  } finally {
+    globalThis.fetch = origFetch;
+    delete process.env.TURNSTILE_SITE_KEY;
+    delete process.env.TURNSTILE_SECRET_KEY;
+  }
+});
+
 test('websites worden netjes genormaliseerd en getoond', () => {
   assert.equal(netteUrl('www.voorbeeld.nl'), 'https://www.voorbeeld.nl');
   assert.equal(netteUrl('https://aanenuitbouw.nl/'), 'https://aanenuitbouw.nl');

@@ -8,6 +8,7 @@ const bev = require('../lib/beveiliging');
 const tfa = require('../lib/tfa');
 const { beeindigSessies, regenereer, bewaar } = require('../lib/sessies');
 const { limiet, opEmail } = require('../lib/ratelimit');
+const turnstile = require('../lib/turnstile');
 
 const BCRYPT_RONDES = 12;
 const WACHTWOORD_MIN = 8;
@@ -75,7 +76,7 @@ router.get('/registreren', (req, res) => {
   });
 });
 
-router.post('/registreren', limRegistratie, async (req, res) => {
+router.post('/registreren', limRegistratie, turnstile.verifieer, async (req, res) => {
   const naam = tekst(req.body.naam, 120);
   const email = tekst(req.body.email, 200).toLowerCase();
   const bedrijf = tekst(req.body.bedrijf, 120) || null;
@@ -87,6 +88,7 @@ router.post('/registreren', limRegistratie, async (req, res) => {
   const toonFout = (fout) =>
     res.status(400).render('auth/registreren', { title: 'Word lid', fout, waarden, codeVereist });
 
+  if (req.turnstileFout) return toonFout(req.turnstileFout);
   if (!naam || !email || !wachtwoord) return toonFout('Vul je naam, e-mail en wachtwoord in.');
   if (!isEmail(email)) return toonFout('Vul een geldig e-mailadres in.');
   const wwFout = controleerWachtwoord(wachtwoord, wachtwoord2);
@@ -144,13 +146,14 @@ router.get('/inloggen', (req, res) => {
   res.render('auth/inloggen', { title: 'Inloggen', fout: null, waarden: {} });
 });
 
-router.post('/inloggen', limLoginIp, limLoginEmail, async (req, res) => {
+router.post('/inloggen', limLoginIp, limLoginEmail, turnstile.verifieer, async (req, res) => {
   const email = tekst(req.body.email, 200).toLowerCase();
   const wachtwoord = typeof req.body.wachtwoord === 'string' ? req.body.wachtwoord.slice(0, WACHTWOORD_MAX) : '';
   const waarden = { email };
   const toonFout = (fout) =>
     res.status(400).render('auth/inloggen', { title: 'Inloggen', fout, waarden });
 
+  if (req.turnstileFout) return toonFout(req.turnstileFout);
   if (!email || !wachtwoord) return toonFout('Vul je e-mail en wachtwoord in.');
 
   try {
@@ -249,7 +252,7 @@ router.get('/wachtwoord-vergeten', (req, res) => {
   res.render('auth/wachtwoord-vergeten', { title: 'Wachtwoord vergeten', fout: null, verzonden: false, waarden: {}, mailOk: mailBeschikbaar() });
 });
 
-router.post('/wachtwoord-vergeten', limVergetenIp, limVergetenEmail, async (req, res) => {
+router.post('/wachtwoord-vergeten', limVergetenIp, limVergetenEmail, turnstile.verifieer, async (req, res) => {
   const email = tekst(req.body.email, 200).toLowerCase();
   const waarden = { email };
   const toon = (opties) =>
@@ -257,6 +260,7 @@ router.post('/wachtwoord-vergeten', limVergetenIp, limVergetenEmail, async (req,
       title: 'Wachtwoord vergeten', fout: null, verzonden: false, waarden, mailOk: mailBeschikbaar(), ...opties
     });
 
+  if (req.turnstileFout) return toon({ fout: req.turnstileFout });
   if (!isEmail(email)) return toon({ fout: 'Vul een geldig e-mailadres in.' });
   if (!mailBeschikbaar()) {
     return toon({ fout: 'Wachtwoord herstellen per e-mail is nog niet ingeschakeld. Neem contact op met het bestuur via info@bclmb.nl.' });

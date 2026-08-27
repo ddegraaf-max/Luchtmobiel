@@ -50,6 +50,8 @@ Ga naar je app-service → tabblad **Variables** en voeg toe:
 | `RESEND_API_KEY` | API-sleutel van [resend.com](https://resend.com) voor e-mail (welkomstmail, wachtwoord vergeten, meldingen) |
 | `MAIL_VAN` | afzender, bijv. `BCLMB <noreply@bclmb.nl>` (domein in Resend verifiëren) |
 | `MAIL_BESTUUR` | (optioneel) e-mailadres van het bestuur voor meldingen over nieuwe leden, vacatures en aanmeldingen |
+| `TURNSTILE_SITE_KEY` | (optioneel) site-sleutel van je Cloudflare Turnstile-widget (robot-controle), zie hieronder |
+| `TURNSTILE_SECRET_KEY` | (optioneel) geheime sleutel van dezelfde Turnstile-widget |
 
 > `DATABASE_URL` staat er al door stap 3 — die laat je met rust.
 >
@@ -108,9 +110,18 @@ Is een lid zowel de telefoon als de herstelcodes kwijt? Dan klik je in **Beheer*
 
 Doe dit als beheerder ook zelf: jouw account heeft de meeste rechten.
 
+### Robot-controle (Cloudflare Turnstile)
+Op de formulieren **Inloggen**, **Word lid** en **Wachtwoord vergeten** kan een Turnstile-widget staan: een lichte, gratis "ben je geen robot"-controle van Cloudflare (geen plaatjes aanklikken). Zo instellen:
+1. Ga naar [dash.cloudflare.com](https://dash.cloudflare.com) → **Turnstile** → **Add widget**.
+2. Geef een naam, vul bij *Hostname* het domein van de site in (bijv. `jouw-app.up.railway.app` of je eigen domein) en kies widget-type **Managed**.
+3. Kopieer de **Site Key** en **Secret Key** naar Railway → Variables als `TURNSTILE_SITE_KEY` en `TURNSTILE_SECRET_KEY`.
+4. Railway herstart de app; de widget verschijnt automatisch boven de knop van de drie formulieren.
+
+Laat je beide variabelen leeg, dan is er geen robot-controle. Werkt inloggen na het instellen niet meer (melding "robot-controle is mislukt")? Controleer dan of de sleutels kloppen en of het domein in Cloudflare juist is — of haal de twee variabelen weg om de controle uit te zetten.
+
 ### Wat er verder is beveiligd
 - Wachtwoorden met bcrypt (12 rondes); 2FA-geheimen versleuteld (AES-256-GCM); van herstelcodes en herstellinks alleen een hash in de database.
-- Bescherming tegen brute force (limiet op inlog-, registratie-, herstel- en 2FA-pogingen).
+- Bescherming tegen brute force (limiet op inlog-, registratie-, herstel- en 2FA-pogingen) en tegen bots (Turnstile).
 - CSRF-tokens op alle formulieren, veilige HTTP-headers (CSP, HSTS, nosniff, geen framing).
 - Nieuwe sessie-id bij inloggen; bij wachtwoordwijziging of -herstel worden andere apparaten uitgelogd; deactiveren door de beheerder werkt direct.
 - Geüploade afbeeldingen worden op inhoud gecontroleerd (alleen echte JPG/PNG/WebP/GIF, geen SVG).

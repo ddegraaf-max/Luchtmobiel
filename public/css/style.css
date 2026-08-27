@@ -571,3 +571,6 @@ h1, h2, h3, .hero h1, .paginakop h1, .beeldband h2 { overflow-wrap: break-word; 
   .herstelcodes-kaart { border: none; padding: 0; }
   body { background: #fff; }
 }
+
+/* Cloudflare Turnstile (robot-controle) */
+.cf-turnstile { margin: 2px 0 4px; min-height: 65px; }

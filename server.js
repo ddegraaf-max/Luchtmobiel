@@ -13,6 +13,7 @@ const initDb = require('./db/init');
 const { attachUser } = require('./middleware/auth');
 const { headers, csrf, geenCacheVoorIngelogd } = require('./middleware/security');
 const helpers = require('./lib/helpers');
+const turnstile = require('./lib/turnstile');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -54,6 +55,7 @@ app.use((req, res, next) => {
   res.locals.path = req.path;
   res.locals.csrfToken = '';
   res.locals.flash = null;
+  res.locals.turnstileSiteKey = turnstile.actief() ? turnstile.siteKey() : '';
   next();
 });
 
