@@ -68,6 +68,20 @@
       <% } %>
     </div>
 
+    <!-- E-mailadres wijzigen -->
+    <div class="form-card" style="margin-top:24px;">
+      <h3>Inlog-e-mailadres wijzigen</h3>
+      <p class="muted">Je logt nu in met <strong><%= profiel.email %></strong>. Na de wijziging log je in met het nieuwe adres; beide adressen krijgen een bevestiging.</p>
+      <form action="/profiel/beveiliging/email" method="post">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div class="veld-rij">
+          <div class="veld"><label for="nieuw_email">Nieuw e-mailadres</label><input type="email" id="nieuw_email" name="nieuw_email" required maxlength="200" autocomplete="email"></div>
+          <div class="veld"><label for="email-ww">Wachtwoord ter bevestiging</label><input type="password" id="email-ww" name="wachtwoord" required autocomplete="current-password"></div>
+        </div>
+        <button type="submit" class="btn btn--ghost">E-mailadres wijzigen</button>
+      </form>
+    </div>
+
     <!-- Wachtwoord wijzigen -->
     <div class="form-card" style="margin-top:24px;">
       <h3>Wachtwoord wijzigen</h3>

@@ -6,7 +6,7 @@ Een besloten netwerk waar leden (en de brigade) **zelf** alles beheren: hun prof
 
 ## Wat zit erin?
 
-- **Ledengids** — elk lid een eigen profiel met logo, bedrijf, expertise, website en contact. Doorzoekbaar op branche.
+- **Ledengids** — elk lid een compleet profiel: foto, contactgegevens (met eigen keuze wat zichtbaar is), LinkedIn, **meerdere bedrijven** (elk met logo, functie, branche, website, e-mail, telefoon, adres, KvK en omschrijving; één hoofdbedrijf), expertise, "waarmee kan ik helpen / wat zoek ik" en band met Defensie. Doorzoekbaar op naam, bedrijf, expertise, branche en plaats.
 - **Vacatures** — leden plaatsen en beheren zelf hun vacatures; markeer ze als "veteraanvriendelijk".
 - **Ondersteuningsprojecten** — vraag steun (financieel, vrijwilligers, expertise…) en meld je aan bij projecten van anderen.
 - **Veteranenzaken** — een hub met hulpbronnen en passend werk, beheerd door de brigade en het bestuur.

@@ -1,22 +1,25 @@
 <div class="paginakop">
   <div class="wrap">
     <div class="flex" style="align-items:center; gap:20px;">
-      <% if (lid.logo_id) { %>
-        <img class="avatar avatar--lg" src="/media/<%= lid.logo_id %>" alt="">
+      <% if (avatarId) { %>
+        <img class="avatar avatar--lg" src="/media/<%= avatarId %>" alt="">
       <% } else { %>
-        <span class="avatar avatar--lg"><%= h.initialen(lid.bedrijf || lid.naam) %></span>
+        <span class="avatar avatar--lg"><%= h.initialen(lid.naam) %></span>
       <% } %>
       <div>
-        <span class="kicker" style="margin-bottom:6px;"><%= lid.branche || 'Lid' %></span>
+        <span class="kicker" style="margin-bottom:6px;"><%= (hoofdbedrijf && hoofdbedrijf.branche) || lid.branche || 'Lid' %></span>
         <h1 style="margin:0;"><%= lid.naam %>
           <% if (lid.rol === 'brigade') { %><span class="badge badge--brigade">Brigade</span><% } %>
         </h1>
-        <% if (lid.bedrijf || lid.functie) { %>
-          <p style="margin:.4rem 0 0; color:var(--sand); font-weight:600;"><%= [lid.functie, lid.bedrijf].filter(Boolean).join(' · ') %></p>
+        <% if (hoofdbedrijf) { %>
+          <p style="margin:.4rem 0 0; color:var(--sand); font-weight:600;"><%= [hoofdbedrijf.functie, hoofdbedrijf.naam].filter(Boolean).join(' · ') %><% if (bedrijven.length > 1) { %> · +<%= bedrijven.length - 1 %> <%= bedrijven.length === 2 ? 'bedrijf' : 'bedrijven' %><% } %></p>
         <% } %>
       </div>
     </div>
-    <a href="/leden" class="btn btn--ghost">← Ledengids</a>
+    <div class="flex">
+      <% if (eigen) { %><a href="/profiel" class="btn btn--primary">Profiel bewerken</a><% } %>
+      <a href="/leden" class="btn btn--ghost">← Ledengids</a>
+    </div>
   </div>
 </div>
 
@@ -29,6 +32,63 @@
           <div class="prose"><%= lid.bio %></div>
         <% } else { %>
           <p class="muted">Dit lid heeft nog geen beschrijving toegevoegd.</p>
+        <% } %>
+
+        <% if (expertise.length) { %>
+          <h3 style="margin-top:22px;">Expertise</h3>
+          <div class="flex" style="gap:6px;">
+            <% expertise.forEach(function(t){ %><span class="badge badge--maroon"><%= t %></span><% }) %>
+          </div>
+        <% } %>
+
+        <% if (lid.aanbod || lid.vraag) { %>
+          <div class="grid grid--2" style="margin-top:24px;">
+            <% if (lid.aanbod) { %>
+              <div class="card" style="background:var(--bone-2);">
+                <span class="kicker" style="margin-bottom:6px;">Kan helpen met</span>
+                <div class="prose mb-0"><%= lid.aanbod %></div>
+              </div>
+            <% } %>
+            <% if (lid.vraag) { %>
+              <div class="card" style="background:var(--bone-2);">
+                <span class="kicker" style="margin-bottom:6px;">Op zoek naar</span>
+                <div class="prose mb-0"><%= lid.vraag %></div>
+              </div>
+            <% } %>
+          </div>
+        <% } %>
+
+        <% if (bedrijven.length) { %>
+          <hr class="divider">
+          <h2><%= bedrijven.length === 1 ? 'Bedrijf' : 'Bedrijven' %></h2>
+          <div class="stack" style="gap:16px;">
+            <% bedrijven.forEach(function(b){ %>
+              <div class="card bedrijf-kaart">
+                <div class="flex" style="align-items:flex-start; gap:18px;">
+                  <div class="partner-logo" style="width:96px; height:80px; flex:none;">
+                    <% if (b.logo_id) { %><img src="/media/<%= b.logo_id %>" alt="Logo <%= b.naam %>"><% } else { %><span class="initialen"><%= h.initialen(b.naam) %></span><% } %>
+                  </div>
+                  <div style="flex:1; min-width:0;">
+                    <div class="flex" style="gap:8px; align-items:center;">
+                      <strong style="font-family:var(--font-display); font-size:1.15rem;"><%= b.naam %></strong>
+                      <% if (b.hoofd && bedrijven.length > 1) { %><span class="badge">Hoofdbedrijf</span><% } %>
+                      <% if (b.branche) { %><span class="badge badge--olive"><%= b.branche %></span><% } %>
+                    </div>
+                    <% if (b.functie) { %><div style="color:var(--maroon); font-weight:600; margin-top:2px;"><%= b.functie %></div><% } %>
+                    <% if (b.omschrijving) { %><p class="muted" style="margin:8px 0 0;"><%= b.omschrijving %></p><% } %>
+                    <dl class="bedrijf-gegevens">
+                      <% if (b.website) { %><div><dt>Website</dt><dd><a href="<%= b.website %>" target="_blank" rel="noopener"><%= h.toonUrl(b.website) %></a></dd></div><% } %>
+                      <% if (b.email) { %><div><dt>E-mail</dt><dd><a href="mailto:<%= b.email %>"><%= b.email %></a></dd></div><% } %>
+                      <% if (b.telefoon) { %><div><dt>Telefoon</dt><dd><a href="tel:<%= b.telefoon %>"><%= b.telefoon %></a></dd></div><% } %>
+                      <% if (b.adres || b.postcode || b.plaats) { %><div><dt>Adres</dt><dd><%= [b.adres, [b.postcode, b.plaats].filter(Boolean).join(' ')].filter(Boolean).join(', ') %></dd></div><% } %>
+                      <% if (b.kvk) { %><div><dt>KvK</dt><dd><%= b.kvk %></dd></div><% } %>
+                      <% if (b.linkedin) { %><div><dt>LinkedIn</dt><dd><a href="<%= b.linkedin %>" target="_blank" rel="noopener">Bedrijfspagina</a></dd></div><% } %>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            <% }) %>
+          </div>
         <% } %>
 
         <% if (vacatures.length) { %>
@@ -61,13 +121,18 @@
       <aside class="zijbalk">
         <dl style="margin:0;">
           <% if (lid.plaats) { %><dt>Plaats</dt><dd><%= lid.plaats %></dd><% } %>
-          <% if (lid.branche) { %><dt>Branche</dt><dd><%= lid.branche %></dd><% } %>
-          <dt>E-mail</dt><dd><a href="mailto:<%= lid.email %>"><%= lid.email %></a></dd>
-          <% if (lid.telefoon) { %><dt>Telefoon</dt><dd><a href="tel:<%= lid.telefoon %>"><%= lid.telefoon %></a></dd><% } %>
-          <% if (lid.website) { %><dt>Website</dt><dd><a href="<%= lid.website %>" target="_blank" rel="noopener"><%= h.toonUrl(lid.website) %></a></dd><% } %>
+          <% if (lid.toon_email !== false) { %><dt>E-mail</dt><dd><a href="mailto:<%= contactEmail %>"><%= contactEmail %></a></dd><% } %>
+          <% if (lid.telefoon && lid.toon_telefoon !== false) { %><dt>Telefoon</dt><dd><a href="tel:<%= lid.telefoon %>"><%= lid.telefoon %></a></dd><% } %>
+          <% if (lid.linkedin) { %><dt>LinkedIn</dt><dd><a href="<%= lid.linkedin %>" target="_blank" rel="noopener">Profiel bekijken</a></dd><% } %>
+          <% if (hoofdbedrijf && hoofdbedrijf.website) { %><dt>Website</dt><dd><a href="<%= hoofdbedrijf.website %>" target="_blank" rel="noopener"><%= h.toonUrl(hoofdbedrijf.website) %></a></dd><% } %>
+          <% if (lid.defensie_relatie) { %><dt>Band met Defensie</dt><dd><%= lid.defensie_relatie %><% if (lid.defensie_toelichting) { %><br><span class="muted" style="font-weight:500;"><%= lid.defensie_toelichting %></span><% } %></dd><% } %>
+          <dt>Lid sinds</dt><dd><%= h.formatDatum(lid.aangemaakt) %></dd>
         </dl>
-        <% if (lid.website) { %>
-          <a href="<%= lid.website %>" target="_blank" rel="noopener" class="btn btn--primary btn--block" style="margin-top:18px;">Bezoek website</a>
+        <% if (lid.toon_email !== false) { %>
+          <a href="mailto:<%= contactEmail %>" class="btn btn--primary btn--block" style="margin-top:18px;">Stuur een e-mail</a>
+        <% } %>
+        <% if (hoofdbedrijf && hoofdbedrijf.website) { %>
+          <a href="<%= hoofdbedrijf.website %>" target="_blank" rel="noopener" class="btn btn--ghost btn--block" style="margin-top:10px;">Bezoek website</a>
         <% } %>
       </aside>
     </div>

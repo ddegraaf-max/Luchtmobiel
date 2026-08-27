@@ -3,7 +3,7 @@
     <div>
       <span class="kicker">Mijn profiel</span>
       <h1>Profiel beheren</h1>
-      <p>Zo zie je eruit in de ledengids.</p>
+      <p>Zo zie je eruit in de ledengids. Vul zoveel mogelijk in: zo vinden leden elkaar.</p>
     </div>
     <div class="flex">
       <a href="/profiel/beveiliging" class="btn btn--ghost">🔐 Beveiliging</a>
@@ -13,82 +13,154 @@
 </div>
 
 <section class="section">
-  <div class="wrap" style="max-width:760px;">
-    <form action="/profiel?_csrf=<%= csrfToken %>" method="post" enctype="multipart/form-data" class="form-card"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
-      <div class="flex logo-kiezer" style="gap:20px; margin-bottom:22px; align-items:flex-start;">
-        <div class="logo-kiezer__beeld">
-          <img class="avatar avatar--lg" id="logo-voorbeeld" src="<%= profiel.logo_id ? '/media/' + profiel.logo_id : '' %>" alt="" <%= profiel.logo_id ? '' : 'hidden' %>>
-          <span class="avatar avatar--lg" id="logo-initialen" <%= profiel.logo_id ? 'hidden' : '' %>><%= h.initialen(profiel.bedrijf || profiel.naam) %></span>
+  <div class="wrap" style="max-width:800px;">
+    <% if (fout) { %><div class="flash flash--fout"><%= fout %></div><% } %>
+
+    <form action="/profiel?_csrf=<%= csrfToken %>" method="post" enctype="multipart/form-data" class="stack" style="gap:24px;">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <!-- Persoonlijk -->
+      <div class="form-card">
+        <span class="kicker">Persoonlijk</span>
+        <h2 style="font-size:1.35rem;">Over jou</h2>
+
+        <div class="flex" style="gap:20px; margin-bottom:22px; align-items:flex-start;">
+          <div style="flex:none;">
+            <img class="avatar avatar--lg" id="foto-voorbeeld" src="<%= profiel.foto_id ? '/media/' + profiel.foto_id : '' %>" alt="" <%= profiel.foto_id ? '' : 'hidden' %>>
+            <span class="avatar avatar--lg" id="foto-initialen" <%= profiel.foto_id ? 'hidden' : '' %>><%= h.initialen(profiel.naam) %></span>
+          </div>
+          <div class="veld" style="flex:1; margin:0;">
+            <label for="foto">Jouw foto</label>
+            <input type="file" id="foto" name="foto" accept="image/png,image/jpeg,image/webp,image/gif" data-voorbeeld="#foto-voorbeeld" data-verberg="#foto-initialen" data-melding="#foto-melding">
+            <span class="hint">PNG, JPG, WebP of GIF, max 2 MB. Je ziet direct een voorbeeld; het wordt pas bewaard als je op <strong>Profiel opslaan</strong> klikt. Geen foto? Dan tonen we het logo van je hoofdbedrijf.</span>
+            <div id="foto-melding" class="hint" style="display:none; color:var(--maroon); margin-top:6px;">Nieuwe foto gekozen — nog niet opgeslagen.</div>
+            <% if (profiel.foto_id) { %>
+              <label class="check" style="margin-top:10px; font-weight:500; font-size:.88rem;"><input type="checkbox" name="foto_verwijderen"> Huidige foto verwijderen</label>
+            <% } %>
+          </div>
         </div>
-        <div class="veld" style="flex:1; margin:0;">
-          <label for="logo">Logo of foto</label>
-          <input type="file" id="logo" name="logo" accept="image/png,image/jpeg,image/webp,image/gif" data-voorbeeld="#logo-voorbeeld" data-verberg="#logo-initialen">
-          <span class="hint">PNG, JPG, WebP of GIF, max 2 MB. Je ziet direct een voorbeeld; het wordt pas bewaard als je op <strong>Profiel opslaan</strong> klikt.</span>
-          <div id="logo-melding" class="hint" style="display:none; color:var(--maroon); margin-top:6px;">Nieuw logo gekozen — nog niet opgeslagen.</div>
-          <% if (profiel.logo_id) { %>
-            <label class="check" style="margin-top:10px; font-weight:500; font-size:.88rem;"><input type="checkbox" name="logo_verwijderen"> Huidig logo verwijderen</label>
-          <% } %>
+
+        <div class="veld-rij">
+          <div class="veld"><label for="naam">Naam *</label><input type="text" id="naam" name="naam" value="<%= profiel.naam || '' %>" maxlength="120" required autocomplete="name"></div>
+          <div class="veld"><label for="plaats">Woon-/vestigingsplaats</label><input type="text" id="plaats" name="plaats" value="<%= profiel.plaats || '' %>" maxlength="120" autocomplete="address-level2"></div>
+        </div>
+        <div class="veld-rij">
+          <div class="veld">
+            <label for="contact_email">Contact-e-mailadres</label>
+            <input type="email" id="contact_email" name="contact_email" value="<%= profiel.contact_email || profiel.email || '' %>" maxlength="200" autocomplete="email">
+            <span class="hint">Voor leden die contact willen. Je inlog-e-mailadres (<%= profiel.email %>) wijzig je onder <a href="/profiel/beveiliging">Beveiliging</a>.</span>
+          </div>
+          <div class="veld"><label for="telefoon">Telefoon / mobiel</label><input type="tel" id="telefoon" name="telefoon" value="<%= profiel.telefoon || '' %>" maxlength="40" autocomplete="tel"></div>
+        </div>
+        <div class="veld">
+          <label for="linkedin">LinkedIn-profiel</label>
+          <input type="text" id="linkedin" name="linkedin" value="<%= profiel.linkedin || '' %>" maxlength="300" placeholder="linkedin.com/in/jouwnaam" autocomplete="url">
+        </div>
+        <div class="veld-rij" style="margin-bottom:0;">
+          <label class="check" style="cursor:pointer;"><input type="checkbox" name="toon_email" <%= profiel.toon_email === false ? '' : 'checked' %>> Toon mijn e-mailadres aan leden</label>
+          <label class="check" style="cursor:pointer;"><input type="checkbox" name="toon_telefoon" <%= profiel.toon_telefoon === false ? '' : 'checked' %>> Toon mijn telefoonnummer aan leden</label>
         </div>
       </div>
 
-      <div class="veld">
-        <label for="naam">Naam</label>
-        <input type="text" id="naam" name="naam" value="<%= profiel.naam || '' %>" maxlength="120" autocomplete="name">
-      </div>
-      <div class="veld-rij">
-        <div class="veld"><label for="bedrijf">Bedrijf</label><input type="text" id="bedrijf" name="bedrijf" value="<%= profiel.bedrijf || '' %>" maxlength="120" autocomplete="organization"></div>
-        <div class="veld"><label for="functie">Functie</label><input type="text" id="functie" name="functie" value="<%= profiel.functie || '' %>" maxlength="120" autocomplete="organization-title"></div>
-      </div>
-      <div class="veld-rij">
-        <div class="veld"><label for="branche">Branche</label>
-          <input type="text" id="branche" name="branche" value="<%= profiel.branche || '' %>" placeholder="Kies of typ je eigen branche" list="branche-opties" maxlength="120">
-          <datalist id="branche-opties">
-            <option value="Bouw &amp; constructie"></option>
-            <option value="Installatietechniek"></option>
-            <option value="Vastgoed &amp; makelaardij"></option>
-            <option value="ICT &amp; software"></option>
-            <option value="Marketing &amp; communicatie"></option>
-            <option value="Advies &amp; consultancy"></option>
-            <option value="Financieel &amp; administratie"></option>
-            <option value="Juridisch"></option>
-            <option value="Verzekeringen"></option>
-            <option value="HR &amp; werving"></option>
-            <option value="Beveiliging"></option>
-            <option value="Logistiek &amp; transport"></option>
-            <option value="Productie &amp; industrie"></option>
-            <option value="Groothandel"></option>
-            <option value="Detailhandel"></option>
-            <option value="Horeca &amp; catering"></option>
-            <option value="Zorg &amp; welzijn"></option>
-            <option value="Sport &amp; gezondheid"></option>
-            <option value="Onderwijs &amp; training"></option>
-            <option value="Energie &amp; duurzaamheid"></option>
-            <option value="Automotive"></option>
-            <option value="Landbouw &amp; groen"></option>
-            <option value="Evenementen"></option>
-            <option value="Reizen &amp; recreatie"></option>
-            <option value="Kunst &amp; creatief"></option>
-            <option value="Defensie &amp; veiligheid"></option>
-            <option value="Overheid &amp; non-profit"></option>
-            <option value="Overig"></option>
-          </datalist>
+      <!-- Bedrijven -->
+      <div class="form-card">
+        <span class="kicker">Bedrijven</span>
+        <h2 style="font-size:1.35rem;">Jouw bedrijf of bedrijven</h2>
+        <p class="muted">Heb je meerdere bedrijven? Voeg ze allemaal toe. Het hoofdbedrijf staat vooraan in de ledengids; de andere bedrijven staan op je profielpagina.</p>
+
+        <div class="bedrijven-lijst" data-bedrijven data-volgende="<%= bedrijven.length %>">
+          <% bedrijven.forEach(function(b, idx){ %>
+            <%- include('../partials/bedrijf-blok', { i: idx, b: b }) %>
+          <% }) %>
         </div>
-        <div class="veld"><label for="plaats">Plaats</label><input type="text" id="plaats" name="plaats" value="<%= profiel.plaats || '' %>" maxlength="120" autocomplete="address-level2"></div>
+        <p class="muted lege-bedrijven" style="<%= bedrijven.length ? 'display:none;' : '' %>">Nog geen bedrijf toegevoegd.</p>
+        <button type="button" class="btn btn--ghost" data-bedrijf-toevoegen>+ Bedrijf toevoegen</button>
+
+        <template id="bedrijf-sjabloon"><%- include('../partials/bedrijf-blok', { i: '__I__', b: {} }) %></template>
+        <datalist id="branche-opties">
+          <option value="Bouw &amp; constructie"></option>
+          <option value="Installatietechniek"></option>
+          <option value="Vastgoed &amp; makelaardij"></option>
+          <option value="ICT &amp; software"></option>
+          <option value="Marketing &amp; communicatie"></option>
+          <option value="Advies &amp; consultancy"></option>
+          <option value="Financieel &amp; administratie"></option>
+          <option value="Juridisch"></option>
+          <option value="Verzekeringen"></option>
+          <option value="HR &amp; werving"></option>
+          <option value="Beveiliging"></option>
+          <option value="Logistiek &amp; transport"></option>
+          <option value="Productie &amp; industrie"></option>
+          <option value="Groothandel"></option>
+          <option value="Detailhandel"></option>
+          <option value="Horeca &amp; catering"></option>
+          <option value="Zorg &amp; welzijn"></option>
+          <option value="Sport &amp; gezondheid"></option>
+          <option value="Onderwijs &amp; training"></option>
+          <option value="Energie &amp; duurzaamheid"></option>
+          <option value="Automotive"></option>
+          <option value="Landbouw &amp; groen"></option>
+          <option value="Evenementen"></option>
+          <option value="Reizen &amp; recreatie"></option>
+          <option value="Kunst &amp; creatief"></option>
+          <option value="Defensie &amp; veiligheid"></option>
+          <option value="Overheid &amp; non-profit"></option>
+          <option value="Overig"></option>
+        </datalist>
       </div>
-      <div class="veld-rij">
-        <div class="veld"><label for="telefoon">Telefoon</label><input type="tel" id="telefoon" name="telefoon" value="<%= profiel.telefoon || '' %>" maxlength="40" autocomplete="tel"></div>
-        <div class="veld"><label for="website">Website</label><input type="text" id="website" name="website" value="<%= profiel.website || '' %>" placeholder="www.voorbeeld.nl" maxlength="300" autocomplete="url"></div>
+
+      <!-- Expertise & netwerk -->
+      <div class="form-card">
+        <span class="kicker">Expertise &amp; netwerk</span>
+        <h2 style="font-size:1.35rem;">Waar kunnen leden je voor vinden?</h2>
+        <div class="veld">
+          <label for="bio">Over jou / je werk</label>
+          <textarea id="bio" name="bio" maxlength="4000" placeholder="Vertel kort wie je bent, wat je doet en wat je drijft."><%= profiel.bio || '' %></textarea>
+        </div>
+        <div class="veld">
+          <label for="expertise">Expertise / specialismen</label>
+          <input type="text" id="expertise" name="expertise" value="<%= profiel.expertise || '' %>" maxlength="600" placeholder="bijv. Bouwbegeleiding, Financiering, Werving & selectie">
+          <span class="hint">Gescheiden door komma's. Hierop kunnen leden zoeken.</span>
+        </div>
+        <div class="veld-rij">
+          <div class="veld">
+            <label for="aanbod">Waarmee kan ik andere leden helpen?</label>
+            <textarea id="aanbod" name="aanbod" maxlength="2000" style="min-height:100px;" placeholder="Kennis, netwerk, diensten, faciliteiten…"><%= profiel.aanbod || '' %></textarea>
+          </div>
+          <div class="veld">
+            <label for="vraag">Waar ben ik naar op zoek?</label>
+            <textarea id="vraag" name="vraag" maxlength="2000" style="min-height:100px;" placeholder="Klanten, partners, personeel, kennis…"><%= profiel.vraag || '' %></textarea>
+          </div>
+        </div>
       </div>
-      <div class="veld">
-        <label for="bio">Over jou / je bedrijf</label>
-        <textarea id="bio" name="bio" maxlength="4000" placeholder="Vertel kort wie je bent, wat je doet en waarmee je andere leden kunt helpen."><%= profiel.bio || '' %></textarea>
+
+      <!-- Defensie -->
+      <div class="form-card">
+        <span class="kicker">Achtergrond</span>
+        <h2 style="font-size:1.35rem;">Band met Defensie</h2>
+        <div class="veld-rij" style="margin-bottom:0;">
+          <div class="veld" style="margin:0;">
+            <label for="defensie_relatie">Relatie tot Defensie</label>
+            <select id="defensie_relatie" name="defensie_relatie">
+              <option value="">Kies…</option>
+              <% defensieOpties.forEach(function(o){ %>
+                <option value="<%= o %>" <%= profiel.defensie_relatie === o ? 'selected' : '' %>><%= o %></option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="veld" style="margin:0;">
+            <label for="defensie_toelichting">Eenheid / periode (optioneel)</label>
+            <input type="text" id="defensie_toelichting" name="defensie_toelichting" value="<%= profiel.defensie_toelichting || '' %>" maxlength="500" placeholder="bijv. 11 Luchtmobiele Brigade, 2004–2012">
+          </div>
+        </div>
       </div>
-      <button type="submit" class="btn btn--primary">Profiel opslaan</button>
+
+      <div><button type="submit" class="btn btn--primary">Profiel opslaan</button></div>
     </form>
 
     <a href="/profiel/beveiliging" class="module" style="margin-top:24px;">
       <h3>🔐 Beveiliging</h3>
-      <p>Wachtwoord wijzigen, tweestapsverificatie met een authenticator-app instellen en ingelogde apparaten beheren.</p>
+      <p>Inlog-e-mailadres of wachtwoord wijzigen, tweestapsverificatie met een authenticator-app instellen en ingelogde apparaten beheren.</p>
       <span class="pijl">Naar beveiliging →</span>
     </a>
   </div>

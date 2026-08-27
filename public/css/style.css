@@ -607,3 +607,13 @@ h1, h2, h3, .hero h1, .paginakop h1, .beeldband h2 { overflow-wrap: break-word; 
 .social svg { width: 18px; height: 18px; fill: currentColor; }
 .social--licht a { border-color: var(--line-strong); color: var(--ink); }
 .social--licht a:hover { background: var(--maroon); color: var(--white); border-color: var(--maroon); }
+
+/* Uitgebreid profiel: bedrijfsblokken */
+.bedrijven-lijst { counter-reset: bedrijf; display: grid; gap: 18px; margin-bottom: 16px; }
+.bedrijf-blok { border: 1px solid var(--line-strong); border-radius: var(--radius); padding: 18px 20px 16px; margin: 0; background: var(--bone); }
+.bedrijf-blok legend { font-family: var(--font-display); font-weight: 700; padding: 0 8px; color: var(--maroon); }
+.bedrijf-blok legend::before { counter-increment: bedrijf; content: "Bedrijf " counter(bedrijf); }
+.bedrijf-blok input[type=text], .bedrijf-blok input[type=email], .bedrijf-blok input[type=tel], .bedrijf-blok textarea { background: var(--white); }
+.bedrijf-kaart .bedrijf-gegevens { margin: 12px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px 16px; }
+.bedrijf-kaart .bedrijf-gegevens dt { font-size: .68rem; text-transform: uppercase; letter-spacing: .12em; color: var(--ink-soft); font-weight: 700; }
+.bedrijf-kaart .bedrijf-gegevens dd { margin: 0; font-weight: 600; font-size: .92rem; overflow-wrap: anywhere; }

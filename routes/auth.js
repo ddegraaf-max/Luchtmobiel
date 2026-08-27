@@ -108,6 +108,9 @@ router.post('/registreren', limRegistratie, turnstile.verifieer, async (req, res
        RETURNING id, naam, email, rol, totp_ingeschakeld`,
       [naam, email, hash, bedrijf, functie]
     );
+    if (bedrijf) {
+      await pool.query('INSERT INTO bedrijven (user_id, naam, functie, hoofd) VALUES ($1, $2, $3, true)', [rows[0].id, bedrijf, functie]);
+    }
     await voltooiLogin(req, rows[0]);
     req.session.flash = { type: 'succes', message: 'Welkom! Vul je profiel aan zodat andere leden je kunnen vinden.' };
 

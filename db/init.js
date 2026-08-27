@@ -126,6 +126,59 @@ async function init() {
     );
   `);
 
+  // Uitgebreid profiel: meerdere bedrijven per lid + extra persoonlijke velden
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS bedrijven (
+      id            SERIAL PRIMARY KEY,
+      user_id       INTEGER REFERENCES users(id) ON DELETE CASCADE,
+      naam          TEXT NOT NULL,
+      functie       TEXT,
+      branche       TEXT,
+      omschrijving  TEXT,
+      website       TEXT,
+      email         TEXT,
+      telefoon      TEXT,
+      adres         TEXT,
+      postcode      TEXT,
+      plaats        TEXT,
+      kvk           TEXT,
+      linkedin      TEXT,
+      logo_id       INTEGER REFERENCES media(id) ON DELETE SET NULL,
+      hoofd         BOOLEAN NOT NULL DEFAULT false,
+      volgorde      INTEGER NOT NULL DEFAULT 0,
+      aangemaakt    TIMESTAMPTZ DEFAULT now()
+    );
+  `);
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS foto_id INTEGER REFERENCES media(id) ON DELETE SET NULL;`);
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS contact_email TEXT;`);
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS linkedin TEXT;`);
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS expertise TEXT;`);
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS aanbod TEXT;`);
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS vraag TEXT;`);
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS defensie_relatie TEXT;`);
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS defensie_toelichting TEXT;`);
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS toon_telefoon BOOLEAN NOT NULL DEFAULT true;`);
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS toon_email BOOLEAN NOT NULL DEFAULT true;`);
+
+  // Eenmalig: bestaande bedrijfsgegevens op het profiel overzetten naar de bedrijventabel.
+  try {
+    const { rows } = await pool.query(
+      `SELECT u.id, u.bedrijf, u.functie, u.branche, u.plaats, u.website, u.logo_id
+       FROM users u LEFT JOIN bedrijven b ON b.user_id = u.id
+       WHERE b.id IS NULL AND u.bedrijf IS NOT NULL AND u.bedrijf <> ''`
+    );
+    for (const u of rows) {
+      await pool.query(
+        `INSERT INTO bedrijven (user_id, naam, functie, branche, plaats, website, logo_id, hoofd)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, true)`,
+        [u.id, u.bedrijf, u.functie, u.branche, u.plaats, u.website, u.logo_id]
+      );
+    }
+    if (rows.length) console.log('[db] Bedrijfsgegevens overgezet naar de bedrijventabel voor', rows.length, 'leden.');
+  } catch (err) {
+    console.error('[db] Overzetten bedrijven mislukt:', err.message);
+  }
+
   // Partners & initiatieven
   await pool.query(`
     CREATE TABLE IF NOT EXISTS partners (

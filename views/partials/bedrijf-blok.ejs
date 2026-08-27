@@ -1,0 +1,56 @@
+<%
+  // Eén bedrijfsblok in het profielformulier. i = index (of '__I__' in het sjabloon), b = bedrijfsgegevens.
+  var p = 'bedrijf_' + i + '_';
+  var heeftLogo = !!b.logo_id;
+%>
+<fieldset class="bedrijf-blok" data-bedrijf>
+  <legend></legend>
+  <input type="hidden" name="<%= p %>id" value="<%= b.id || '' %>">
+
+  <div class="flex" style="gap:18px; margin-bottom:16px; align-items:flex-start;">
+    <div class="partner-logo" style="width:110px; height:84px; flex:none;">
+      <img id="b<%= i %>-logo-voorbeeld" src="<%= heeftLogo ? '/media/' + b.logo_id : '' %>" alt="" <%= heeftLogo ? '' : 'hidden' %>>
+      <span class="initialen" id="b<%= i %>-logo-initialen" <%= heeftLogo ? 'hidden' : '' %>><%= h.initialen(b.naam || '?') %></span>
+    </div>
+    <div class="veld" style="flex:1; margin:0;">
+      <label for="<%= p %>logo">Bedrijfslogo</label>
+      <input type="file" id="<%= p %>logo" name="<%= p %>logo" accept="image/png,image/jpeg,image/webp,image/gif"
+             data-voorbeeld="#b<%= i %>-logo-voorbeeld" data-verberg="#b<%= i %>-logo-initialen" data-melding="#b<%= i %>-logo-melding">
+      <span class="hint">PNG, JPG, WebP of GIF, max 2 MB.</span>
+      <div id="b<%= i %>-logo-melding" class="hint" style="display:none; color:var(--maroon); margin-top:6px;">Nieuw logo gekozen — nog niet opgeslagen.</div>
+      <% if (heeftLogo) { %>
+        <label class="check" style="margin-top:8px; font-weight:500; font-size:.86rem;"><input type="checkbox" name="<%= p %>logo_verwijderen"> Logo verwijderen</label>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="veld-rij">
+    <div class="veld"><label for="<%= p %>naam">Bedrijfsnaam *</label><input type="text" id="<%= p %>naam" name="<%= p %>naam" value="<%= b.naam || '' %>" maxlength="150"></div>
+    <div class="veld"><label for="<%= p %>functie">Jouw functie / rol</label><input type="text" id="<%= p %>functie" name="<%= p %>functie" value="<%= b.functie || '' %>" maxlength="120" placeholder="bijv. Eigenaar, Directeur, Adviseur"></div>
+  </div>
+  <div class="veld-rij">
+    <div class="veld"><label for="<%= p %>branche">Branche</label><input type="text" id="<%= p %>branche" name="<%= p %>branche" value="<%= b.branche || '' %>" list="branche-opties" maxlength="120" placeholder="Kies of typ je eigen branche"></div>
+    <div class="veld"><label for="<%= p %>website">Website</label><input type="text" id="<%= p %>website" name="<%= p %>website" value="<%= b.website || '' %>" maxlength="300" placeholder="www.bedrijf.nl"></div>
+  </div>
+  <div class="veld-rij">
+    <div class="veld"><label for="<%= p %>email">E-mail (zakelijk)</label><input type="email" id="<%= p %>email" name="<%= p %>email" value="<%= b.email || '' %>" maxlength="200"></div>
+    <div class="veld"><label for="<%= p %>telefoon">Telefoon (zakelijk)</label><input type="tel" id="<%= p %>telefoon" name="<%= p %>telefoon" value="<%= b.telefoon || '' %>" maxlength="40"></div>
+  </div>
+  <div class="veld"><label for="<%= p %>adres">Adres</label><input type="text" id="<%= p %>adres" name="<%= p %>adres" value="<%= b.adres || '' %>" maxlength="200" placeholder="Straat en huisnummer"></div>
+  <div class="veld-rij">
+    <div class="veld"><label for="<%= p %>postcode">Postcode</label><input type="text" id="<%= p %>postcode" name="<%= p %>postcode" value="<%= b.postcode || '' %>" maxlength="20"></div>
+    <div class="veld"><label for="<%= p %>plaats">Plaats</label><input type="text" id="<%= p %>plaats" name="<%= p %>plaats" value="<%= b.plaats || '' %>" maxlength="120"></div>
+  </div>
+  <div class="veld-rij">
+    <div class="veld"><label for="<%= p %>kvk">KvK-nummer</label><input type="text" id="<%= p %>kvk" name="<%= p %>kvk" value="<%= b.kvk || '' %>" maxlength="20"></div>
+    <div class="veld"><label for="<%= p %>linkedin">LinkedIn-bedrijfspagina</label><input type="text" id="<%= p %>linkedin" name="<%= p %>linkedin" value="<%= b.linkedin || '' %>" maxlength="300" placeholder="linkedin.com/company/…"></div>
+  </div>
+  <div class="veld">
+    <label for="<%= p %>omschrijving">Wat doet dit bedrijf?</label>
+    <textarea id="<%= p %>omschrijving" name="<%= p %>omschrijving" maxlength="2000" style="min-height:90px;" placeholder="Korte omschrijving van de activiteiten, producten of diensten."><%= b.omschrijving || '' %></textarea>
+  </div>
+  <div class="flex between" style="align-items:center;">
+    <label class="check" style="cursor:pointer; margin:0;"><input type="radio" name="hoofdbedrijf" value="<%= i %>" <%= b.hoofd ? 'checked' : '' %>> Hoofdbedrijf (wordt getoond in de ledengids)</label>
+    <button type="button" class="btn btn--danger btn--sm" data-bedrijf-verwijderen data-bestaand="<%= b.id ? '1' : '' %>">Bedrijf verwijderen</button>
+  </div>
+</fieldset>

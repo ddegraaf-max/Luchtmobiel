@@ -1,4 +1,4 @@
-// Mobiel menu togglen
+// Mobiel menu togglen, afdrukken, bedrijfsblokken toevoegen/verwijderen
 document.addEventListener('click', function (e) {
   const toggle = e.target.closest('.nav-toggle');
   if (toggle) {
@@ -8,6 +8,46 @@ document.addEventListener('click', function (e) {
 
   // Afdrukken (herstelcodes)
   if (e.target.closest('[data-print]')) window.print();
+
+  // Profiel: bedrijf toevoegen
+  const toevoegen = e.target.closest('[data-bedrijf-toevoegen]');
+  if (toevoegen) {
+    const lijst = document.querySelector('[data-bedrijven]');
+    const sjabloon = document.getElementById('bedrijf-sjabloon');
+    if (!lijst || !sjabloon) return;
+    if (lijst.querySelectorAll('[data-bedrijf]').length >= 10) { alert('Je kunt maximaal 10 bedrijven toevoegen.'); return; }
+    const idx = Number(lijst.dataset.volgende || lijst.querySelectorAll('[data-bedrijf]').length);
+    lijst.dataset.volgende = String(idx + 1);
+    lijst.insertAdjacentHTML('beforeend', sjabloon.innerHTML.replace(/__I__/g, String(idx)));
+    const nieuw = lijst.lastElementChild;
+    if (!lijst.querySelector('input[name="hoofdbedrijf"]:checked')) {
+      const radio = nieuw.querySelector('input[name="hoofdbedrijf"]');
+      if (radio) radio.checked = true;
+    }
+    const leeg = document.querySelector('.lege-bedrijven');
+    if (leeg) leeg.style.display = 'none';
+    const eerste = nieuw.querySelector('input[type=text]');
+    if (eerste) eerste.focus();
+  }
+
+  // Profiel: bedrijf verwijderen
+  const verwijderen = e.target.closest('[data-bedrijf-verwijderen]');
+  if (verwijderen) {
+    const blok = verwijderen.closest('[data-bedrijf]');
+    if (!blok) return;
+    if (verwijderen.dataset.bestaand && !confirm('Dit bedrijf van je profiel verwijderen? Dit wordt definitief zodra je op "Profiel opslaan" klikt.')) return;
+    const wasHoofd = blok.querySelector('input[name="hoofdbedrijf"]:checked');
+    blok.remove();
+    const lijst = document.querySelector('[data-bedrijven]');
+    if (lijst) {
+      if (wasHoofd) {
+        const volgende = lijst.querySelector('input[name="hoofdbedrijf"]');
+        if (volgende) volgende.checked = true;
+      }
+      const leeg = document.querySelector('.lege-bedrijven');
+      if (leeg && !lijst.querySelector('[data-bedrijf]')) leeg.style.display = '';
+    }
+  }
 });
 
 // Bevestiging voor verwijderacties en andere gevoelige formulieren
@@ -25,11 +65,11 @@ document.addEventListener('change', function (e) {
     el.form.requestSubmit ? el.form.requestSubmit() : el.form.submit();
   }
 
-  // Direct voorbeeld tonen van een gekozen afbeelding (bijv. profiel-logo)
+  // Direct voorbeeld tonen van een gekozen afbeelding (foto, logo)
   if (el.matches && el.matches('input[type=file][data-voorbeeld]')) {
     const beeld = document.querySelector(el.dataset.voorbeeld);
     const verberg = el.dataset.verberg ? document.querySelector(el.dataset.verberg) : null;
-    const melding = document.getElementById('logo-melding');
+    const melding = el.dataset.melding ? document.querySelector(el.dataset.melding) : document.getElementById('logo-melding');
     const bestand = el.files && el.files[0];
     if (!beeld) return;
     if (bestand && /^image\//.test(bestand.type)) {

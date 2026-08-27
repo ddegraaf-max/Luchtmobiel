@@ -12,7 +12,7 @@
 <section class="section section--tight">
   <div class="wrap">
     <form method="get" class="filterbalk">
-      <input type="text" name="zoek" placeholder="Zoek op naam, bedrijf of expertise…" value="<%= zoek %>">
+      <input type="text" name="zoek" placeholder="Zoek op naam, bedrijf, expertise of plaats…" value="<%= zoek %>">
       <select name="branche">
         <option value="">Alle branches</option>
         <% branches.forEach(function(b){ %>
@@ -33,20 +33,34 @@
       <div class="lege-staat"><p class="mb-0">Geen leden gevonden. Pas je zoekopdracht aan.</p></div>
     <% } else { %>
       <div class="grid grid--auto">
-        <% leden.forEach(function(l){ %>
+        <% leden.forEach(function(l){ var hoofd = l.bedrijven[0] || null; %>
           <a href="/leden/<%= l.id %>" class="card lid-card" style="text-decoration:none;">
-            <% if (l.logo_id) { %>
-              <img class="avatar" src="/media/<%= l.logo_id %>" alt="">
+            <% if (l.avatarId) { %>
+              <img class="avatar" src="/media/<%= l.avatarId %>" alt="">
             <% } else { %>
-              <span class="avatar"><%= h.initialen(l.bedrijf || l.naam) %></span>
+              <span class="avatar"><%= h.initialen(l.naam) %></span>
             <% } %>
             <div class="info">
               <div class="naam"><%= l.naam %>
                 <% if (l.rol === 'brigade') { %><span class="badge badge--brigade" style="vertical-align:middle;">Brigade</span><% } %>
               </div>
-              <% if (l.bedrijf) { %><div class="rol"><%= l.bedrijf %></div><% } %>
-              <% if (l.functie) { %><div class="sub"><%= l.functie %></div><% } %>
-              <% if (l.branche) { %><div style="margin-top:8px;"><span class="badge"><%= l.branche %></span></div><% } %>
+              <% if (hoofd) { %>
+                <div class="rol"><%= hoofd.naam %><% if (l.bedrijven.length > 1) { %> <span class="muted" style="font-weight:500;">+<%= l.bedrijven.length - 1 %></span><% } %></div>
+                <% if (hoofd.functie) { %><div class="sub"><%= hoofd.functie %></div><% } %>
+              <% } else if (l.bedrijf) { %>
+                <div class="rol"><%= l.bedrijf %></div>
+                <% if (l.functie) { %><div class="sub"><%= l.functie %></div><% } %>
+              <% } %>
+              <% var branches = []; l.bedrijven.forEach(function(b){ if (b.branche && branches.indexOf(b.branche) < 0) branches.push(b.branche); }); if (!branches.length && l.branche) branches.push(l.branche); %>
+              <% if (branches.length || (l.plaats)) { %>
+                <div class="flex" style="gap:6px; margin-top:8px;">
+                  <% branches.slice(0, 3).forEach(function(b){ %><span class="badge"><%= b %></span><% }) %>
+                  <% if (l.plaats) { %><span class="badge badge--olive"><%= l.plaats %></span><% } %>
+                </div>
+              <% } %>
+              <% if (l.tags.length) { %>
+                <div class="meta" style="margin-top:8px;"><%= l.tags.slice(0, 5).join(' · ') %></div>
+              <% } %>
               <% if (l.bio) { %><div class="omschrijving"><%= h.kort(l.bio, 110) %></div><% } %>
             </div>
           </a>

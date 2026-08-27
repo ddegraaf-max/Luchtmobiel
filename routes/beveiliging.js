@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs');
 const QRCode = require('qrcode');
 const pool = require('../db/pool');
 const { requireLogin } = require('../middleware/auth');
+const { isEmail } = require('../lib/helpers');
 const totp = require('../lib/totp');
 const bev = require('../lib/beveiliging');
 const tfa = require('../lib/tfa');
@@ -79,6 +80,28 @@ router.post('/wachtwoord', limGevoelig, async (req, res) => {
   await stuurMelding(user, 'Je wachtwoord is gewijzigd', 'Het wachtwoord van je account op het ledenplatform is zojuist gewijzigd. Op andere apparaten ben je automatisch uitgelogd.');
 
   req.session.flash = { type: 'succes', message: 'Je wachtwoord is gewijzigd. Op andere apparaten ben je uitgelogd.' };
+  res.redirect('/profiel/beveiliging');
+});
+
+// Inlog-e-mailadres wijzigen (met wachtwoord; oud én nieuw adres krijgen bericht)
+router.post('/email', limGevoelig, async (req, res) => {
+  const user = await haalUser(req.session.user.id);
+  const nieuw = typeof req.body.nieuw_email === 'string' ? req.body.nieuw_email.trim().toLowerCase().slice(0, 200) : '';
+  if (!isEmail(nieuw)) return toon(res, user, { fout: 'Vul een geldig nieuw e-mailadres in.' });
+  if (nieuw === user.email) return toon(res, user, { fout: 'Dit is al je huidige e-mailadres.' });
+  if (!(await wachtwoordKlopt(user, req.body.wachtwoord))) return toon(res, user, { fout: 'Je wachtwoord is onjuist.' });
+  const bestaat = (await pool.query('SELECT id FROM users WHERE email = $1 AND id <> $2', [nieuw, user.id])).rows.length > 0;
+  if (bestaat) return toon(res, user, { fout: 'Er bestaat al een account met dit e-mailadres.' });
+
+  const oud = user.email;
+  await pool.query(
+    `UPDATE users SET email = $1, contact_email = CASE WHEN contact_email IS NULL OR contact_email = $2 THEN $1 ELSE contact_email END WHERE id = $3`,
+    [nieuw, oud, user.id]
+  );
+  req.session.user.email = nieuw;
+  await stuurMelding({ ...user, email: oud }, 'Je inlog-e-mailadres is gewijzigd', `Het e-mailadres van je account op het ledenplatform is gewijzigd naar <strong>${escHtml(nieuw)}</strong>. Inloggen doe je voortaan met dat adres.`);
+  await stuurMelding({ ...user, email: nieuw }, 'Je inlog-e-mailadres is gewijzigd', `Dit adres is vanaf nu het inlog-e-mailadres van je account op het ledenplatform (voorheen ${escHtml(oud)}).`);
+  req.session.flash = { type: 'succes', message: `Je e-mailadres is gewijzigd naar ${nieuw}. Log voortaan in met dit adres.` };
   res.redirect('/profiel/beveiliging');
 });
 
