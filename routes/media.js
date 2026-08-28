@@ -11,14 +11,16 @@ const AFBEELDINGEN = new Set(['image/png', 'image/jpeg', 'image/gif', 'image/web
 
 router.get('/:id', async (req, res) => {
   try {
-    const { rows } = await pool.query('SELECT mime, data FROM media WHERE id = $1', [req.params.id]);
+    const { rows } = await pool.query('SELECT mime, data, besloten FROM media WHERE id = $1', [req.params.id]);
     if (rows.length === 0) return res.status(404).end();
+    // Besloten afbeeldingen (profielfoto's, bedrijfslogo's) alleen voor ingelogde leden
+    if (rows[0].besloten && !req.session.user) return res.status(404).end();
     const mime = AFBEELDINGEN.has(rows[0].mime) ? rows[0].mime : 'application/octet-stream';
     res.set('Content-Type', mime);
     res.set('X-Content-Type-Options', 'nosniff');
     res.set('Content-Disposition', 'inline');
     res.set('Content-Security-Policy', "default-src 'none'; style-src 'unsafe-inline'; sandbox");
-    res.set('Cache-Control', 'public, max-age=86400, immutable');
+    res.set('Cache-Control', rows[0].besloten ? 'private, max-age=3600' : 'public, max-age=86400, immutable');
     res.send(rows[0].data);
   } catch (err) {
     console.error('[media]', err.message);

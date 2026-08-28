@@ -47,6 +47,7 @@ Ga naar je app-service → tabblad **Variables** en voeg toe:
 | `REGISTRATIE_CODE` | de toegangscode voor nieuwe leden, bijv. `LUCHTMOBIEL` |
 | `NODE_ENV` | `production` |
 | `AGENDA_IMPORT_UREN` | (optioneel) om de hoeveel uur de agenda van bclmb.nl wordt overgenomen; standaard `6`, `0` = uit |
+| `TFA_VERPLICHT_ADMIN` | (optioneel) `1` = beheerders moeten eerst tweestapsverificatie instellen voordat ze bij Beheer kunnen |
 | `APP_URL` | het adres van de site, bijv. `https://jouw-app.up.railway.app` (voor links in e-mails) |
 | `ENCRYPTIE_SLEUTEL` | (aanbevolen) nog een lange willekeurige tekst; hiermee worden 2FA-geheimen versleuteld. Daarna **niet meer wijzigen** |
 | `RESEND_API_KEY` | API-sleutel van [resend.com](https://resend.com) voor e-mail (welkomstmail, wachtwoord vergeten, meldingen) |
@@ -137,9 +138,14 @@ Laat je beide variabelen leeg, dan is er geen robot-controle. Werkt inloggen na 
 ### Wat er verder is beveiligd
 - Wachtwoorden met bcrypt (12 rondes); 2FA-geheimen versleuteld (AES-256-GCM); van herstelcodes en herstellinks alleen een hash in de database.
 - Bescherming tegen brute force (limiet op inlog-, registratie-, herstel- en 2FA-pogingen) en tegen bots (Turnstile).
-- CSRF-tokens op alle formulieren, veilige HTTP-headers (CSP, HSTS, nosniff, geen framing).
-- Nieuwe sessie-id bij inloggen; bij wachtwoordwijziging of -herstel worden andere apparaten uitgelogd; deactiveren door de beheerder werkt direct.
-- Geüploade afbeeldingen worden op inhoud gecontroleerd (alleen echte JPG/PNG/WebP/GIF, geen SVG).
+- CSRF-tokens op alle formulieren, veilige HTTP-headers (CSP zonder inline scripts, HSTS, nosniff, geen framing, COOP/CORP), https afgedwongen in productie.
+- Nieuwe sessie-id bij inloggen; bij wachtwoordwijziging of -herstel worden andere apparaten uitgelogd; deactiveren door de beheerder werkt direct; wijzigen van het inlog-e-mailadres vraagt het wachtwoord.
+- Geüploade afbeeldingen worden op inhoud gecontroleerd (alleen echte JPG/PNG/WebP/GIF, geen SVG) en gesandboxt geserveerd; profielfoto's en bedrijfslogo's zijn alleen zichtbaar voor ingelogde leden.
+- Alle invoer is begrensd (lengte, aantal velden, bestandsgrootte); route-id's worden gevalideerd; fouten tonen nooit technische details.
+- De agenda-import haalt alleen publieke http(s)-adressen op (geen interne netwerken) met een maximale grootte en time-out.
+- Met `TFA_VERPLICHT_ADMIN=1` kan een beheerder het beheerpaneel pas gebruiken na het instellen van tweestapsverificatie.
+
+Bewuste keuzes die je moet weten: afbeeldingen van openbare onderdelen (partners, projecten, evenementen, galerij) zijn via hun adres ook zonder inloggen op te vragen; bij registratie is te zien of een e-mailadres al bestaat (nodig voor een duidelijke melding, beperkt door de toegangscode en de limiet op pogingen); e-mail wijzigen wordt niet met een bevestigingslink geverifieerd (wel per mail gemeld op het oude en nieuwe adres).
 
 ## De toegangscode aanpassen
 Wil je de code wijzigen (bijv. na een nieuwe ledenwerving)? Pas de variabele `REGISTRATIE_CODE` op Railway aan en de app gebruikt direct de nieuwe code.

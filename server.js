@@ -11,7 +11,7 @@ const expressLayouts = require('express-ejs-layouts');
 const pool = require('./db/pool');
 const initDb = require('./db/init');
 const { attachUser } = require('./middleware/auth');
-const { headers, csrf, geenCacheVoorIngelogd } = require('./middleware/security');
+const { headers, csrf, geenCacheVoorIngelogd, httpsVerplicht, platteInvoer } = require('./middleware/security');
 const helpers = require('./lib/helpers');
 const turnstile = require('./lib/turnstile');
 
@@ -50,8 +50,15 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(expressLayouts);
 app.set('layout', 'partials/layout');
 
+// In productie alleen via https (Railway zet X-Forwarded-Proto; zonder die header doen we niets,
+// zodat er nooit een redirect-lus kan ontstaan).
+if (isProd) app.use(httpsVerplicht);
+
 // Beveiligingsheaders (CSP, HSTS, nosniff, ...)
 app.use(headers);
+
+// Query-parameters: geen geneste objecten (a[b]=c) uit de URL.
+app.set('query parser', 'simple');
 
 // Basis-locals meteen zetten, zodat óók een foutpagina die vroeg in de keten
 // wordt gerenderd (te groot verzoek, CSRF-fout, ...) altijd kan worden opgebouwd.
@@ -68,7 +75,8 @@ app.use((req, res, next) => {
 });
 
 // Body parsing
-app.use(express.urlencoded({ extended: false, limit: '2mb', parameterLimit: 200 }));
+app.use(express.urlencoded({ extended: false, limit: '2mb', parameterLimit: 500 }));
+app.use(platteInvoer);
 
 // Statische bestanden
 app.use('/static', express.static(path.join(__dirname, 'public'), { maxAge: '7d' }));

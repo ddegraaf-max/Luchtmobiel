@@ -40,7 +40,28 @@ function werkBestandsnaamBij(input) {
     wrapper.classList.remove('heeft-bestand');
   }
 }
-document.addEventListener('DOMContentLoaded', function () { verfraaiBestandsvelden(document); });
+// Afbeeldingen met een terugvaloptie (geen inline onerror: de CSP staat dat niet toe)
+function afbeeldingTerugval(img) {
+  if (img.dataset.terugvalKlaar) return;
+  img.dataset.terugvalKlaar = '1';
+  if (img.dataset.fallback) { img.src = img.dataset.fallback; return; }
+  if (img.hasAttribute('data-fallback-verberg')) {
+    img.style.display = 'none';
+    const volgende = img.nextElementSibling;
+    if (volgende) volgende.style.display = 'block';
+  }
+}
+document.addEventListener('error', function (e) {
+  const img = e.target;
+  if (img && img.tagName === 'IMG' && (img.dataset.fallback || img.hasAttribute('data-fallback-verberg'))) afbeeldingTerugval(img);
+}, true);
+
+document.addEventListener('DOMContentLoaded', function () {
+  verfraaiBestandsvelden(document);
+  document.querySelectorAll('img[data-fallback], img[data-fallback-verberg]').forEach(function (img) {
+    if (img.complete && img.naturalWidth === 0) afbeeldingTerugval(img);
+  });
+});
 
 // Mobiel menu togglen, afdrukken, bedrijfsblokken toevoegen/verwijderen
 document.addEventListener('click', function (e) {

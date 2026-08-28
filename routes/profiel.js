@@ -119,7 +119,7 @@ router.post('/', requireLogin, uploads, async (req, res) => {
     await client.query('BEGIN');
 
     // Persoonlijke foto
-    const nieuweFoto = await bewaarAfbeelding((req.files || []).find((f) => f.fieldname === 'foto'), uid, client);
+    const nieuweFoto = await bewaarAfbeelding((req.files || []).find((f) => f.fieldname === 'foto'), uid, client, { besloten: true });
     let fotoId = huidig.foto_id;
     if (nieuweFoto) fotoId = nieuweFoto;
     else if (req.body.foto_verwijderen === 'on') fotoId = null;
@@ -138,7 +138,7 @@ router.post('/', requireLogin, uploads, async (req, res) => {
     const behouden = new Set();
     let volgorde = 0;
     for (const b of lijst) {
-      const nieuwLogo = await bewaarAfbeelding(b.logo, uid, client);
+      const nieuwLogo = await bewaarAfbeelding(b.logo, uid, client, { besloten: true });
       const velden = [b.naam, b.functie, b.branche, b.omschrijving, b.website, b.email, b.telefoon, b.adres, b.postcode, b.plaats, b.kvk, b.linkedin];
       if (b.id && perId.has(b.id)) {
         const oud = perId.get(b.id);

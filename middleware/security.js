@@ -24,8 +24,41 @@ function headers(req, res, next) {
   res.set('X-Frame-Options', 'DENY');
   res.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=()');
+  res.set('Cross-Origin-Opener-Policy', 'same-origin');
+  res.set('Cross-Origin-Resource-Policy', 'same-origin');
   res.set('Content-Security-Policy', CSP);
   if (isProd) res.set('Strict-Transport-Security', 'max-age=15552000; includeSubDomains');
+  next();
+}
+
+// Dwingt https af achter een proxy die X-Forwarded-Proto meegeeft (Railway).
+// Ontbreekt die header, dan grijpen we niet in (voorkomt een redirect-lus).
+function httpsVerplicht(req, res, next) {
+  const proto = String(req.get('x-forwarded-proto') || '').split(',')[0].trim().toLowerCase();
+  if (proto !== 'http') return next();
+  if (req.method === 'GET' || req.method === 'HEAD') {
+    return res.redirect(301, 'https://' + req.get('host') + req.originalUrl);
+  }
+  return res.status(403).type('text/plain').send('Gebruik https.');
+}
+
+// Maakt van query en body platte tekstwaarden: geen arrays/objecten, en een bovengrens
+// per veld zodat extreem grote invoer niet tot trage verwerking of volle databases leidt.
+const MAX_VELD = 50000;
+function kapInvoer(bron) {
+  if (!bron || typeof bron !== 'object') return bron;
+  for (const k of Object.keys(bron)) {
+    let v = bron[k];
+    if (Array.isArray(v)) v = v[0];
+    if (v !== undefined && v !== null && typeof v !== 'string') v = typeof v === 'object' ? '' : String(v);
+    if (typeof v === 'string' && v.length > MAX_VELD) v = v.slice(0, MAX_VELD);
+    bron[k] = v;
+  }
+  return bron;
+}
+function platteInvoer(req, res, next) {
+  kapInvoer(req.query);
+  kapInvoer(req.body);
   next();
 }
 
@@ -60,4 +93,4 @@ function csrf(req, res, next) {
   });
 }
 
-module.exports = { headers, csrf, geenCacheVoorIngelogd };
+module.exports = { headers, csrf, geenCacheVoorIngelogd, httpsVerplicht, platteInvoer, kapInvoer };

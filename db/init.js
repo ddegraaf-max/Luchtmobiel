@@ -126,6 +126,22 @@ async function init() {
     );
   `);
 
+  // Besloten media: profielfoto's en bedrijfslogo's alleen voor ingelogde leden
+  await pool.query(`ALTER TABLE media ADD COLUMN IF NOT EXISTS besloten BOOLEAN NOT NULL DEFAULT false;`);
+  try {
+    const ids = new Set();
+    for (const r of (await pool.query('SELECT logo_id, foto_id FROM users WHERE logo_id IS NOT NULL OR foto_id IS NOT NULL')).rows) {
+      if (r.logo_id) ids.add(r.logo_id);
+      if (r.foto_id) ids.add(r.foto_id);
+    }
+    try {
+      for (const r of (await pool.query('SELECT logo_id FROM bedrijven WHERE logo_id IS NOT NULL')).rows) ids.add(r.logo_id);
+    } catch (e) { /* bedrijventabel bestaat bij een eerste start nog niet */ }
+    for (const id of ids) await pool.query('UPDATE media SET besloten = true WHERE id = $1 AND besloten = false', [id]);
+  } catch (err) {
+    console.error('[db] Markeren besloten media mislukt:', err.message);
+  }
+
   // Agenda: hele-dag-evenementen en automatische import vanaf bclmb.nl
   await pool.query(`ALTER TABLE evenementen ADD COLUMN IF NOT EXISTS hele_dag BOOLEAN NOT NULL DEFAULT false;`);
   await pool.query(`ALTER TABLE evenementen ADD COLUMN IF NOT EXISTS bron TEXT;`);

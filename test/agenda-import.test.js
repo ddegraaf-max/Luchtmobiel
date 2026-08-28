@@ -58,6 +58,16 @@ test('html naar tekst en detailpagina lezen', () => {
   assert.equal(ai.leesDetail('<dl><dt>Datum en tijd</dt> <dd>16 sep 2026 18:00 - 22:00</dd></dl>').datumTekst, '16 sep 2026 18:00 - 22:00', 'label "Datum en tijd" bij evenementen met tijd');
 });
 
+test('alleen publieke http(s)-adressen worden opgehaald (geen SSRF)', () => {
+  assert.equal(ai.urlToegestaan('https://www.bclmb.nl/_ical/public.ics'), true);
+  assert.equal(ai.urlToegestaan('http://bclmb.nl/evenementen/x'), true);
+  assert.equal(ai.urlToegestaan('https://congressus-9w-rbbc.s3-eu-west-1.amazonaws.com/files/x.png'), true);
+  for (const slecht of ['ftp://bclmb.nl/x', 'file:///etc/passwd', 'http://localhost/x', 'http://127.0.0.1:5432/', 'http://10.0.0.5/x',
+    'http://192.168.1.1/', 'http://172.16.0.1/', 'http://169.254.169.254/latest/meta-data/', 'http://[::1]/', 'http://postgres.railway.internal/', 'onzin', '']) {
+    assert.equal(ai.urlToegestaan(slecht), false, slecht);
+  }
+});
+
 test('categorie raden en entities', () => {
   assert.equal(ai.raadCategorie('Excursie: Oefening Falcon Leap'), 'Excursie');
   assert.equal(ai.raadCategorie('Intocht Fearless Falcon & Baretuitreiking'), 'Ceremonieel');

@@ -45,7 +45,15 @@ function requireLogin(req, res, next) {
 }
 
 function requireAdmin(req, res, next) {
-  if (req.session.user && req.session.user.rol === 'admin') return next();
+  const u = req.session.user;
+  if (u && u.rol === 'admin') {
+    // Optioneel: beheerders verplicht tweestapsverificatie (TFA_VERPLICHT_ADMIN=1)
+    if (process.env.TFA_VERPLICHT_ADMIN === '1' && !u.tfa) {
+      req.session.flash = { type: 'info', message: 'Als beheerder moet je eerst tweestapsverificatie instellen voordat je het beheer kunt gebruiken.' };
+      return res.redirect('/profiel/beveiliging');
+    }
+    return next();
+  }
   return res.status(403).render('error', {
     title: 'Geen toegang',
     bericht: 'Deze pagina is alleen voor beheerders.'

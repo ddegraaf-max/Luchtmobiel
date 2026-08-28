@@ -125,6 +125,34 @@ test('turnstile: uit zonder sleutels, verificatie met gemockte siteverify', asyn
   }
 });
 
+test('invoerbegrenzing en https-afdwinging', () => {
+  const { platteInvoer, httpsVerplicht, kapInvoer } = require('../middleware/security');
+  const { isEmail } = require('../lib/helpers');
+  assert.equal(isEmail('a@b.nl'), true);
+  assert.equal(isEmail('a@' + 'b'.repeat(300) + '.nl'), false, 'te lange adressen worden direct afgewezen');
+
+  const req = { query: { zoek: ['eerste', 'tweede'], obj: { a: 1 }, n: 5 }, body: { lang: 'x'.repeat(60000), ok: 'ja' } };
+  platteInvoer(req, {}, () => {});
+  assert.deepEqual(req.query, { zoek: 'eerste', obj: '', n: '5' });
+  assert.equal(req.body.lang.length, 50000);
+  assert.equal(req.body.ok, 'ja');
+  assert.equal(kapInvoer(undefined), undefined);
+
+  const maakRes = () => { const r = { status(c) { r.code = c; return r; }, redirect(c, u) { r.code = c; r.url = u; }, type() { return r; }, send() {} }; return r; };
+  let res = maakRes(); let door = false;
+  httpsVerplicht({ get: (h) => (h === 'x-forwarded-proto' ? 'http' : 'site.nl'), method: 'GET', originalUrl: '/leden?x=1' }, res, () => { door = true; });
+  assert.equal(res.code, 301); assert.equal(res.url, 'https://site.nl/leden?x=1'); assert.equal(door, false);
+  res = maakRes(); door = false;
+  httpsVerplicht({ get: (h) => (h === 'x-forwarded-proto' ? 'https' : 'site.nl'), method: 'GET', originalUrl: '/' }, res, () => { door = true; });
+  assert.equal(door, true);
+  res = maakRes(); door = false;
+  httpsVerplicht({ get: () => undefined, method: 'GET', originalUrl: '/' }, res, () => { door = true; });
+  assert.equal(door, true, 'zonder header: niets doen (geen redirect-lus)');
+  res = maakRes(); door = false;
+  httpsVerplicht({ get: (h) => (h === 'x-forwarded-proto' ? 'http' : 'site.nl'), method: 'POST', originalUrl: '/inloggen' }, res, () => { door = true; });
+  assert.equal(res.code, 403);
+});
+
 test('websites worden netjes genormaliseerd en getoond', () => {
   assert.equal(netteUrl('www.voorbeeld.nl'), 'https://www.voorbeeld.nl');
   assert.equal(netteUrl('https://aanenuitbouw.nl/'), 'https://aanenuitbouw.nl');
