@@ -33,7 +33,7 @@ router.get('/', async (req, res) => {
     )).rows;
 
     evenementen = (await pool.query(
-      `SELECT id, titel, categorie, start_op, eind_op, locatie
+      `SELECT id, titel, categorie, start_op, eind_op, locatie, hele_dag
        FROM evenementen WHERE COALESCE(eind_op, start_op) >= $1 ORDER BY start_op ASC LIMIT 3`,
       [isoLokaal(new Date())]
     )).rows;
@@ -88,7 +88,7 @@ router.get('/dashboard', requireLogin, async (req, res) => {
     )).rows;
 
     const mijnEvenementen = (await pool.query(
-      `SELECT e.id, e.titel, e.start_op, e.eind_op, e.locatie, a.aantal
+      `SELECT e.id, e.titel, e.start_op, e.eind_op, e.locatie, e.hele_dag, a.aantal
        FROM evenement_aanmeldingen a JOIN evenementen e ON e.id = a.evenement_id
        WHERE a.user_id = $1 ORDER BY e.start_op ASC`,
       [uid]

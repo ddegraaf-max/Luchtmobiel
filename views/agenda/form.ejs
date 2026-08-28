@@ -55,13 +55,20 @@
           <label for="max_plaatsen">Max. aantal plaatsen (optioneel)</label>
           <input type="number" id="max_plaatsen" name="max_plaatsen" min="1" value="<%= evenement.max_plaatsen || '' %>">
         </div>
-        <div class="veld" style="display:flex; align-items:center;">
+        <div class="veld" style="display:flex; flex-direction:column; justify-content:center; gap:10px;">
           <label style="display:flex; align-items:center; gap:10px; cursor:pointer; margin-top:22px;">
             <input type="checkbox" name="aanmelden" style="width:auto;" <%= (evenement.aanmelden === undefined || evenement.aanmelden) ? 'checked' : '' %>>
             Aanmelden mogelijk maken
           </label>
+          <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+            <input type="checkbox" name="hele_dag" style="width:auto;" <%= (evenement.hele_dag === true || evenement.hele_dag === 'on') ? 'checked' : '' %>>
+            Hele dag (tijden worden niet getoond)
+          </label>
         </div>
       </div>
+      <% if (evenement.bron_url) { %>
+        <div class="flash flash--info">Dit evenement is overgenomen van <a href="<%= evenement.bron_url %>" target="_blank" rel="noopener">bclmb.nl</a>. Titel, omschrijving, datum en locatie worden overschreven zodra de bron wijzigt.</div>
+      <% } %>
 
       <div class="veld">
         <label for="afbeelding">Afbeelding (optioneel)</label>

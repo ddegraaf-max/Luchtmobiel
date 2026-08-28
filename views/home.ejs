@@ -74,7 +74,7 @@
           <div>
             <% if (e.categorie) { %><span class="badge badge--olive" style="margin-bottom:4px;"><%= e.categorie %></span><% } %>
             <div style="font-family:var(--font-display); font-weight:700;"><%= e.titel %></div>
-            <div class="meta" style="margin-top:2px;"><%= h.formatTijd(e.start_op) %><%= e.locatie ? ' · ' + e.locatie : '' %></div>
+            <div class="meta" style="margin-top:2px;"><%= e.hele_dag ? 'Hele dag' : h.formatTijd(e.start_op) %><%= e.locatie ? ' · ' + e.locatie : '' %></div>
           </div>
         </a>
       <% }) %>

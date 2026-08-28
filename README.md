@@ -46,6 +46,7 @@ Ga naar je app-service → tabblad **Variables** en voeg toe:
 | `ADMIN_NAAM` | jouw naam, bijv. `Daniël de Graaf` |
 | `REGISTRATIE_CODE` | de toegangscode voor nieuwe leden, bijv. `LUCHTMOBIEL` |
 | `NODE_ENV` | `production` |
+| `AGENDA_IMPORT_UREN` | (optioneel) om de hoeveel uur de agenda van bclmb.nl wordt overgenomen; standaard `6`, `0` = uit |
 | `APP_URL` | het adres van de site, bijv. `https://jouw-app.up.railway.app` (voor links in e-mails) |
 | `ENCRYPTIE_SLEUTEL` | (aanbevolen) nog een lange willekeurige tekst; hiermee worden 2FA-geheimen versleuteld. Daarna **niet meer wijzigen** |
 | `RESEND_API_KEY` | API-sleutel van [resend.com](https://resend.com) voor e-mail (welkomstmail, wachtwoord vergeten, meldingen) |
@@ -98,6 +99,16 @@ Op de pagina **De Brigade** staan bij de drie eenheden voorlopige, zelf-ontworpe
 Gebruik bij voorkeur een PNG met transparante achtergrond (vierkant, bijv. 300×300 px). Zodra de bestanden er staan en je opnieuw deployt, verschijnen ze automatisch in plaats van de voorlopige ontwerpen.
 
 > **Belangrijk over rechten:** de officiële emblemen zijn beschermd beeldmateriaal van Defensie. Vraag het juiste, gelicentieerde beeld en toestemming op bij het regiment / de traditiecommissie, bij 11 Luchtmobiele Brigade of via het Mediacentrum Defensie. Als aan de brigade verbonden businessclub heb je daar doorgaans korte lijnen voor.
+
+## Agenda automatisch gevuld vanaf bclmb.nl
+De activiteiten op de hoofdsite van de Business Club ([bclmb.nl/evenementen](https://bclmb.nl/evenementen)) worden automatisch in de agenda van het platform gezet: bij het starten en daarna elke 6 uur (instelbaar met `AGENDA_IMPORT_UREN`; `0` zet het uit). In **Beheer** zie je wanneer de laatste import draaide en kun je met **Nu importeren** direct bijwerken.
+
+- Titel, omschrijving, datum/tijd, locatie en afbeelding komen van bclmb.nl (iCal-feed + de evenementpagina). Wijzigt er iets op de hoofdsite, dan wordt het hier bijgewerkt.
+- Geïmporteerde evenementen verwijzen voor het aanmelden naar bclmb.nl (knop *Aanmelden op bclmb.nl*), zodat er één deelnemerslijst is. Wil je toch aanmelden via het platform? Zet dan in het evenement *Aanmelden mogelijk maken* aan; die instelling (en de categorie en het maximum aantal plaatsen) wordt niet overschreven.
+- Verwijder je een geïmporteerd evenement in het platform, dan wordt het niet opnieuw geïmporteerd (terug te draaien in Beheer). Verdwijnt een toekomstig evenement van de hoofdsite, dan verdwijnt het hier ook, tenzij er al aanmeldingen zijn.
+- Evenementen zonder tijd worden als "hele dag" getoond; dat kun je ook voor handmatige evenementen aanvinken.
+
+> Bij de eerste import komen de echte activiteiten naast eventuele oude voorbeeld-evenementen te staan. Verwijder de voorbeelden (of dubbele handmatige versies) één keer via de agenda.
 
 ## Beveiliging: wachtwoord vergeten & tweestapsverificatie
 

@@ -126,6 +126,24 @@ async function init() {
     );
   `);
 
+  // Agenda: hele-dag-evenementen en automatische import vanaf bclmb.nl
+  await pool.query(`ALTER TABLE evenementen ADD COLUMN IF NOT EXISTS hele_dag BOOLEAN NOT NULL DEFAULT false;`);
+  await pool.query(`ALTER TABLE evenementen ADD COLUMN IF NOT EXISTS bron TEXT;`);
+  await pool.query(`ALTER TABLE evenementen ADD COLUMN IF NOT EXISTS bron_uid TEXT;`);
+  await pool.query(`ALTER TABLE evenementen ADD COLUMN IF NOT EXISTS bron_url TEXT;`);
+  await pool.query(`ALTER TABLE evenementen ADD COLUMN IF NOT EXISTS bron_hash TEXT;`);
+  await pool.query(`ALTER TABLE evenementen ADD COLUMN IF NOT EXISTS bron_afbeelding_url TEXT;`);
+  await pool.query(`ALTER TABLE evenementen ADD COLUMN IF NOT EXISTS bron_bijgewerkt TIMESTAMPTZ;`);
+  await pool.query(`CREATE INDEX IF NOT EXISTS evenementen_bron_idx ON evenementen(bron, bron_uid);`);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS agenda_import_negeer (
+      id          SERIAL PRIMARY KEY,
+      bron        TEXT NOT NULL,
+      bron_uid    TEXT NOT NULL,
+      aangemaakt  TIMESTAMPTZ DEFAULT now()
+    );
+  `);
+
   // Uitgebreid profiel: meerdere bedrijven per lid + extra persoonlijke velden
   await pool.query(`
     CREATE TABLE IF NOT EXISTS bedrijven (

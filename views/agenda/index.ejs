@@ -45,7 +45,12 @@
               <% if (e.categorie) { %><span class="badge badge--olive" style="margin-bottom:6px;"><%= e.categorie %></span><% } %>
               <a class="titel" href="/agenda/<%= e.id %>" style="display:block;"><%= e.titel %></a>
               <div class="meta-rij">
-                <span>🕑 <%= h.formatTijd(e.start_op) %><%= e.eind_op ? '–' + h.formatTijd(e.eind_op) : '' %></span>
+                <% if (e.hele_dag) { %>
+                  <span>🕑 Hele dag<%= e.eind_op && e.eind_op.slice(0, 10) !== e.start_op.slice(0, 10) ? ' · t/m ' + h.formatDatumKort(e.eind_op) : '' %></span>
+                <% } else { %>
+                  <span>🕑 <%= h.formatTijd(e.start_op) %><%= e.eind_op ? '–' + h.formatTijd(e.eind_op) : '' %></span>
+                <% } %>
+                <% if (e.bron_url) { %><span title="Overgenomen van de site van de Business Club">🔗 bclmb.nl</span><% } %>
                 <% if (e.locatie) { %><span>📍 <%= e.locatie %></span><% } %>
                 <% if (e.aanmelden && e.max_plaatsen) { %><span><%= Math.max(0, e.max_plaatsen - e.bezet) %> plaatsen vrij</span><% } %>
               </div>

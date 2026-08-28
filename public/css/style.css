@@ -617,3 +617,15 @@ h1, h2, h3, .hero h1, .paginakop h1, .beeldband h2 { overflow-wrap: break-word; 
 .bedrijf-kaart .bedrijf-gegevens { margin: 12px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px 16px; }
 .bedrijf-kaart .bedrijf-gegevens dt { font-size: .68rem; text-transform: uppercase; letter-spacing: .12em; color: var(--ink-soft); font-weight: 700; }
 .bedrijf-kaart .bedrijf-gegevens dd { margin: 0; font-weight: 600; font-size: .92rem; overflow-wrap: anywhere; }
+
+/* Nette bestandskiezer (vervangt de kale browserknop "Bestand kiezen") */
+.bestand-kiezer { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; cursor: pointer; max-width: 100%; margin: 2px 0 6px; }
+.bestand-kiezer input[type=file] { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; clip: rect(0 0 0 0); }
+.bestand-kiezer .bestand-knop { display: inline-flex; align-items: center; gap: .5em; font-weight: 700; font-size: .86rem; padding: 9px 14px; border: 1px solid var(--line-strong); border-radius: var(--radius); background: var(--white); color: var(--ink); transition: border-color .15s, color .15s, box-shadow .15s, background .15s; white-space: nowrap; }
+.bestand-kiezer .bestand-knop svg { width: 16px; height: 16px; }
+.bestand-kiezer:hover .bestand-knop, .bestand-kiezer:focus-within .bestand-knop { border-color: var(--maroon); color: var(--maroon); background: rgba(110,34,48,.05); }
+.bestand-kiezer:focus-within .bestand-knop { box-shadow: 0 0 0 3px rgba(110,34,48,.12); }
+.bestand-kiezer .bestand-naam { font-size: .86rem; color: var(--ink-soft); overflow-wrap: anywhere; }
+.bestand-kiezer.heeft-bestand .bestand-naam { color: var(--ink); font-weight: 600; }
+.bestand-kiezer .bestand-wissen { display: none; background: none; border: none; color: var(--maroon); font: inherit; font-size: .82rem; font-weight: 700; cursor: pointer; padding: 0; text-decoration: underline; }
+.bestand-kiezer.heeft-bestand .bestand-wissen { display: inline; }

@@ -5,6 +5,7 @@ const { requireLogin, requireAdmin, idParams } = require('../middleware/auth');
 const { beeindigSessies } = require('../lib/sessies');
 const tfa = require('../lib/tfa');
 const { sendMail, mailLayout, escHtml } = require('../lib/mail');
+const agendaImportLib = require('../lib/agenda-import');
 
 router.use(requireLogin, requireAdmin);
 idParams(router);
@@ -22,11 +23,29 @@ router.get('/', async (req, res) => {
         (SELECT COUNT(*) FROM projecten) AS projecten,
         (SELECT COUNT(*) FROM users WHERE totp_ingeschakeld = true) AS met_tfa
     `)).rows[0];
-    res.render('beheer/index', { title: 'Beheer', leden, stats });
+    const agendaImport = { ...agendaImportLib.status(), genegeerd: await agendaImportLib.aantalGenegeerd(),
+      aantal: (await pool.query('SELECT COUNT(*)::int AS n FROM evenementen WHERE bron = $1', [agendaImportLib.BRON])).rows[0].n };
+    res.render('beheer/index', { title: 'Beheer', leden, stats, agendaImport });
   } catch (err) {
     console.error('[beheer]', err.message);
     res.status(500).render('error', { title: 'Fout', bericht: 'Het beheerpaneel kon niet worden geladen.' });
   }
+});
+
+// Agenda-import vanaf bclmb.nl handmatig draaien
+router.post('/agenda-import', async (req, res) => {
+  const r = await agendaImportLib.importeerAgenda();
+  const samenvatting = `${r.nieuw} nieuw, ${r.bijgewerkt} bijgewerkt, ${r.ongewijzigd} ongewijzigd, ${r.verwijderd} verwijderd${r.overgeslagen ? ', ' + r.overgeslagen + ' genegeerd' : ''}.`;
+  req.session.flash = r.fouten.length
+    ? { type: 'fout', message: `Agenda-import afgerond met meldingen: ${samenvatting} ${r.fouten.join(' | ')}` }
+    : { type: 'succes', message: `Agenda-import afgerond: ${samenvatting}` };
+  res.redirect('/beheer');
+});
+
+router.post('/agenda-import/negeer-wissen', async (req, res) => {
+  await agendaImportLib.negeerlijstWissen();
+  req.session.flash = { type: 'succes', message: 'Genegeerde evenementen worden bij de volgende import weer toegevoegd.' };
+  res.redirect('/beheer');
 });
 
 const isZelf = (req) => Number(req.params.id) === req.session.user.id;

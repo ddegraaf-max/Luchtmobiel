@@ -5,6 +5,7 @@ const { requireLogin, requireRedactie, idParams } = require('../middleware/auth'
 const { isoLokaal, formatDatumLang, formatTijd } = require('../lib/helpers');
 const { sendMail, mailLayout, escHtml } = require('../lib/mail');
 const { afbeelding, bewaarAfbeelding } = require('../lib/upload');
+const agendaImport = require('../lib/agenda-import');
 
 const CATEGORIEEN = ['Ceremonieel', 'Sportief', 'Excursie', 'Netwerk', 'Overig'];
 
@@ -25,8 +26,13 @@ function leesFormulier(body) {
     start_op: DATUMTIJD.test(start) ? start : '',
     eind_op: eind && DATUMTIJD.test(eind) ? eind : null,
     aanmelden: body.aanmelden === 'on' || body.aanmelden === 'true' || body.aanmelden === '1',
+    hele_dag: body.hele_dag === 'on',
     max_plaatsen: Number.isFinite(maxp) && maxp > 0 ? maxp : null
   };
+  if (d.hele_dag && d.start_op) {
+    d.start_op = d.start_op.slice(0, 10) + 'T00:00';
+    d.eind_op = (d.eind_op || d.start_op).slice(0, 10) + 'T23:59';
+  }
   if (!d.titel || !d.start_op) d.fout = 'Vul minimaal een titel en een geldige startdatum/tijd in.';
   else if (eind && !d.eind_op) d.fout = 'De einddatum/tijd is ongeldig.';
   else if (d.eind_op && d.eind_op < d.start_op) d.fout = 'Het einde ligt vóór het begin.';
@@ -78,9 +84,9 @@ router.post('/nieuw', requireRedactie, uploadAfbeelding, async (req, res) => {
   try {
     const afbId = await bewaarAfbeelding(req.file, req.session.user.id);
     const { rows } = await pool.query(
-      `INSERT INTO evenementen (titel, categorie, omschrijving, locatie, start_op, eind_op, aanmelden, max_plaatsen, afbeelding_id, auteur_id)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING id`,
-      [d.titel, d.categorie, d.omschrijving, d.locatie, d.start_op, d.eind_op, d.aanmelden, d.max_plaatsen, afbId, req.session.user.id]
+      `INSERT INTO evenementen (titel, categorie, omschrijving, locatie, start_op, eind_op, aanmelden, max_plaatsen, afbeelding_id, auteur_id, hele_dag)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING id`,
+      [d.titel, d.categorie, d.omschrijving, d.locatie, d.start_op, d.eind_op, d.aanmelden, d.max_plaatsen, afbId, req.session.user.id, d.hele_dag]
     );
     req.session.flash = { type: 'succes', message: 'Evenement toegevoegd aan de agenda.' };
     res.redirect('/agenda/' + rows[0].id);
@@ -171,7 +177,9 @@ router.post('/:id/aanmelden', requireLogin, async (req, res) => {
     // E-mailnotificaties (niet-blokkerend)
     try {
       const u = req.session.user;
-      const wanneer = `${formatDatumLang(ev.start_op)} om ${formatTijd(ev.start_op)} uur`;
+      const wanneer = ev.hele_dag
+        ? `${formatDatumLang(ev.start_op)} (hele dag)`
+        : `${formatDatumLang(ev.start_op)} om ${formatTijd(ev.start_op)} uur`;
       const waar = ev.locatie ? `<br><strong>Waar:</strong> ${escHtml(ev.locatie)}` : '';
       await sendMail({
         to: u.email,
@@ -236,8 +244,8 @@ router.post('/:id/bewerken', requireRedactie, uploadAfbeelding, async (req, res)
     const afbId = (await bewaarAfbeelding(req.file, req.session.user.id)) || bestaand.afbeelding_id;
     await pool.query(
       `UPDATE evenementen SET titel=$1, categorie=$2, omschrijving=$3, locatie=$4, start_op=$5, eind_op=$6,
-       aanmelden=$7, max_plaatsen=$8, afbeelding_id=$9 WHERE id=$10`,
-      [d.titel, d.categorie, d.omschrijving, d.locatie, d.start_op, d.eind_op, d.aanmelden, d.max_plaatsen, afbId, bestaand.id]
+       aanmelden=$7, max_plaatsen=$8, afbeelding_id=$9, hele_dag=$10 WHERE id=$11`,
+      [d.titel, d.categorie, d.omschrijving, d.locatie, d.start_op, d.eind_op, d.aanmelden, d.max_plaatsen, afbId, d.hele_dag, bestaand.id]
     );
     req.session.flash = { type: 'succes', message: 'Evenement bijgewerkt.' };
     res.redirect('/agenda/' + bestaand.id);
@@ -250,7 +258,10 @@ router.post('/:id/bewerken', requireRedactie, uploadAfbeelding, async (req, res)
 // Verwijderen (beheer)
 router.post('/:id/verwijderen', requireRedactie, async (req, res) => {
   try {
+    const ev = (await pool.query('SELECT bron, bron_uid FROM evenementen WHERE id = $1', [req.params.id])).rows[0];
     await pool.query('DELETE FROM evenementen WHERE id = $1', [req.params.id]);
+    // Geïmporteerd evenement: niet opnieuw laten importeren
+    if (ev && ev.bron && ev.bron_uid) await agendaImport.negeer(ev.bron_uid);
     req.session.flash = { type: 'succes', message: 'Evenement verwijderd.' };
   } catch (err) {
     console.error('[agenda verwijderen]', err.message);
@@ -277,13 +288,23 @@ router.get('/:id/ical', async (req, res) => {
     }
     const esc = (s) => String(s || '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
     const stamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    let datumRegels = [`DTSTART:${dtstart}`, `DTEND:${dtend}`];
+    if (ev.hele_dag) {
+      // Hele dag: alleen datums; DTEND is de dag ná de laatste dag (exclusief)
+      const [Y, M, D] = (ev.eind_op || ev.start_op).slice(0, 10).split('-').map(Number);
+      const na = new Date(Date.UTC(Y, M - 1, D + 1));
+      const p = (n) => String(n).padStart(2, '0');
+      datumRegels = [
+        `DTSTART;VALUE=DATE:${ev.start_op.slice(0, 10).replace(/-/g, '')}`,
+        `DTEND;VALUE=DATE:${na.getUTCFullYear()}${p(na.getUTCMonth() + 1)}${p(na.getUTCDate())}`
+      ];
+    }
     const ics = [
       'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//BCLMB//Agenda//NL', 'CALSCALE:GREGORIAN',
       'BEGIN:VEVENT',
       `UID:evenement-${ev.id}@bclmb`,
       `DTSTAMP:${stamp}`,
-      `DTSTART:${dtstart}`,
-      `DTEND:${dtend}`,
+      ...datumRegels,
       `SUMMARY:${esc(ev.titel)}`,
       ev.locatie ? `LOCATION:${esc(ev.locatie)}` : '',
       ev.omschrijving ? `DESCRIPTION:${esc(ev.omschrijving)}` : '',

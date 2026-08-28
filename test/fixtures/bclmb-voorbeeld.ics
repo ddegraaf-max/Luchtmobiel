@@ -1,0 +1,70 @@
+BEGIN:VCALENDAR
+PRODID:congressus.congressus.nl
+VERSION:2.0
+BEGIN:VEVENT
+DTSTAMP:20251110T000000Z
+DTSTART:20261118
+DTEND:20261119
+SUMMARY:Bijeenkomst: nog te bepalen! 
+DESCRIPTION:
+UID:bijeenkomst-4-2026
+STATUS:CONFIRMED
+SEQUENCE:290
+LOCATION:TBD
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260611T000000Z
+DTSTART:20261211
+DTEND:20261212
+SUMMARY:Intocht Fearless Falcon &amp; Baretuitreiking (VAKOL) 
+DESCRIPTION:Na een week van afzien tijdens de eindoefening Fearless Falcon marcheren de aspirant-luchtmobielers binnen voor het moment waar het allemaal om draait: de uitreiking van de rode baret. Met de intocht sluiten zij hun opleiding af en treden zij officieel toe tot de gelederen van 11 Luchtmobiele Brigade. Kom de nieuwe lichting verwelkomen en wees getuige van dit bijzondere moment — voor de militairen zelf, hun familie en iedereen die de brigade een warm hart toedraagt.
+UID:intocht-fearless-falcon-baretuitreiking-vakol
+STATUS:CONFIRMED
+SEQUENCE:77
+LOCATION:Oranjekazerne, Schaarsbergen
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260611T000000Z
+DTSTART:20261209
+DTEND:20261211
+SUMMARY:Relatie-event op de kazerne 
+DESCRIPTION:Reserveer alvast in je agenda: op 10 en 11 december organiseren we een tweedaags relatie-event op de kazerne. Een programma waarin je het luchtmobiele leven van dichtbij meemaakt — denk aan actieve onderdelen op de kazerne, een gezamenlijk diner en een bezoek aan het museum. Bijzonder onderdeel van het programma: we zijn aanwezig bij de start van de eindmars van de opleiding én de volgende ochtend bij de binnenkomst — een mooi en bijzonder moment om mee te maken. Het volledige programma wordt op dit moment uitgewerkt. Meer informatie over de invulling, tijden en aanmelding volgt binnenkort.
+UID:relatie-event-op-de-kazerne
+STATUS:CONFIRMED
+SEQUENCE:77
+LOCATION:Oranjekazerne, Schaarsbergen
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260713T000000Z
+DTSTART:20260904
+DTEND:20260905
+SUMMARY:Intocht Fearless Falcon &amp; Baretuitreiking 
+DESCRIPTION:Na een week van afzien tijdens de eindoefening Fearless Falcon marcheren de aspirant-luchtmobielers binnen voor het moment waar het allemaal om draait: de uitreiking van de rode baret. Met de intocht sluiten zij hun opleiding af en treden zij officieel toe tot de gelederen van 11 Luchtmobiele Brigade. Kom de nieuwe lichting verwelkomen en wees getuige van dit bijzondere moment — voor de militairen zelf, hun familie en iedereen die de brigade een warm hart toedraagt.
+UID:137847-intocht-fearless-falcon-baretuitreiking
+STATUS:CONFIRMED
+SEQUENCE:77
+LOCATION:Oranjekazerne, Schaarsbergen
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260818T000000Z
+DTSTART:20260908
+DTEND:20260909
+SUMMARY:Excursie: Oefening Falcon Leap op de Marnewaard 
+DESCRIPTION:Een unieke kans: we zijn als toeschouwers aanwezig bij oefening Falcon Leap, een raid/aanvalsoefening van 11 Luchtmobiele Brigade op oefenterrein de Marnewaard. Van dichtbij zien hoe de brigade traint — dat maak je niet vaak mee. We sluiten hiervoor aan bij de Vrienden van de Rode Baret, die het vervoer verzorgen. Je stapt op in Schaarsbergen en wordt per bus naar de Marnewaard gebracht en weer teruggebracht. Praktisch: 🚌 Opstappen in Schaarsbergen, vertrektijd volgt ⚠️ Let op: bij slecht weer kan de oefening niet doorgaan. Houd je mail/deze pagina in de gaten voor de definitieve bevestiging. Het exacte programma wordt nog afgestemd en volgt zo snel mogelijk. Aanmelden
+UID:excursie-oefening-ex-fale-op-de-marnewaard
+STATUS:CONFIRMED
+SEQUENCE:77
+LOCATION:Vertrek vanaf Schaarsbergen
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20251110T092853Z
+DTSTART:20260916T160000Z
+DTEND:20260916T200000Z
+SUMMARY:Bijeenkomst: de veteranenbegraafplaats &amp; LinkedIn 
+DESCRIPTION:Business Club Luchtmobiel in Loenen: een bijzondere avond op een bijzondere plek Op woensdag 16 september zijn we te gast op een plek die nauw verbonden is met waar Business Club Luchtmobiel voor staat: de Nationale Veteranenbegraafplaats in Loenen. We starten de avond samen aan tafel. Daarna krijgen we een rondleiding over de Veteranenbegraafplaats en horen we de verhalen achter deze bijzondere plek, over de veteranen die hier hun laatste rustplaats hebben en over het belangrijke werk dat er dagelijks wordt verricht. Na de rondleiding schakelen we van historie naar ondernemen. Hoe haal je zakelijk méér uit LinkedIn? Jorrit Drieënhuizen neemt ons mee in een praktische inspiratiesessie. Geen saai verhaal, maar concrete tips waarmee je direct aan de slag kunt. Hoe zorg je dat je LinkedIn profiel voor je werkt? Hoe word je beter zichtbaar bij de juiste mensen? En hoe gebruik je LinkedIn om waardevolle zakelijke contacten op te bouwen? En natuurlijk draait een bijeenkomst van Business Club Luchtmobiel ook om elkaar. Er is daarom volop tijd om kennis te maken, bij te praten, ervaringen uit te wisselen en nieuwe verbindingen te leggen. Programma 18.00 uur – Ontvangst en gezamenlijke maaltijd 18.30 uur – Rondleiding Nationale Veteranenbegraafplaats Aansluitend – Inspiratiesessie LinkedIn met Jorrit Drieënhuizen Tot slot – Netwerken en napraten Praktische informatie Let op: parkeer op de parkeerplaats van de Veteranenbegraafplaats en niet bij het naastgelegen ereveld. Ben je erbij? Een bijzondere locatie, een interessant verhaal, praktische LinkedIn-inspiratie en natuurlijk goed gezelschap. Meld je direct aan. We zien je graag op 16 september in Loenen.
+UID:bijeenkomst-3-2026
+STATUS:CONFIRMED
+SEQUENCE:290
+LOCATION:Nationale Veteranenbegraafplaats, Loenen
+END:VEVENT
+END:VCALENDAR

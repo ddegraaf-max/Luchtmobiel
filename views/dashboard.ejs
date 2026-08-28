@@ -93,7 +93,7 @@
           <a href="/agenda/<%= e.id %>" class="card" style="padding:14px 18px;">
             <div class="flex between">
               <strong style="font-family:var(--font-display);"><%= e.titel %></strong>
-              <span class="meta"><%= h.formatDatumLang(e.start_op) %> · <%= h.formatTijd(e.start_op) %><%= e.aantal > 1 ? ' · ' + e.aantal + ' pers.' : '' %></span>
+              <span class="meta"><%= h.formatDatumLang(e.start_op) %> · <%= e.hele_dag ? 'hele dag' : h.formatTijd(e.start_op) %><%= e.aantal > 1 ? ' · ' + e.aantal + ' pers.' : '' %></span>
             </div>
             <% if (e.locatie) { %><div class="meta" style="margin-top:4px;">📍 <%= e.locatie %></div><% } %>
           </a>

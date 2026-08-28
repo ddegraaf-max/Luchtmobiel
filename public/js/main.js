@@ -1,3 +1,47 @@
+// Nette bestandskiezer: vervangt de kale browserknop door een eigen knop + bestandsnaam.
+function verfraaiBestandsvelden(root) {
+  (root || document).querySelectorAll('input[type=file]').forEach(function (input) {
+    if (input.closest('.bestand-kiezer')) return;
+    const wrapper = document.createElement('label');
+    wrapper.className = 'bestand-kiezer';
+    input.parentNode.insertBefore(wrapper, input);
+    wrapper.appendChild(input);
+    const knop = document.createElement('span');
+    knop.className = 'bestand-knop';
+    knop.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>' +
+      (input.dataset.knoptekst || (input.accept && input.accept.indexOf('image') === 0 ? 'Kies afbeelding' : 'Kies bestand'));
+    const naam = document.createElement('span');
+    naam.className = 'bestand-naam';
+    naam.textContent = 'Nog geen bestand gekozen';
+    const wissen = document.createElement('button');
+    wissen.type = 'button';
+    wissen.className = 'bestand-wissen';
+    wissen.textContent = 'Wissen';
+    wrapper.appendChild(knop);
+    wrapper.appendChild(naam);
+    wrapper.appendChild(wissen);
+    wissen.addEventListener('click', function (ev) {
+      ev.preventDefault(); ev.stopPropagation();
+      input.value = '';
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+  });
+}
+function werkBestandsnaamBij(input) {
+  const wrapper = input.closest('.bestand-kiezer');
+  if (!wrapper) return;
+  const naam = wrapper.querySelector('.bestand-naam');
+  const bestand = input.files && input.files[0];
+  if (bestand) {
+    naam.textContent = bestand.name + ' (' + (bestand.size > 1024 * 1024 ? (bestand.size / 1024 / 1024).toFixed(1) + ' MB' : Math.max(1, Math.round(bestand.size / 1024)) + ' kB') + ')';
+    wrapper.classList.add('heeft-bestand');
+  } else {
+    naam.textContent = 'Nog geen bestand gekozen';
+    wrapper.classList.remove('heeft-bestand');
+  }
+}
+document.addEventListener('DOMContentLoaded', function () { verfraaiBestandsvelden(document); });
+
 // Mobiel menu togglen, afdrukken, bedrijfsblokken toevoegen/verwijderen
 document.addEventListener('click', function (e) {
   const toggle = e.target.closest('.nav-toggle');
@@ -20,6 +64,7 @@ document.addEventListener('click', function (e) {
     lijst.dataset.volgende = String(idx + 1);
     lijst.insertAdjacentHTML('beforeend', sjabloon.innerHTML.replace(/__I__/g, String(idx)));
     const nieuw = lijst.lastElementChild;
+    verfraaiBestandsvelden(nieuw);
     if (!lijst.querySelector('input[name="hoofdbedrijf"]:checked')) {
       const radio = nieuw.querySelector('input[name="hoofdbedrijf"]');
       if (radio) radio.checked = true;
@@ -64,6 +109,8 @@ document.addEventListener('change', function (e) {
   if (el.matches && el.matches('[data-auto-submit]') && el.form) {
     el.form.requestSubmit ? el.form.requestSubmit() : el.form.submit();
   }
+
+  if (el.matches && el.matches('input[type=file]')) werkBestandsnaamBij(el);
 
   // Direct voorbeeld tonen van een gekozen afbeelding (foto, logo)
   if (el.matches && el.matches('input[type=file][data-voorbeeld]')) {

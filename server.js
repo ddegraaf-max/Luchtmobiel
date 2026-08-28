@@ -140,12 +140,13 @@ app.use((err, req, res, next) => {
 // Laatste vangnet: log in plaats van crashen.
 process.on('unhandledRejection', (err) => console.error('[server] Onafgehandelde promise-fout:', err));
 
-// Start: eerst DB klaarzetten, dan luisteren.
+// Start: eerst DB klaarzetten, dan luisteren en de agenda-import inplannen.
 if (require.main === module) {
   initDb()
     .catch((err) => console.error('[server] DB-init mislukt (server start toch):', err.message))
     .finally(() => {
       app.listen(PORT, () => console.log(`[server] Luchtmobiel-platform draait op poort ${PORT}`));
+      require('./lib/agenda-import').planImport();
     });
 }
 

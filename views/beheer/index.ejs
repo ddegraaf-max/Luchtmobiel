@@ -17,6 +17,40 @@
       <div class="stat"><div class="getal"><%= stats.met_tfa %></div><div class="label">Met 2FA</div></div>
     </div>
 
+    <div class="card" style="margin-bottom:32px;">
+      <div class="flex between" style="align-items:flex-start;">
+        <div>
+          <h3 style="margin:0 0 4px;">Agenda-import van bclmb.nl</h3>
+          <p class="muted mb-0" style="font-size:.9rem;">
+            <% if (!agendaImport.config.uren) { %>
+              Uitgeschakeld (AGENDA_IMPORT_UREN=0).
+            <% } else { %>
+              Activiteiten van de hoofdsite worden automatisch overgenomen (elke <%= agendaImport.config.uren %> uur). <%= agendaImport.aantal %> geïmporteerd<%= agendaImport.aantal === 1 ? ' evenement' : 'e evenementen' %> in de agenda.
+            <% } %>
+            <% if (agendaImport.laatste) { %>
+              <br>Laatste import: <%= new Date(agendaImport.laatste.tijdstip).toLocaleString('nl-NL', { timeZone: 'Europe/Amsterdam' }) %> —
+              <%= agendaImport.laatste.nieuw %> nieuw, <%= agendaImport.laatste.bijgewerkt %> bijgewerkt, <%= agendaImport.laatste.ongewijzigd %> ongewijzigd, <%= agendaImport.laatste.verwijderd %> verwijderd<%= agendaImport.laatste.overgeslagen ? ', ' + agendaImport.laatste.overgeslagen + ' genegeerd' : '' %>.
+              <% if (agendaImport.laatste.fouten.length) { %><br><span style="color:#8a2020;">Meldingen: <%= agendaImport.laatste.fouten.join(' | ') %></span><% } %>
+            <% } else if (agendaImport.config.uren) { %>
+              <br>Nog niet gedraaid sinds de laatste herstart.
+            <% } %>
+          </p>
+        </div>
+        <div class="flex" style="gap:8px;">
+          <form action="/beheer/agenda-import" method="post" class="inline-form">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button class="btn btn--primary btn--sm" type="submit" <%= agendaImport.bezig ? 'disabled' : '' %>>Nu importeren</button>
+          </form>
+          <% if (agendaImport.genegeerd > 0) { %>
+            <form action="/beheer/agenda-import/negeer-wissen" method="post" class="inline-form" data-bevestig="De <%= agendaImport.genegeerd %> door jou verwijderde evenement(en) van bclmb.nl worden bij de volgende import weer toegevoegd. Doorgaan?">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <button class="btn btn--ghost btn--sm" type="submit">Verwijderde weer toestaan (<%= agendaImport.genegeerd %>)</button>
+            </form>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
     <div style="overflow-x:auto;">
       <table class="tabel">
         <thead>
