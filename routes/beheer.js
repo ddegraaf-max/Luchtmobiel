@@ -4,7 +4,8 @@ const pool = require('../db/pool');
 const { requireLogin, requireAdmin, idParams } = require('../middleware/auth');
 const { beeindigSessies } = require('../lib/sessies');
 const tfa = require('../lib/tfa');
-const { sendMail, mailLayout, escHtml } = require('../lib/mail');
+const { sendMail, mailLayout, escHtml, verstuur, mailInstellingen } = require('../lib/mail');
+const versie = require('../lib/versie');
 const agendaImportLib = require('../lib/agenda-import');
 const sponsorImportLib = require('../lib/sponsor-import');
 const nieuwsImportLib = require('../lib/nieuws-import');
@@ -31,7 +32,7 @@ router.get('/', async (req, res) => {
       geplaatst: (await pool.query("SELECT COUNT(*)::int AS n FROM sponsorverzoeken WHERE status = 'geplaatst'")).rows[0].n };
     const nieuwsImport = { ...nieuwsImportLib.status(), genegeerd: await nieuwsImportLib.aantalGenegeerd(),
       aantal: (await pool.query('SELECT COUNT(*)::int AS n FROM nieuws WHERE bron = $1', [nieuwsImportLib.BRON])).rows[0].n };
-    res.render('beheer/index', { title: 'Beheer', leden, stats, agendaImport, sponsor, nieuwsImport });
+    res.render('beheer/index', { title: 'Beheer', leden, stats, agendaImport, sponsor, nieuwsImport, mail: mailInstellingen() });
   } catch (err) {
     console.error('[beheer]', err.message);
     res.status(500).render('error', { title: 'Fout', bericht: 'Het beheerpaneel kon niet worden geladen.' });
@@ -51,6 +52,24 @@ router.post('/agenda-import', async (req, res) => {
 router.post('/agenda-import/negeer-wissen', async (req, res) => {
   await agendaImportLib.negeerlijstWissen();
   req.session.flash = { type: 'succes', message: 'Genegeerde evenementen worden bij de volgende import weer toegevoegd.' };
+  res.redirect('/beheer');
+});
+
+// Test-e-mail naar de ingelogde beheerder; toont precies wat Resend antwoordt.
+router.post('/testmail', async (req, res) => {
+  const u = req.session.user;
+  const inst = mailInstellingen();
+  const r = await verstuur({
+    to: u.email,
+    subject: 'Testmail van het ledenplatform',
+    html: mailLayout('Test geslaagd',
+      `<p>Beste ${escHtml(u.naam)},</p>
+       <p>Deze testmail is verstuurd vanuit <strong>Beheer</strong> op het ledenplatform. Komt hij aan, dan werkt het versturen van e-mail.</p>
+       <p style="font-size:12px;color:#8a8178;">Afzender: ${escHtml(inst.van)} · Versie ${escHtml(versie.label)} · ${new Date().toLocaleString('nl-NL', { timeZone: 'Europe/Amsterdam' })}</p>`)
+  });
+  req.session.flash = r.ok
+    ? { type: 'succes', message: `Testmail verstuurd naar ${u.email} (Resend-id ${r.id || 'onbekend'}). Niet ontvangen? Kijk in je spammap en in Resend onder Emails.` }
+    : { type: 'fout', message: `Testmail NIET verstuurd. ${r.fout}` };
   res.redirect('/beheer');
 });
 

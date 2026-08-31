@@ -183,6 +183,28 @@
       </table>
     </div>
     <div class="card" style="margin-top:32px;">
+      <div class="flex between" style="align-items:flex-start;">
+        <div>
+          <h3 style="margin:0 0 4px;">E-mail (Resend)</h3>
+          <p class="muted mb-0" style="font-size:.9rem;">
+            <% if (!mail.ingeschakeld) { %>
+              <span style="color:#8a2020;">Uit: <code>RESEND_API_KEY</code> is niet ingesteld op Railway.</span> Zonder sleutel worden er geen e-mails verstuurd (welkomstmail, wachtwoord vergeten, meldingen).
+            <% } else { %>
+              Sleutel ingesteld (<code><%= mail.sleutelHint %></code>).
+              Afzender: <code><%= mail.van %></code><% if (mail.vanStandaard) { %> <span style="color:#8a2020;">— standaardafzender: Resend levert dan alleen af op het e-mailadres van je eigen Resend-account. Stel <code>MAIL_VAN</code> in op een adres van een geverifieerd domein, bijv. <code>Business Club Luchtmobiel &lt;noreply@luchtmobiel.red&gt;</code>.</span><% } %>
+              <br>Bestuur: <%= mail.bestuur ? '<code>' + mail.bestuur + '</code>' : '<span style="color:#8a2020;">niet ingesteld (MAIL_BESTUUR) — geen meldingen over nieuwe leden en sponsorverzoeken</span>' %>.
+              Links in e-mails: <%= mail.appUrl ? '<code>' + mail.appUrl + '</code>' : '<span style="color:#8a2020;">APP_URL niet ingesteld</span>' %>.
+            <% } %>
+          </p>
+        </div>
+        <form action="/beheer/testmail" method="post" class="inline-form">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <button class="btn btn--primary btn--sm" type="submit" <%= mail.ingeschakeld ? '' : 'disabled' %>>Stuur testmail naar mij</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:32px;">
       <h3 style="margin:0 0 4px;">Versie van de site</h3>
       <p class="muted mb-0" style="font-size:.9rem;">
         Online staat <strong>versie <%= versie.nummer %></strong><% if (versie.commit) { %> (update <code><%= versie.commit %></code><%= versie.tak ? ', tak ' + versie.tak : '' %>)<% } %>.
