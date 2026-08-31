@@ -3,6 +3,9 @@
 Het versienummer staat in de voettekst van elke pagina en in **Beheer** (met de code van de uitgerolde update).
 Bij elke update wordt het nummer in `package.json` opgehoogd en hier beschreven wat er is veranderd.
 
+## 1.3.2 — 31 augustus 2026
+- Voettekst: e-mail- en websitelink staan weer netjes in het adresblok (geen witruimte er omheen).
+
 ## 1.3.1 — 31 augustus 2026
 - Voettekst: link naar de hoofdsite www.bclmb.nl bij de contactgegevens.
 
