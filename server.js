@@ -92,7 +92,10 @@ app.get('/versie.json', (req, res) => {
 app.use(express.urlencoded({ extended: false, limit: '2mb', parameterLimit: 500 }));
 app.use(platteInvoer);
 
-// Statische bestanden
+// Statische bestanden. Afbeeldingen mogen ook elders worden getoond (embleem in e-mails,
+// deelvoorvertoningen); de algemene Cross-Origin-Resource-Policy 'same-origin' zou ze in
+// webmail en andere sites blokkeren.
+app.use('/static/img', (req, res, next) => { res.set('Cross-Origin-Resource-Policy', 'cross-origin'); next(); });
 app.use('/static', express.static(path.join(__dirname, 'public'), { maxAge: '7d' }));
 
 // Sessies (opgeslagen in Postgres zodat ze deploys overleven)

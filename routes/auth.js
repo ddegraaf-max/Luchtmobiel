@@ -288,7 +288,6 @@ router.post('/wachtwoord-vergeten', limVergetenIp, limVergetenEmail, turnstile.v
           `<p>Beste ${escHtml(user.naam)},</p>
            <p>Er is gevraagd om het wachtwoord van je account op het ledenplatform opnieuw in te stellen. Klik op de knop hieronder om een nieuw wachtwoord te kiezen. De link is <strong>1 uur</strong> geldig en werkt één keer.</p>
            ${require('../lib/mail').mailKnop(link, 'Nieuw wachtwoord kiezen')}
-           <p style="font-size:13px;color:#8a8178;">Werkt de knop niet? Kopieer dan deze link in je browser:<br>${escHtml(link)}</p>
            <p>Heb je dit niet zelf aangevraagd? Dan kun je deze e-mail negeren; je wachtwoord blijft ongewijzigd.</p>`)
       });
       if (!verzonden) console.error('[wachtwoord vergeten] mail niet verzonden voor gebruiker', user.id);
