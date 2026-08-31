@@ -3,6 +3,9 @@
 Het versienummer staat in de voettekst van elke pagina en in **Beheer** (met de code van de uitgerolde update).
 Bij elke update wordt het nummer in `package.json` opgehoogd en hier beschreven wat er is veranderd.
 
+## 1.2.2 — 31 augustus 2026
+- Beheer: opmaakfout in de e-mailkaart hersteld (`<code>` werd als tekst getoond).
+
 ## 1.2.1 — 31 augustus 2026
 - Beheer: kaart **E-mail (Resend)** met de huidige instellingen (sleutel aanwezig, afzender, bestuursadres, APP_URL) en een knop **Stuur testmail naar mij** die het exacte antwoord van Resend toont als versturen mislukt.
 

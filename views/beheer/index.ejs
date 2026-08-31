@@ -192,8 +192,8 @@
             <% } else { %>
               Sleutel ingesteld (<code><%= mail.sleutelHint %></code>).
               Afzender: <code><%= mail.van %></code><% if (mail.vanStandaard) { %> <span style="color:#8a2020;">— standaardafzender: Resend levert dan alleen af op het e-mailadres van je eigen Resend-account. Stel <code>MAIL_VAN</code> in op een adres van een geverifieerd domein, bijv. <code>Business Club Luchtmobiel &lt;noreply@luchtmobiel.red&gt;</code>.</span><% } %>
-              <br>Bestuur: <%= mail.bestuur ? '<code>' + mail.bestuur + '</code>' : '<span style="color:#8a2020;">niet ingesteld (MAIL_BESTUUR) — geen meldingen over nieuwe leden en sponsorverzoeken</span>' %>.
-              Links in e-mails: <%= mail.appUrl ? '<code>' + mail.appUrl + '</code>' : '<span style="color:#8a2020;">APP_URL niet ingesteld</span>' %>.
+              <br>Bestuur: <% if (mail.bestuur) { %><code><%= mail.bestuur %></code><% } else { %><span style="color:#8a2020;">niet ingesteld (MAIL_BESTUUR) — geen meldingen over nieuwe leden en sponsorverzoeken</span><% } %>.
+              Links in e-mails: <% if (mail.appUrl) { %><code><%= mail.appUrl %></code><% } else { %><span style="color:#8a2020;">APP_URL niet ingesteld</span><% } %>.
             <% } %>
           </p>
         </div>
