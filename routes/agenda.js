@@ -136,6 +136,15 @@ router.get('/:id', async (req, res) => {
       [evenement.id]
     )).rows;
 
+    res.locals.meta = {
+      type: 'article',
+      titel: evenement.titel,
+      beschrijving: [res.locals.h.formatDatumLang(evenement.start_op), evenement.hele_dag ? null : res.locals.h.formatTijd(evenement.start_op), evenement.locatie].filter(Boolean).join(' · ')
+        + (evenement.omschrijving ? ' — ' + res.locals.h.kort(evenement.omschrijving, 160) : ''),
+      afbeelding: evenement.afbeelding_id ? '/media/' + evenement.afbeelding_id : null,
+      afbeeldingAlt: evenement.afbeelding_id ? evenement.titel : null,
+      kaart: evenement.afbeelding_id ? 'summary_large_image' : 'summary'
+    };
     res.render('agenda/detail', { title: evenement.titel, evenement, bezet, deelnemers, mijnAanmelding, plaatsenVrij, magBeheren, fotos });
   } catch (err) {
     console.error('[agenda detail]', err.message);

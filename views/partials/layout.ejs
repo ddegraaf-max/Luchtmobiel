@@ -4,7 +4,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= typeof title !== 'undefined' ? title + ' — ' : '' %><%= siteNaam %></title>
-  <meta name="description" content="Het besloten netwerk van de Business Club Luchtmobiel: leden, vacatures, ondersteuningsprojecten en veteranenzaken.">
+  <%
+    // Deelvoorvertoning (Open Graph): WhatsApp, LinkedIn, Signal, Teams e.d. tonen hiermee een kaartje met
+    // afbeelding, titel en omschrijving in plaats van een kale link. Pagina's kunnen eigen waarden meegeven via meta.
+    const m = (typeof meta !== 'undefined' && meta) ? meta : {};
+    const basis = typeof basisUrl !== 'undefined' ? basisUrl : '';
+    const ogTitel = m.titel || (typeof title !== 'undefined' && title) || siteNaam;
+    const ogBeschrijving = m.beschrijving || 'Het netwerk van de Business Club Luchtmobiel: ondernemers, professionals en de brigade — met bijzondere aandacht voor veteranenzaken.';
+    const eigenAfbeelding = !!m.afbeelding;
+    const ogAfbeelding = eigenAfbeelding ? (/^https?:\/\//i.test(m.afbeelding) ? m.afbeelding : basis + m.afbeelding) : basis + '/static/img/logo.png?v=2';
+  %>
+  <meta name="description" content="<%= ogBeschrijving %>">
+  <meta property="og:type" content="<%= m.type || 'website' %>">
+  <meta property="og:site_name" content="<%= siteNaam %>">
+  <meta property="og:locale" content="nl_NL">
+  <meta property="og:title" content="<%= ogTitel %>">
+  <meta property="og:description" content="<%= ogBeschrijving %>">
+  <meta property="og:url" content="<%= typeof paginaUrl !== 'undefined' ? paginaUrl : basis %>">
+  <meta property="og:image" content="<%= ogAfbeelding %>">
+  <meta property="og:image:alt" content="<%= m.afbeeldingAlt || 'Embleem van de Business Club Luchtmobiel' %>">
+  <% if (!eigenAfbeelding) { %>
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1024">
+  <meta property="og:image:height" content="1024">
+  <% } %>
+  <meta name="twitter:card" content="<%= m.kaart || 'summary' %>">
+  <meta name="twitter:title" content="<%= ogTitel %>">
+  <meta name="twitter:description" content="<%= ogBeschrijving %>">
+  <meta name="twitter:image" content="<%= ogAfbeelding %>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">

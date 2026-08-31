@@ -57,6 +57,9 @@ router.get('/:id', async (req, res) => {
     if (!bericht || (!bericht.gepubliceerd && !beheer)) {
       return res.status(404).render('error', { title: 'Niet gevonden', bericht: 'Dit bericht bestaat niet (meer).' });
     }
+    if (bericht.gepubliceerd) {
+      res.locals.meta = { type: 'article', titel: bericht.titel, beschrijving: res.locals.h.kort(bericht.inhoud, 200) || 'Nieuws van de Business Club Luchtmobiel.' };
+    }
     res.render('nieuws/detail', { title: bericht.titel, bericht, magBeheren: beheer });
   } catch (err) {
     console.error('[nieuws detail]', err.message);

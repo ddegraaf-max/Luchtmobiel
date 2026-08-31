@@ -144,6 +144,15 @@ router.get('/:id', async (req, res) => {
     if (!partner || (!partner.gepubliceerd && !beheer)) {
       return res.status(404).render('error', { title: 'Niet gevonden', bericht: 'Deze partner bestaat niet (meer).' });
     }
+    if (partner.gepubliceerd) {
+      res.locals.meta = {
+        type: 'article',
+        titel: partner.naam,
+        beschrijving: partner.samenvatting || res.locals.h.kort(partner.omschrijving, 200) || `${partner.naam} — partner van de Business Club Luchtmobiel.`,
+        afbeelding: partner.logo_id ? '/media/' + partner.logo_id : null,
+        afbeeldingAlt: partner.logo_id ? 'Logo ' + partner.naam : null
+      };
+    }
     res.render('partners/detail', { title: partner.naam, partner, magBeheren: beheer });
   } catch (err) {
     console.error('[partner detail]', err.message);

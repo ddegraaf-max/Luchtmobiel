@@ -71,6 +71,12 @@ app.use((req, res, next) => {
   res.locals.flash = null;
   res.locals.turnstileSiteKey = turnstile.actief() ? turnstile.siteKey() : '';
   res.locals.social = SOCIAL;
+  // Voor deelvoorvertoningen (WhatsApp, LinkedIn, ...): absolute adressen en per pagina
+  // eventueel een eigen titel/omschrijving/afbeelding via res.locals.meta.
+  const basis = (process.env.APP_URL || '').trim().replace(/\/+$/, '') || `${req.protocol}://${req.get('host') || 'localhost'}`;
+  res.locals.basisUrl = basis;
+  res.locals.paginaUrl = basis + req.originalUrl.split('?')[0];
+  res.locals.meta = null;
   next();
 });
 

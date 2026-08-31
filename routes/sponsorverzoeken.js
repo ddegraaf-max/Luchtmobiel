@@ -64,6 +64,10 @@ router.get('/', async (req, res) => {
        ORDER BY uitgelicht DESC, COALESCE(beoordeeld_op, aangemaakt) DESC`
     )).rows;
     const teControleren = beheer ? await si.aantalTeControleren() : 0;
+    res.locals.meta = {
+      titel: 'Sponsorverzoeken voor militairen & veteranen',
+      beschrijving: 'Acties, stichtingen en initiatieven in Nederland die sponsors, donateurs of steun zoeken voor militairen en veteranen — bekeken door het bestuur van de Business Club Luchtmobiel.'
+    };
     res.render('sponsorverzoeken/index', { title: 'Sponsorverzoeken', verzoeken, magBeheren: beheer, teControleren });
   } catch (err) {
     console.error('[sponsorverzoeken]', err.message);
@@ -141,6 +145,14 @@ router.get('/:id', async (req, res) => {
     const beheer = magBeheren(req);
     if (!verzoek || (verzoek.status !== 'geplaatst' && !beheer)) {
       return res.status(404).render('error', { title: 'Niet gevonden', bericht: 'Dit sponsorverzoek bestaat niet (meer).' });
+    }
+    if (verzoek.status === 'geplaatst') {
+      const delen = [verzoek.organisatie, verzoek.plaats, verzoek.doelbedrag ? 'Doel: ' + verzoek.doelbedrag : null].filter(Boolean).join(' · ');
+      res.locals.meta = {
+        type: 'article',
+        titel: verzoek.titel,
+        beschrijving: (verzoek.samenvatting || res.locals.h.kort(verzoek.omschrijving, 200) || 'Sponsorverzoek voor militairen en veteranen.') + (delen ? ' — ' + delen : '')
+      };
     }
     res.render('sponsorverzoeken/detail', { title: verzoek.titel, verzoek, magBeheren: beheer, statusLabel: si.STATUS_LABEL, bronLabel: si.BRON_LABEL });
   } catch (err) {
