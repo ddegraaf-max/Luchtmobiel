@@ -1,4 +1,85 @@
 {
-  "bijgewerkt": "2026-08-31T08:41:56Z",
-  "items": []
+  "bijgewerkt": "2026-08-31T08:58:27Z",
+  "items": [
+    {
+      "id": "afmp-sponsorloop-veteranen",
+      "titel": "AFMP steunt sponsorloop voor veteranen - doe mee",
+      "organisatie": "AFMP (Algemene Federatie van Militair Personeel)",
+      "doelgroep": "Veteranen",
+      "samenvatting": "AFMP roept op om mee te doen aan of te sponsoren voor een sponsorloop ten bate van veteranen. Nog niet op de pagina gecontroleerd.",
+      "omschrijving": null,
+      "url": "https://www.afmp.nl/actueel/nieuws-and-blogs/afmp-steunt-sponsorloop-voor-veteranen-doe-mee/",
+      "bron_naam": "afmp.nl",
+      "plaats": null,
+      "doelbedrag": null,
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-08-31",
+      "zoekterm": "sponsorloop veteranen 2026"
+    },
+    {
+      "id": "fuseliers-crowdfunding-hulphond",
+      "titel": "Crowdfunding hulphond - Steunfonds Garderegiment Fuseliers Prinses Irene",
+      "organisatie": "Steunfonds Garderegiment Fuseliers Prinses Irene",
+      "doelgroep": "Militairen & veteranen",
+      "samenvatting": "Het steunfonds van het Garderegiment Fuseliers Prinses Irene houdt een crowdfundingsactie voor een hulphond. Nog niet op de pagina gecontroleerd.",
+      "omschrijving": null,
+      "url": "https://www.fuseliers.nl/verenigingen/steunfonds/crowdfunding-hulphond/",
+      "bron_naam": "fuseliers.nl",
+      "plaats": null,
+      "doelbedrag": null,
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-08-31",
+      "zoekterm": "crowdfunding veteraan hulphond september 2026"
+    },
+    {
+      "id": "geef-wij-wandelen-voor-veteranen-search-team",
+      "titel": "Ik wandel voor Veteranen Search Team",
+      "organisatie": "Stichting Veteranen Search Team",
+      "doelgroep": "Veteranen",
+      "samenvatting": "Een deelnemer haalt via Geef.nl sponsorgeld op met een wandeling voor Stichting Veteranen Search Team. Nog niet op de pagina gecontroleerd.",
+      "omschrijving": null,
+      "url": "https://www.geef.nl/nl/actie/wij-wandelen-voor-veteranen-search-team/donateurs",
+      "bron_naam": "geef.nl",
+      "plaats": null,
+      "doelbedrag": null,
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-08-31",
+      "zoekterm": "site:geef.nl veteranen"
+    },
+    {
+      "id": "doneeractie-staan-voor-een-veteraan",
+      "titel": "Staan voor een veteraan",
+      "organisatie": null,
+      "doelgroep": "Veteranen",
+      "samenvatting": "Doneeractie om een ernstig zieke veteraan en zijn gezin financieel te steunen. Nog niet op de pagina gecontroleerd.",
+      "omschrijving": null,
+      "url": "https://www.doneeractie.nl/staan-voor-een-veteraan/-40498",
+      "bron_naam": "doneeractie.nl",
+      "plaats": null,
+      "doelbedrag": null,
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-08-31",
+      "zoekterm": "site:doneeractie.nl veteraan"
+    },
+    {
+      "id": "steunactie-help-mij-veteranen-ptss",
+      "titel": "Help mij, veteranen met PTSS te helpen zichzelf te bevrijden",
+      "organisatie": null,
+      "doelgroep": "Veteranen",
+      "samenvatting": "Steunactie.nl-inzamelingsactie voor een initiatief dat veteranen met PTSS wil helpen. Nog niet op de pagina gecontroleerd.",
+      "omschrijving": null,
+      "url": "https://steunactie.nl/actie/help-mij-veteranen-met-ptss-te-helpen-zichzelf-te-bevrijden/-3077",
+      "bron_naam": "steunactie.nl",
+      "plaats": null,
+      "doelbedrag": null,
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-08-31",
+      "zoekterm": "site:steunactie.nl veteraan"
+    }
+  ]
 }
