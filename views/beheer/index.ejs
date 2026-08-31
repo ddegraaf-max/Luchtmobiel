@@ -148,6 +148,14 @@
         </tbody>
       </table>
     </div>
+    <div class="card" style="margin-top:32px;">
+      <h3 style="margin:0 0 4px;">Versie van de site</h3>
+      <p class="muted mb-0" style="font-size:.9rem;">
+        Online staat <strong>versie <%= versie.nummer %></strong><% if (versie.commit) { %> (update <code><%= versie.commit %></code><%= versie.tak ? ', tak ' + versie.tak : '' %>)<% } %>.
+        <% if (versie.bericht) { %><br>Laatste wijziging: <em><%= versie.bericht %></em><% } %>
+        <br>Gestart op <%= new Date(versie.gestart).toLocaleString('nl-NL', { timeZone: 'Europe/Amsterdam' }) %>. Het versienummer wordt bij elke update opgehoogd; de wijzigingen per versie staan in CHANGELOG.md in de repository.
+      </p>
+    </div>
     <p class="muted" style="margin-top:16px; font-size:.85rem;">Tip: zet een lid op <strong>Brigade</strong> om die persoon de veteranenhub te laten beheren. <strong>Admin</strong> geeft volledige toegang tot dit beheerpaneel. Met <strong>Reset</strong> schakel je de tweestapsverificatie van een lid uit dat zijn telefoon en herstelcodes kwijt is.</p>
   </div>
 </section>

@@ -14,6 +14,7 @@ const { attachUser } = require('./middleware/auth');
 const { headers, csrf, geenCacheVoorIngelogd, httpsVerplicht, platteInvoer } = require('./middleware/security');
 const helpers = require('./lib/helpers');
 const turnstile = require('./lib/turnstile');
+const versie = require('./lib/versie');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -77,7 +78,14 @@ app.use((req, res, next) => {
   res.locals.basisUrl = basis;
   res.locals.paginaUrl = basis + req.originalUrl.split('?')[0];
   res.locals.meta = null;
+  res.locals.versie = versie;
   next();
+});
+
+// Welke versie staat online? (ook handig om na een deploy te controleren)
+app.get('/versie.json', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  res.json({ versie: versie.nummer, commit: versie.commit, tak: versie.tak, bericht: versie.bericht, gestart: versie.gestart });
 });
 
 // Body parsing
