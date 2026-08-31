@@ -3,6 +3,9 @@
 Het versienummer staat in de voettekst van elke pagina en in **Beheer** (met de code van de uitgerolde update).
 Bij elke update wordt het nummer in `package.json` opgehoogd en hier beschreven wat er is veranderd.
 
+## 1.4.0 — 31 augustus 2026
+- **YouTube-video's in de galerij**: plak in *Galerij beheren* een YouTube-link (watch, youtu.be, shorts) en de video verschijnt tussen de foto's met een afspeelknop; afspelen gebeurt op de pagina zelf via de privacyvriendelijke youtube-nocookie-speler (geen cookies vóór het klikken).
+
 ## 1.3.2 — 31 augustus 2026
 - Voettekst: e-mail- en websitelink staan weer netjes in het adresblok (geen witruimte er omheen).
 

@@ -1,12 +1,22 @@
 <% if (typeof fotos !== 'undefined' && fotos && fotos.length) { %>
   <div class="foto-galerij">
     <% fotos.forEach(function(f){ %>
-      <figure>
-        <img loading="lazy" src="/media/<%= f.media_id %>" alt="<%= f.bijschrift || 'Foto van de brigade' %>">
-        <% if (f.bijschrift) { %><figcaption><%= f.bijschrift %></figcaption><% } %>
-      </figure>
+      <% if (f.youtube_id) { %>
+        <figure class="video-item">
+          <button type="button" class="video-start" data-youtube="<%= f.youtube_id %>" data-titel="<%= f.bijschrift || 'Video' %>" aria-label="Video afspelen: <%= f.bijschrift || 'video' %>">
+            <img loading="lazy" src="https://i.ytimg.com/vi/<%= f.youtube_id %>/hqdefault.jpg" alt="<%= f.bijschrift || 'Video' %>">
+            <span class="speelknop" aria-hidden="true"></span>
+          </button>
+          <% if (f.bijschrift) { %><figcaption>▶ <%= f.bijschrift %></figcaption><% } %>
+        </figure>
+      <% } else { %>
+        <figure>
+          <img loading="lazy" src="/media/<%= f.media_id %>" alt="<%= f.bijschrift || 'Foto van de brigade' %>">
+          <% if (f.bijschrift) { %><figcaption><%= f.bijschrift %></figcaption><% } %>
+        </figure>
+      <% } %>
     <% }) %>
   </div>
 <% } else if (typeof user !== 'undefined' && user && (user.rol === 'admin' || user.rol === 'brigade')) { %>
-  <div class="lege-staat"><p class="mb-0">Nog geen foto's. <a href="/galerij/beheer">Voeg foto's toe &rarr;</a></p></div>
+  <div class="lege-staat"><p class="mb-0">Nog geen foto's of video's. <a href="/galerij/beheer">Voeg ze toe &rarr;</a></p></div>
 <% } %>

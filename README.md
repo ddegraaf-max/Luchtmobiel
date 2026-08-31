@@ -13,6 +13,7 @@ Een besloten netwerk waar leden (en de brigade) **zelf** alles beheren: hun prof
 - **Partners & initiatieven** — publieke pagina met organisaties, stichtingen, sponsors en initiatieven (logo, omschrijving, website), gefilterd op categorie; uitgelichte partners staan ook op de homepage. Leden kunnen zelf een initiatief aandragen; dat komt als concept bij het bestuur/de brigade terecht om aan te vullen en te publiceren.
 - **Nieuws** — berichten van het bestuur plus het nieuws en de blogs van bclmb.nl, automatisch overgenomen met afbeelding en link naar het origineel.
 - **Sponsorverzoeken** — een assistent zoekt elke ochtend het Nederlandse web af naar sponsor-, donatie- en steunverzoeken voor militairen en veteranen. Alles komt eerst in een controlewachtrij; wat jij plaatst verschijnt op de publieke pagina *Sponsoring*. Zie [Sponsorverzoeken](#sponsorverzoeken-dagelijks-gezocht-door-de-assistent).
+- **Galerij met foto's en video's** — de brigade/het bestuur beheert per pagina (homepage, De Brigade, Veteranenzaken) een galerij met foto's en YouTube-video's; video's spelen op de pagina zelf af via de cookieloze YouTube-speler.
 - **Zelfservice** — leden registreren met een toegangscode en beheren daarna alles zelf. Jij hoeft niets goed te keuren.
 - **Beheer** — jij bepaalt rollen (lid / brigade / admin) en kunt leden activeren of verwijderen.
 - **Veilig inloggen** — wachtwoord vergeten via e-mail, tweestapsverificatie met een authenticator-app (Google/Microsoft Authenticator, Authy, 1Password), herstelcodes, en bescherming tegen brute force en CSRF.

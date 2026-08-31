@@ -114,6 +114,8 @@ async function init() {
 
   // Uitbreidingen (idempotent)
   await pool.query(`ALTER TABLE galerij ADD COLUMN IF NOT EXISTS evenement_id INTEGER REFERENCES evenementen(id) ON DELETE CASCADE;`);
+  // Galerij: naast foto's ook YouTube-video's (media_id leeg, youtube_id gevuld)
+  await pool.query(`ALTER TABLE galerij ADD COLUMN IF NOT EXISTS youtube_id TEXT;`);
   await pool.query(`
     CREATE TABLE IF NOT EXISTS nieuws (
       id           SERIAL PRIMARY KEY,

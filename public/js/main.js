@@ -65,6 +65,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Mobiel menu togglen, afdrukken, bedrijfsblokken toevoegen/verwijderen
 document.addEventListener('click', function (e) {
+  // Galerij: YouTube-video afspelen (thumbnail vervangen door de ingesloten speler)
+  const video = e.target.closest('[data-youtube]');
+  if (video) {
+    const kader = document.createElement('div');
+    kader.className = 'video-kader';
+    const frame = document.createElement('iframe');
+    frame.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(video.dataset.youtube) + '?autoplay=1&rel=0';
+    frame.title = video.dataset.titel || 'Video';
+    frame.setAttribute('allow', 'autoplay; encrypted-media; fullscreen; picture-in-picture');
+    frame.setAttribute('allowfullscreen', '');
+    kader.appendChild(frame);
+    video.replaceWith(kader);
+    return;
+  }
+
   const toggle = e.target.closest('.nav-toggle');
   if (toggle) {
     const nav = toggle.closest('.nav');

@@ -3,7 +3,7 @@
     <div>
       <span class="kicker">Beheer</span>
       <h1>Galerij beheren</h1>
-      <p>Upload hier de eigen foto's van de club. Ze worden veilig in de database opgeslagen en verschijnen op de gekozen pagina.</p>
+      <p>Upload eigen foto's of voeg YouTube-video's toe; ze verschijnen op de gekozen pagina.</p>
     </div>
     <a href="/dashboard" class="btn btn--ghost">Terug naar dashboard</a>
   </div>
@@ -12,6 +12,7 @@
 <section class="section section--tight">
   <div class="wrap">
     <div class="grid" style="grid-template-columns: minmax(280px, 360px) 1fr; gap: 28px; align-items:start;">
+      <div class="stack">
       <div class="card">
         <h3 style="margin-top:0;">Foto toevoegen</h3>
         <form action="/galerij?_csrf=<%= csrfToken %>" method="post" enctype="multipart/form-data"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
@@ -34,6 +35,29 @@
         </form>
       </div>
 
+      <div class="card">
+        <h3 style="margin-top:0;">YouTube-video toevoegen</h3>
+        <form action="/galerij/youtube" method="post"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <div class="veld">
+            <label for="yt-pagina">Pagina</label>
+            <select id="yt-pagina" name="pagina">
+              <% paginas.forEach(function(p){ %><option value="<%= p.key %>"><%= p.label %></option><% }) %>
+            </select>
+          </div>
+          <div class="veld">
+            <label for="yt-bijschrift">Bijschrift (optioneel)</label>
+            <input type="text" id="yt-bijschrift" name="bijschrift" maxlength="200" placeholder="bijv. Aftermovie sportdag 2026">
+          </div>
+          <div class="veld">
+            <label for="youtube_url">YouTube-link</label>
+            <input type="text" id="youtube_url" name="youtube_url" required maxlength="300" placeholder="https://www.youtube.com/watch?v=…">
+            <span class="hint">Ook youtu.be- en Shorts-links werken. De video speelt af op de pagina zelf.</span>
+          </div>
+          <button type="submit" class="btn btn--primary btn--block">Video toevoegen</button>
+        </form>
+      </div>
+      </div>
+
       <div>
         <% if (!fotos.length) { %>
           <div class="lege-staat"><p class="mb-0">Nog geen foto's geüpload. Voeg links je eerste foto toe.</p></div>
@@ -44,11 +68,18 @@
               <h3 style="margin:0 0 12px;"><%= p.label %> <span class="muted" style="font-weight:400;">(<%= groep.length %>)</span></h3>
               <div class="foto-galerij" style="margin-bottom:28px;">
                 <% groep.forEach(function(f){ %>
-                  <figure>
-                    <img src="/media/<%= f.media_id %>" alt="<%= f.bijschrift || '' %>">
+                  <figure<%= f.youtube_id ? ' class="video-item"' : '' %>>
+                    <% if (f.youtube_id) { %>
+                      <span class="video-start" style="cursor:default;">
+                        <img src="https://i.ytimg.com/vi/<%= f.youtube_id %>/hqdefault.jpg" alt="<%= f.bijschrift || 'Video' %>">
+                        <span class="speelknop" aria-hidden="true"></span>
+                      </span>
+                    <% } else { %>
+                      <img src="/media/<%= f.media_id %>" alt="<%= f.bijschrift || '' %>">
+                    <% } %>
                     <figcaption>
-                      <%= f.bijschrift || 'Zonder bijschrift' %>
-                      <form action="/galerij/<%= f.id %>/verwijderen" method="post" data-bevestig="Deze foto verwijderen?" style="margin-top:8px;"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                      <%= f.youtube_id ? '▶ ' : '' %><%= f.bijschrift || 'Zonder bijschrift' %>
+                      <form action="/galerij/<%= f.id %>/verwijderen" method="post" data-bevestig="<%= f.youtube_id ? 'Deze video' : 'Deze foto' %> uit de galerij verwijderen?" style="margin-top:8px;"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         <button type="submit" class="btn btn--danger btn--sm">Verwijderen</button>
                       </form>
                     </figcaption>

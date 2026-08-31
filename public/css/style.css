@@ -432,6 +432,16 @@ input[type=file] { font-size: .88rem; }
 .foto-galerij img { width: 100%; height: 200px; object-fit: cover; display: block; background: var(--maroon-deep); }
 .foto-galerij figcaption { padding: 10px 14px; font-size: .85rem; color: var(--ink-soft); }
 
+/* YouTube-video's in de galerij: thumbnail met afspeelknop; klikken vervangt hem door de speler */
+.video-start { position: relative; display: block; width: 100%; padding: 0; border: 0; background: var(--maroon-deep); cursor: pointer; }
+.video-start img { transition: opacity .15s; }
+.video-start:hover img { opacity: .85; }
+.speelknop { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 56px; height: 56px; border-radius: 50%; background: rgba(28,23,20,.72); box-shadow: 0 2px 12px rgba(0,0,0,.35); }
+.speelknop::after { content: ""; position: absolute; top: 50%; left: 54%; transform: translate(-50%, -50%); border-style: solid; border-width: 11px 0 11px 18px; border-color: transparent transparent transparent var(--bone); }
+.video-start:hover .speelknop { background: var(--maroon); }
+.video-kader { background: #000; }
+.video-kader iframe { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; }
+
 /* gemerkte hero met gouden V (veteranen) */
 .hero--merk { position: relative; }
 .hero--v::before, .hero--em::before {
