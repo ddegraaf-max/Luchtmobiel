@@ -3,6 +3,9 @@
 Het versienummer staat in de voettekst van elke pagina en in **Beheer** (met de code van de uitgerolde update).
 Bij elke update wordt het nummer in `package.json` opgehoogd en hier beschreven wat er is veranderd.
 
+## 1.1.1 — 31 augustus 2026
+- Deelvoorvertoning: eigen embleem-afbeelding (800×800, crème achtergrond, 36 kB) in plaats van het grote transparante logo, zodat WhatsApp het embleem betrouwbaar toont.
+
 ## 1.1.0 — 31 augustus 2026
 - **Sponsorverzoeken**: nieuwe publieke pagina *Sponsoring* met sponsor-, donatie- en steunverzoeken voor militairen en veteranen; controlewachtrij voor bestuur/brigade (plaatsen, afwijzen, bewerken, uitlichten, handmatig toevoegen).
 - **Dagelijkse zoekronde**: een Claude-assistent zoekt elke ochtend het Nederlandstalige web af (incl. vaste bronnen en openbare LinkedIn/Facebook-berichten) en zet de vondsten klaar voor controle; e-mail aan het bestuur bij nieuwe verzoeken.
