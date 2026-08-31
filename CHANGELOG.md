@@ -3,6 +3,9 @@
 Het versienummer staat in de voettekst van elke pagina en in **Beheer** (met de code van de uitgerolde update).
 Bij elke update wordt het nummer in `package.json` opgehoogd en hier beschreven wat er is veranderd.
 
+## 1.6.0 — 31 augustus 2026
+- **Facebook-nieuws**: de dagelijkse assistent volgt nu ook de openbare Facebook-pagina *11 Luchtmobiele Brigade, Veteranenzaken*; berichten verschijnen tussen het nieuws met het label *Facebook* en een knop naar het originele bericht.
+
 ## 1.5.1 — 31 augustus 2026
 - Geen onnodige foutmelding in Beheer zolang het LinkedIn-bestand van de assistent nog niet bestaat (404 wordt stil overgeslagen).
 

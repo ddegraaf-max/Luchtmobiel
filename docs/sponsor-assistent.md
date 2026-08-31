@@ -82,14 +82,15 @@ worden gevraagd **voor of door Nederlandse militairen, veteranen of hun nabestaa
 
 7. **Sluit af met een kort verslag** (in het Nederlands): welke zoektermen je hebt gebruikt, hoeveel kandidaten je zag, welke je hebt toegevoegd (titel + url) en welke je hebt afgewezen en waarom. Is er niets nieuws, zeg dat dan gewoon.
 
-## LinkedIn-nieuws van de brigade (zelfde ronde)
+## LinkedIn- en Facebook-nieuws van de brigade (zelfde ronde)
 
 Houd in dezelfde dagelijkse ronde ook `data/linkedin-nieuws.json` bij met **nieuwe openbare
-LinkedIn-berichten** van deze pagina's:
+socialemedia-berichten** (LinkedIn én Facebook) van deze pagina's:
 
 - **11 Luchtmobiele Brigade** — `linkedin.com/company/11-luchtmobiele-brigade`
 - **Business Club Luchtmobiel** — `linkedin.com/company/business-club-luchtmobiel`
 - **Draagploeg Veteranen Luchtmobiele Brigade** (draagploegveteranenlmbl.nl) — zoek naar openbare LinkedIn-berichten ván of óver de draagploeg (bijv. `site:linkedin.com/posts draagploeg veteranen luchtmobiele`); gebruik als `pagina` de waarde `Draagploeg Veteranen Luchtmobiele Brigade`. Alleen berichten die echt over de draagploeg gaan.
+- **11 Luchtmobiele Brigade, Veteranenzaken** (Facebook) — `facebook.com/people/11-Luchtmobiele-Brigade-Veteranenzaken/100078067485502/`; zoek met `site:facebook.com "11 Luchtmobiele Brigade Veteranenzaken"` (ook m.facebook.com-resultaten tellen). `url` moet een facebook.com-link naar het bericht zijn; als `id` gebruik je het nummer of de pfbid-code uit de link (bijv. `story_fbid=…` of `/posts/…`). `pagina`: `11 Luchtmobiele Brigade, Veteranenzaken`.
 
 Werkwijze:
 1. Zoek met WebSearch naar recente openbare berichten, bijv. `site:linkedin.com/posts 11-luchtmobiele-brigade`, `"11 Luchtmobiele Brigade op LinkedIn"`, `site:linkedin.com/posts business-club-luchtmobiel`. Probeer een gevonden bericht met WebFetch te openen; lukt dat niet (inlogmuur), gebruik dan letterlijk de tekst uit het zoekresultaat — **niets verzinnen of aanvullen**.

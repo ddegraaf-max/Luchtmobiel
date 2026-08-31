@@ -99,7 +99,7 @@ router.post('/:id/verwijderen', requireRedactie, async (req, res) => {
   if (bericht) {
     // Overgenomen bericht: niet opnieuw importeren; meegekomen afbeelding opruimen
     if (bericht.bron === nieuwsImport.BRON && bericht.bron_uid) await nieuwsImport.negeer(bericht.bron_uid);
-    else if (bericht.bron === nieuwsImport.LINKEDIN_BRON && bericht.bron_uid) await nieuwsImport.negeer(bericht.bron_uid, nieuwsImport.LINKEDIN_NEGEER);
+    else if (nieuwsImport.SOCIAL_BRONNEN.includes(bericht.bron) && bericht.bron_uid) await nieuwsImport.negeer(bericht.bron_uid, nieuwsImport.LINKEDIN_NEGEER);
     if (bericht.afbeelding_id) await pool.query('DELETE FROM media WHERE id = $1 AND eigenaar_id IS NULL', [bericht.afbeelding_id]);
   }
   req.session.flash = { type: 'succes', message: 'Nieuwsbericht verwijderd.' };

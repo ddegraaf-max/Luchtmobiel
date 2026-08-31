@@ -79,7 +79,18 @@ test('LinkedIn: activiteit-id en itemvalidatie', () => {
   assert.equal(it.datum.toISOString().slice(0, 10), '2026-08-30');
   assert.equal(it.pagina, '11 Luchtmobiele Brigade');
 
-  assert.equal(ni.valideerLinkedInItem({ url: 'https://kwaadaardig.nl/posts/x-activity-7040989309109202944-x', titel: 'x' }), null, 'alleen linkedin.com');
+  // Facebook
+  const fb = ni.valideerLinkedInItem({ url: 'https://m.facebook.com/story.php/?story_fbid=411472094798370&id=100078067485502', titel: 'Reünie aangekondigd', pagina: '11 Luchtmobiele Brigade, Veteranenzaken' });
+  assert.equal(fb.uid, 'fb-411472094798370');
+  assert.equal(fb.platform, 'facebook');
+  assert.equal(fb.platformNaam, 'Facebook');
+  assert.equal(ni.facebookBerichtId('https://www.facebook.com/100078067485502/posts/724532383492338/'), 'fb-724532383492338');
+  assert.equal(ni.facebookBerichtId('https://www.facebook.com/x/posts/pfbid0AbC123xyz'), 'fb-pfbid0AbC123xyz');
+  assert.equal(ni.facebookBerichtId('https://www.facebook.com/people/x/100078067485502/'), null);
+  assert.equal(ni.valideerLinkedInItem({ url: 'https://www.facebook.com/x/posts/pfbid0AbC123xyz' }).titel, 'Bericht op Facebook');
+  assert.equal(ni.valideerLinkedInItem({ url: 'https://nepfacebook.com/x/posts/724532383492338' }), null, 'nep-domein');
+
+  assert.equal(ni.valideerLinkedInItem({ url: 'https://kwaadaardig.nl/posts/x-activity-7040989309109202944-x', titel: 'x' }), null, 'alleen linkedin.com of facebook.com');
   assert.equal(ni.valideerLinkedInItem({ url: 'https://nl.linkedin.com/posts/zonder-id', titel: 'x' }), null, 'zonder id geen item');
   assert.equal(ni.valideerLinkedInItem({ url: 'https://evil-linkedin.com/posts/x-activity-7040989309109202944-x' }), null, 'nep-domein');
   assert.equal(ni.valideerLinkedInItem(null), null);

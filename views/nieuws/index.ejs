@@ -24,7 +24,7 @@
               <div class="meta flex" style="gap:8px;">
                 <span><%= h.formatDatum(n.aangemaakt) %><%= n.auteur ? ' · ' + n.auteur : '' %></span>
                 <% if (n.categorie) { %><span class="badge badge--olive"><%= n.categorie %></span><% } %>
-                <% if (n.bron === 'linkedin') { %><span class="badge" title="Overgenomen van LinkedIn">LinkedIn</span><% } else if (n.bron_url) { %><span class="badge" title="Overgenomen van de site van de Business Club">bclmb.nl</span><% } %>
+                <% if (n.bron === 'linkedin' || n.bron === 'facebook') { %><span class="badge" title="Overgenomen van sociale media"><%= n.bron === 'facebook' ? 'Facebook' : 'LinkedIn' %></span><% } else if (n.bron_url) { %><span class="badge" title="Overgenomen van de site van de Business Club">bclmb.nl</span><% } %>
                 <% if (!n.gepubliceerd) { %><span class="badge">concept</span><% } %>
               </div>
               <div style="font-family:var(--font-display); font-weight:700; font-size:1.2rem; margin:4px 0 6px; color:var(--ink);"><%= n.titel %></div>
