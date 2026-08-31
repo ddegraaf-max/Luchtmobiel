@@ -1,6 +1,38 @@
 {
-  "bijgewerkt": "2026-08-31T08:58:27Z",
+  "bijgewerkt": "2026-08-31T09:03:20Z",
   "items": [
+    {
+      "id": "nim-roermond-vrienden-monument",
+      "titel": "Stichting Vrienden van het Monument vraagt donaties voor herdenking gesneuvelde militairen in Roermond",
+      "organisatie": "Stichting Vrienden van het Monument",
+      "doelgroep": "Militairen & veteranen",
+      "samenvatting": "De stichting bij het Nationaal Indië Monument in Roermond vraagt donateurs, legaten of erfgenaamschappen om de jaarlijkse herdenking van in Nederlands-Indië en Nieuw-Guinea gesneuvelde militairen en het onderhoud van het monument te bekostigen.",
+      "omschrijving": null,
+      "url": "https://www.nim-roermond.nl/doneren",
+      "bron_naam": "nim-roermond.nl",
+      "plaats": "Roermond",
+      "doelbedrag": null,
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-08-31",
+      "zoekterm": "veteranen stichting zoekt donateurs vrienden worden 2026"
+    },
+    {
+      "id": "veteranenbrunssum-sponsoren",
+      "titel": "Stichting Veteranen Brunssum zoekt sponsors en donateurs voor Veteranendag",
+      "organisatie": "Stichting Veteranen Brunssum",
+      "doelgroep": "Veteranen",
+      "samenvatting": "Stichting Veteranen Brunssum zoekt bedrijven als sponsor (vanaf € 100) en particulieren als donateur (vanaf € 15 per jaar) om de jaarlijkse Veteranendag op het Lindeplein te bekostigen.",
+      "omschrijving": null,
+      "url": "https://veteranenbrunssum.nl/sponsoren/",
+      "bron_naam": "veteranenbrunssum.nl",
+      "plaats": "Brunssum",
+      "doelbedrag": null,
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-08-31",
+      "zoekterm": "veteranen stichting zoekt donateurs vrienden worden 2026"
+    },
     {
       "id": "afmp-sponsorloop-veteranen",
       "titel": "AFMP steunt sponsorloop voor veteranen - doe mee",
