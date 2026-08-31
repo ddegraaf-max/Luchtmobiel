@@ -61,7 +61,11 @@
       <% if (magBeheren) { %>
         <div class="card" style="margin-top:26px;">
           <% if (evenement.bron_url) { %>
-            <div class="flash flash--info" style="margin-bottom:14px;">Dit evenement wordt automatisch overgenomen van bclmb.nl. Titel, omschrijving, datum en locatie worden bij een wijziging op de bron opnieuw overgeschreven; aanmelden/plaatsen en de categorie blijven zoals jij ze instelt. Verwijder je het hier, dan wordt het niet opnieuw geïmporteerd.</div>
+            <% if (evenement.bron === 'sponsorverzoek') { %>
+              <div class="flash flash--info" style="margin-bottom:14px;">Dit agenda-item hoort bij een <a href="/sponsorverzoeken/<%= evenement.bron_uid %>">sponsorverzoek</a>. Titel, omschrijving, datum en locatie volgen dat verzoek; pas ze daar aan via <em>Bewerken</em>. Verwijder je het hier, dan komt het niet terug tenzij je bij het verzoek "In de agenda tonen" opnieuw aanvinkt.</div>
+            <% } else { %>
+              <div class="flash flash--info" style="margin-bottom:14px;">Dit evenement wordt automatisch overgenomen van bclmb.nl. Titel, omschrijving, datum en locatie worden bij een wijziging op de bron opnieuw overgeschreven; aanmelden/plaatsen en de categorie blijven zoals jij ze instelt. Verwijder je het hier, dan wordt het niet opnieuw geïmporteerd.</div>
+            <% } %>
           <% } %>
           <div class="flex between" style="align-items:center;">
             <strong>Beheer</strong>
@@ -91,7 +95,12 @@
         <h3 style="margin-top:0;">Aanmelden</h3>
         <% if (!evenement.aanmelden && evenement.bron_url) { %>
           <p class="muted">Aanmelden en de laatste informatie vind je op de site van de Business Club.</p>
-          <a href="<%= evenement.bron_url %>" target="_blank" rel="noopener" class="btn btn--primary btn--block">Aanmelden op bclmb.nl</a>
+          <% if (evenement.bron === 'sponsorverzoek') { %>
+            <a href="<%= evenement.bron_url %>" target="_blank" rel="noopener nofollow" class="btn btn--primary btn--block">Sponsoren of doneren ↗</a>
+            <a href="/sponsorverzoeken/<%= evenement.bron_uid %>" class="btn btn--ghost btn--block" style="margin-top:10px;">Bekijk het sponsorverzoek</a>
+          <% } else { %>
+            <a href="<%= evenement.bron_url %>" target="_blank" rel="noopener" class="btn btn--primary btn--block">Aanmelden op bclmb.nl</a>
+          <% } %>
         <% } else if (!evenement.aanmelden) { %>
           <p class="muted">Voor dit evenement is aanmelden niet nodig — iedereen is welkom.</p>
         <% } else if (!isToekomst) { %>
@@ -125,7 +134,11 @@
       </div>
       <a href="/agenda/<%= evenement.id %>/ical" class="btn btn--ghost btn--block" style="margin-top:14px;">📅 Zet in mijn agenda</a>
       <% if (evenement.bron_url) { %>
-        <p class="meta" style="margin:12px 0 0; text-align:center;">Overgenomen van <a href="<%= evenement.bron_url %>" target="_blank" rel="noopener">bclmb.nl</a><% if (evenement.bron_bijgewerkt) { %> · bijgewerkt <%= h.formatDatum(evenement.bron_bijgewerkt) %><% } %></p>
+        <% if (evenement.bron === 'sponsorverzoek') { %>
+          <p class="meta" style="margin:12px 0 0; text-align:center;">Sponsoractie van een derde partij — zie het <a href="/sponsorverzoeken/<%= evenement.bron_uid %>">sponsorverzoek</a>.</p>
+        <% } else { %>
+          <p class="meta" style="margin:12px 0 0; text-align:center;">Overgenomen van <a href="<%= evenement.bron_url %>" target="_blank" rel="noopener">bclmb.nl</a><% if (evenement.bron_bijgewerkt) { %> · bijgewerkt <%= h.formatDatum(evenement.bron_bijgewerkt) %><% } %></p>
+        <% } %>
       <% } %>
     </aside>
   </div>

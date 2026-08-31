@@ -60,7 +60,7 @@ worden gevraagd **voor of door Nederlandse militairen, veteranen of hun nabestaa
    Let op: LinkedIn en Facebook laten pagina's vaak niet openen zonder inlog. Verwijst het bericht naar een actiepagina (doneeractie, GoFundMe, website van een stichting), gebruik dan díe pagina als `url` en controleer die. Is er alleen het bericht zelf en kun je het niet openen, neem het dan alleen op als de tekst in de zoekresultaten ondubbelzinnig een lopend Nederlands verzoek voor militairen/veteranen toont, met de link naar het bericht als `url`, `bron_naam` `linkedin.com` of `facebook.com`, en eindig de `samenvatting` met "Nog niet op de pagina gecontroleerd."
    Kijk ook rechtstreeks (met WebFetch) op zoekpagina's van crowdfunding-platforms, bijv. `https://www.doneeractie.nl/zoeken?q=veteraan` en `https://www.doneeractie.nl/zoeken?q=militair`, en op nieuwspagina's van veteranenorganisaties (Nederlands Veteraneninstituut, vfonds, Nederlandse Veteranendag, veteranenverenigingen van de regimenten van 11 Luchtmobiele Brigade).
 
-3. **Controleer elke kandidaat op de pagina zelf** met WebFetch. Neem alleen op wat aan de criteria hierboven voldoet en waarvan de actie nog loopt. Haal uit de pagina: titel, organisatie of initiatiefnemer, voor wie het is, plaats/regio, doelbedrag en einddatum (als vermeld), en de datum waarop het verzoek is geplaatst (als vermeld).
+3. **Controleer elke kandidaat op de pagina zelf** met WebFetch. Neem alleen op wat aan de criteria hierboven voldoet en waarvan de actie nog loopt. Haal uit de pagina: titel, organisatie of initiatiefnemer, voor wie het is, plaats/regio, doelbedrag en einddatum (als vermeld), en de datum waarop het verzoek is geplaatst (als vermeld). Hoort het verzoek bij een **evenement** (sponsorloop, mars, benefiet, veiling, concert), noteer dan ook de datum, begintijd, eventuele einddatum en locatie van dat evenement — het platform zet het dan ook in de agenda.
 
 4. **Schrijf per verzoek een neutrale samenvatting** van één of twee zinnen (max. 300 tekens) in het Nederlands: wat wordt gevraagd en waarvoor. Eventueel een langere toelichting van een paar alinea's in `omschrijving` (max. 5000 tekens). Geen wervende taal, geen eigen mening, niets verzinnen: wat niet op de pagina staat, laat je leeg (`null`).
 
@@ -132,6 +132,12 @@ Velden:
 | `gepubliceerd_op_bron` | nee | Datum waarop het verzoek online kwam, `JJJJ-MM-DD` of ISO-tijdstip. |
 | `gevonden_op` | ja | Datum van deze zoekronde, `JJJJ-MM-DD`. |
 | `zoekterm` | nee | De zoekopdracht waarmee je het vond (helpt het bestuur de zoekstrategie te verbeteren). |
+| `evenement_datum` | nee | Hoort het verzoek bij een evenement (sponsorloop, benefiet, veiling, mars, concert)? Datum van dat evenement, `JJJJ-MM-DD`. Het platform zet het verzoek dan na plaatsing ook in de agenda. |
+| `evenement_tijd` | nee | Begintijd `UU:MM`, alleen als vermeld (leeg = hele dag). |
+| `evenement_einddatum` | nee | Laatste dag, `JJJJ-MM-DD`, alleen bij meerdaagse evenementen. |
+| `evenement_locatie` | nee | Plaats of route van het evenement, bijv. `Son en Breugel → Schaarsbergen`. |
+
+Het platform kent elk verzoek zelf een kenmerk toe (RED2026001, RED2026002, …); dat hoef jij niet te doen.
 
 Het platform valideert elk item opnieuw, negeert ongeldige items en slaat alles over wat het al kent
 (zelfde url, zelfde `id` of dezelfde titel van dezelfde site). Wat het bestuur afwijst, komt niet

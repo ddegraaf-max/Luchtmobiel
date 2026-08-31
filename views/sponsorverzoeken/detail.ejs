@@ -1,7 +1,7 @@
 <div class="paginakop">
   <div class="wrap">
     <div>
-      <span class="kicker" style="margin-bottom:6px;">Sponsorverzoek<% if (verzoek.doelgroep) { %> · <%= verzoek.doelgroep %><% } %><% if (verzoek.uitgelicht) { %> · Uitgelicht<% } %><% if (verzoek.status !== 'geplaatst') { %> · <%= statusLabel[verzoek.status].toLowerCase() %><% } %></span>
+      <span class="kicker" style="margin-bottom:6px;">Sponsorverzoek<% if (verzoek.kenmerk) { %> <%= verzoek.kenmerk %><% } %><% if (verzoek.doelgroep) { %> · <%= verzoek.doelgroep %><% } %><% if (verzoek.uitgelicht) { %> · Uitgelicht<% } %><% if (verzoek.status !== 'geplaatst') { %> · <%= statusLabel[verzoek.status].toLowerCase() %><% } %></span>
       <h1 style="margin:0;"><%= verzoek.titel %></h1>
       <% if (verzoek.organisatie || verzoek.plaats) { %><p style="margin:.4rem 0 0; color:var(--sand); font-weight:600;"><%= verzoek.organisatie || '' %><%= verzoek.organisatie && verzoek.plaats ? ' · ' : '' %><%= verzoek.plaats || '' %></p><% } %>
     </div>
@@ -58,6 +58,12 @@
 
       <aside class="zijbalk">
         <dl style="margin:0 0 16px;">
+          <% if (verzoek.kenmerk) { %><dt>Kenmerk</dt><dd><%= verzoek.kenmerk %></dd><% } %>
+          <% if (verzoek.evenement_datum) { %>
+            <dt>Evenement</dt>
+            <dd><%= h.formatDatumDag(verzoek.evenement_datum) %><%= verzoek.evenement_tijd ? ', ' + verzoek.evenement_tijd + ' uur' : '' %><%= verzoek.evenement_einddatum && verzoek.evenement_einddatum !== verzoek.evenement_datum ? ' t/m ' + h.formatDatumDag(verzoek.evenement_einddatum) : '' %><% if (verzoek.evenement_locatie) { %><br><span style="font-weight:500;"><%= verzoek.evenement_locatie %></span><% } %>
+              <% if (verzoek.evenement_id) { %><br><a href="/agenda/<%= verzoek.evenement_id %>">Bekijk in de agenda →</a><% } %></dd>
+          <% } %>
           <% if (verzoek.organisatie) { %><dt>Organisatie</dt><dd><%= verzoek.organisatie %></dd><% } %>
           <% if (verzoek.doelgroep) { %><dt>Voor wie</dt><dd><%= verzoek.doelgroep %></dd><% } %>
           <% if (verzoek.plaats) { %><dt>Plaats / regio</dt><dd><%= verzoek.plaats %></dd><% } %>

@@ -14,6 +14,7 @@
     <% if (verzoek.bron === 'assistent') { %>
       <div class="flash flash--info">Dit verzoek is gevonden door de assistent. Je kunt de tekst vrij aanpassen; de assistent overschrijft hem niet meer.</div>
     <% } %>
+    <% if (verzoek.kenmerk) { %><p class="muted" style="margin:-6px 0 14px;">Kenmerk <strong><%= verzoek.kenmerk %></strong></p><% } %>
     <form action="<%= actie %>" method="post" class="form-card">
       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
@@ -67,6 +68,33 @@
           <input type="date" id="einddatum" name="einddatum" value="<%= verzoek.einddatum || '' %>">
         </div>
       </div>
+      <h3 style="margin:28px 0 6px; font-size:1.05rem;">Hoort het verzoek bij een evenement?</h3>
+      <p class="muted" style="font-size:.9rem; margin-bottom:12px;">Bijvoorbeeld een sponsorloop, benefiet, veiling of mars. Vul de datum in; zodra het verzoek is geplaatst komt het dan ook in de agenda (categorie Sponsoractie), met een link naar het verzoek.</p>
+      <div class="veld-rij">
+        <div class="veld">
+          <label for="evenement_datum">Datum</label>
+          <input type="date" id="evenement_datum" name="evenement_datum" value="<%= verzoek.evenement_datum || '' %>">
+        </div>
+        <div class="veld">
+          <label for="evenement_tijd">Begintijd</label>
+          <input type="time" id="evenement_tijd" name="evenement_tijd" value="<%= verzoek.evenement_tijd || '' %>">
+          <span class="hint">Leeg = hele dag</span>
+        </div>
+        <div class="veld">
+          <label for="evenement_einddatum">Einddatum</label>
+          <input type="date" id="evenement_einddatum" name="evenement_einddatum" value="<%= verzoek.evenement_einddatum || '' %>">
+          <span class="hint">Alleen bij meerdere dagen</span>
+        </div>
+      </div>
+      <div class="veld">
+        <label for="evenement_locatie">Locatie van het evenement</label>
+        <input type="text" id="evenement_locatie" name="evenement_locatie" value="<%= verzoek.evenement_locatie || '' %>" maxlength="200" placeholder="Bijv. Son en Breugel → Schaarsbergen">
+      </div>
+      <label class="check" style="cursor:pointer; margin-bottom:22px;">
+        <input type="checkbox" name="in_agenda" <%= (verzoek.in_agenda === undefined || verzoek.in_agenda === null || verzoek.in_agenda === true || verzoek.in_agenda === 'on') ? 'checked' : '' %>>
+        In de agenda tonen zodra het verzoek geplaatst is (alleen met een datum)
+      </label>
+
       <div class="veld-rij">
         <div class="veld">
           <label for="status">Status</label>

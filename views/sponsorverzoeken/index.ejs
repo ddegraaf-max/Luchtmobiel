@@ -39,10 +39,15 @@
             <a class="card-titel" href="/sponsorverzoeken/<%= v.id %>" style="font-family:var(--font-display); font-weight:700; font-size:1.15rem; line-height:1.2;"><%= v.titel %></a>
             <% if (v.organisatie) { %><div class="meta" style="margin-top:-4px;"><%= v.organisatie %><%= v.plaats ? ' · ' + v.plaats : '' %></div><% } else if (v.plaats) { %><div class="meta" style="margin-top:-4px;"><%= v.plaats %></div><% } %>
             <% if (v.samenvatting) { %><p class="muted mb-0" style="flex:1;"><%= v.samenvatting %></p><% } %>
+            <% if (v.evenement_datum) { %>
+              <div class="meta">📅 <%= h.formatDatumDag(v.evenement_datum) %><%= v.evenement_einddatum && v.evenement_einddatum !== v.evenement_datum ? ' t/m ' + h.formatDatumDag(v.evenement_einddatum) : '' %><%= v.evenement_locatie ? ' · ' + v.evenement_locatie : '' %><% if (v.evenement_id) { %> · <a href="/agenda/<%= v.evenement_id %>">agenda</a><% } %></div>
+            <% } %>
             <div class="meta">
               <% if (v.doelbedrag) { %>Doel: <strong><%= v.doelbedrag %></strong><% } %>
               <% if (v.doelbedrag && v.einddatum) { %> · <% } %>
               <% if (v.einddatum) { %>Loopt tot <%= h.formatDatumDag(v.einddatum) %><% } %>
+              <% if ((v.doelbedrag || v.einddatum) && v.kenmerk) { %> · <% } %>
+              <% if (v.kenmerk) { %><span title="Kenmerk"><%= v.kenmerk %></span><% } %>
             </div>
             <div class="flex between" style="margin-top:auto;">
               <a href="/sponsorverzoeken/<%= v.id %>" style="font-weight:700;">Bekijk →</a>

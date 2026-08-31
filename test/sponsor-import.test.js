@@ -61,6 +61,22 @@ test('items worden gevalideerd en opgeschoond', () => {
   assert.equal(si.valideerItem({ titel: 'x'.repeat(500), url: 'https://x.nl/a' }).item.titel.length, 200, 'titel begrensd');
 });
 
+test('evenementvelden: datum, tijd, einddatum en locatie', () => {
+  const v = si.valideerItem({ titel: 'Mars', url: 'https://x.nl/mars', evenement_datum: '2026-09-12', evenement_tijd: '9:30', evenement_einddatum: '2026-09-13', evenement_locatie: '  Son en Breugel  →  Schaarsbergen ' }).item;
+  assert.equal(v.evenement_datum, '2026-09-12');
+  assert.equal(v.evenement_tijd, '09:30', 'tijd genormaliseerd naar uu:mm');
+  assert.equal(v.evenement_einddatum, '2026-09-13');
+  assert.equal(v.evenement_locatie, 'Son en Breugel → Schaarsbergen');
+  const leeg = si.valideerItem({ titel: 'Zonder', url: 'https://x.nl/a' }).item;
+  assert.equal(leeg.evenement_datum, null);
+  assert.equal(leeg.evenement_tijd, null);
+  assert.equal(si.tijdOk('11.00'), '11:00');
+  assert.equal(si.tijdOk('24:00'), null);
+  assert.equal(si.tijdOk('abc'), null);
+  assert.equal(si.tijdOk(''), null);
+  assert.equal(si.valideerItem({ titel: 'Foute datum', url: 'https://x.nl/a', evenement_datum: '12-09-2026' }).item.evenement_datum, null);
+});
+
 test('het bestand van de assistent wordt gelezen in beide vormen', () => {
   const met = si.leesInbox(JSON.stringify({ bijgewerkt: '2026-08-31T05:10:00Z', items: [{ titel: 'A', url: 'https://x.nl/a' }] }));
   assert.equal(met.items.length, 1);

@@ -50,7 +50,7 @@
                 <% } else { %>
                   <span>🕑 <%= h.formatTijd(e.start_op) %><%= e.eind_op ? '–' + h.formatTijd(e.eind_op) : '' %></span>
                 <% } %>
-                <% if (e.bron_url) { %><span title="Overgenomen van de site van de Business Club">🔗 bclmb.nl</span><% } %>
+                <% if (e.bron === 'sponsorverzoek') { %><span title="Sponsoractie van een derde partij; zie Sponsoring">🤝 Sponsoractie</span><% } else if (e.bron_url) { %><span title="Overgenomen van de site van de Business Club">🔗 bclmb.nl</span><% } %>
                 <% if (e.locatie) { %><span>📍 <%= e.locatie %></span><% } %>
                 <% if (e.aanmelden && e.max_plaatsen) { %><span><%= Math.max(0, e.max_plaatsen - e.bezet) %> plaatsen vrij</span><% } %>
               </div>

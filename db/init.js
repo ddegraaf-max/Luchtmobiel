@@ -263,6 +263,26 @@ async function init() {
       bijgewerkt           TIMESTAMPTZ DEFAULT now()
     );
   `);
+  // Sponsorverzoek dat bij een evenement hoort (sponsorloop, benefiet, mars): kan in de agenda komen
+  await pool.query(`ALTER TABLE sponsorverzoeken ADD COLUMN IF NOT EXISTS evenement_datum TEXT;`);
+  await pool.query(`ALTER TABLE sponsorverzoeken ADD COLUMN IF NOT EXISTS evenement_tijd TEXT;`);
+  await pool.query(`ALTER TABLE sponsorverzoeken ADD COLUMN IF NOT EXISTS evenement_einddatum TEXT;`);
+  await pool.query(`ALTER TABLE sponsorverzoeken ADD COLUMN IF NOT EXISTS evenement_locatie TEXT;`);
+  await pool.query(`ALTER TABLE sponsorverzoeken ADD COLUMN IF NOT EXISTS in_agenda BOOLEAN NOT NULL DEFAULT true;`);
+  await pool.query(`ALTER TABLE sponsorverzoeken ADD COLUMN IF NOT EXISTS evenement_id INTEGER REFERENCES evenementen(id) ON DELETE SET NULL;`);
+  // Kenmerk per verzoek (RED2026001, RED2026002, ...); bestaande verzoeken krijgen er alsnog een.
+  await pool.query(`ALTER TABLE sponsorverzoeken ADD COLUMN IF NOT EXISTS kenmerk TEXT;`);
+  await pool.query(`CREATE UNIQUE INDEX IF NOT EXISTS sponsorverzoeken_kenmerk_idx ON sponsorverzoeken(kenmerk);`);
+  try {
+    const { volgendKenmerk } = require('../lib/sponsor-import');
+    const zonder = (await pool.query('SELECT id, aangemaakt FROM sponsorverzoeken WHERE kenmerk IS NULL ORDER BY aangemaakt, id')).rows;
+    for (const r of zonder) {
+      await pool.query('UPDATE sponsorverzoeken SET kenmerk = $1 WHERE id = $2', [await volgendKenmerk(new Date(r.aangemaakt || Date.now())), r.id]);
+    }
+    if (zonder.length) console.log('[db] Kenmerk toegekend aan', zonder.length, 'sponsorverzoek(en).');
+  } catch (err) {
+    console.error('[db] Kenmerken sponsorverzoeken toekennen mislukt:', err.message);
+  }
   await pool.query(`CREATE INDEX IF NOT EXISTS sponsorverzoeken_status_idx ON sponsorverzoeken(status);`);
   await pool.query(`CREATE INDEX IF NOT EXISTS sponsorverzoeken_url_idx ON sponsorverzoeken(url_sleutel);`);
 

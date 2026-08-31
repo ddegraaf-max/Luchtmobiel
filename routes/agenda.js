@@ -7,7 +7,7 @@ const { sendMail, mailLayout, escHtml } = require('../lib/mail');
 const { afbeelding, bewaarAfbeelding } = require('../lib/upload');
 const agendaImport = require('../lib/agenda-import');
 
-const CATEGORIEEN = ['Ceremonieel', 'Sportief', 'Excursie', 'Netwerk', 'Overig'];
+const CATEGORIEEN = ['Ceremonieel', 'Sportief', 'Excursie', 'Netwerk', 'Sponsoractie', 'Overig'];
 
 idParams(router, ['id', 'fotoId']);
 const uploadAfbeelding = afbeelding('afbeelding', { maxMb: 2 });
@@ -268,9 +268,13 @@ router.post('/:id/bewerken', requireRedactie, uploadAfbeelding, async (req, res)
 router.post('/:id/verwijderen', requireRedactie, async (req, res) => {
   try {
     const ev = (await pool.query('SELECT bron, bron_uid FROM evenementen WHERE id = $1', [req.params.id])).rows[0];
+    // Agenda-item van een sponsorverzoek: bij het verzoek uitzetten, zodat het niet terugkomt
+    if (ev && ev.bron === 'sponsorverzoek') {
+      await pool.query('UPDATE sponsorverzoeken SET in_agenda = false, evenement_id = NULL WHERE evenement_id = $1', [req.params.id]);
+    }
     await pool.query('DELETE FROM evenementen WHERE id = $1', [req.params.id]);
-    // Geïmporteerd evenement: niet opnieuw laten importeren
-    if (ev && ev.bron && ev.bron_uid) await agendaImport.negeer(ev.bron_uid);
+    // Geïmporteerd evenement van bclmb.nl: niet opnieuw laten importeren
+    if (ev && ev.bron === agendaImport.BRON && ev.bron_uid) await agendaImport.negeer(ev.bron_uid);
     req.session.flash = { type: 'succes', message: 'Evenement verwijderd.' };
   } catch (err) {
     console.error('[agenda verwijderen]', err.message);

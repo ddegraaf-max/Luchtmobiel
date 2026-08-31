@@ -1,6 +1,7 @@
 // Sponsorverzoeken voor militairen en veteranen: gevonden door de dagelijkse
 // assistent (of handmatig toegevoegd), gecontroleerd door bestuur/brigade en pas
-// daarna zichtbaar op de publieke pagina.
+// daarna zichtbaar op de publieke pagina. Een geplaatst verzoek met evenementdatum
+// komt ook in de agenda; elk verzoek heeft een kenmerk (RED2026001, ...).
 
 const express = require('express');
 const router = express.Router();
@@ -35,11 +36,22 @@ function leesFormulier(body) {
     doelbedrag: tekst(body.doelbedrag, 50),
     einddatum: si.datumOk(body.einddatum),
     uitgelicht: body.uitgelicht === 'on',
-    status: si.STATUSSEN.includes(body.status) ? body.status : 'nieuw'
+    status: si.STATUSSEN.includes(body.status) ? body.status : 'nieuw',
+    // Evenement (optioneel): datum verplicht om in de agenda te komen, tijd en einddatum niet
+    evenement_datum: si.datumOk(body.evenement_datum),
+    evenement_tijd: si.tijdOk(body.evenement_tijd),
+    evenement_einddatum: si.datumOk(body.evenement_einddatum),
+    evenement_locatie: tekst(body.evenement_locatie, 200),
+    in_agenda: body.in_agenda === 'on'
   };
   if (!d.bron_naam && d.url) d.bron_naam = si.hostVan(d.url);
-  d.fout = !d.titel ? 'Geef het sponsorverzoek minimaal een titel.'
-    : (urlRuw && !d.url ? 'De link is geen geldig webadres.' : null);
+  if (!d.titel) d.fout = 'Geef het sponsorverzoek minimaal een titel.';
+  else if (urlRuw && !d.url) d.fout = 'De link is geen geldig webadres.';
+  else if (tekst(body.evenement_datum, 20) && !d.evenement_datum) d.fout = 'De datum van het evenement is ongeldig.';
+  else if (tekst(body.evenement_tijd, 10) && !d.evenement_tijd) d.fout = 'De begintijd van het evenement is ongeldig (gebruik uu:mm).';
+  else if (d.evenement_einddatum && !d.evenement_datum) d.fout = 'Vul ook de begindatum van het evenement in.';
+  else if (d.evenement_einddatum && d.evenement_einddatum < d.evenement_datum) d.fout = 'De einddatum van het evenement ligt vóór de begindatum.';
+  else d.fout = null;
   return d;
 }
 
@@ -110,7 +122,7 @@ router.post('/controle/ophalen', requireLogin, requireRedactie, async (req, res)
 
 // Handmatig toevoegen
 router.get('/nieuw', requireLogin, requireRedactie, (req, res) => {
-  toonFormulier(res, { title: 'Sponsorverzoek toevoegen', verzoek: { status: 'geplaatst', doelgroep: 'Veteranen' }, actie: '/sponsorverzoeken/nieuw', fout: null });
+  toonFormulier(res, { title: 'Sponsorverzoek toevoegen', verzoek: { status: 'geplaatst', doelgroep: 'Veteranen', in_agenda: true }, actie: '/sponsorverzoeken/nieuw', fout: null });
 });
 
 router.post('/nieuw', requireLogin, requireRedactie, async (req, res) => {
@@ -119,15 +131,19 @@ router.post('/nieuw', requireLogin, requireRedactie, async (req, res) => {
   try {
     const uid = req.session.user.id;
     const beoordeeld = d.status !== 'nieuw';
+    const kenmerk = await si.volgendKenmerk();
     const { rows } = await pool.query(
       `INSERT INTO sponsorverzoeken (titel, organisatie, samenvatting, omschrijving, url, url_sleutel, titel_sleutel, bron, bron_naam,
-         doelgroep, plaats, doelbedrag, einddatum, status, uitgelicht, auteur_id, beoordeeld_door, beoordeeld_op)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18) RETURNING id`,
+         doelgroep, plaats, doelbedrag, einddatum, status, uitgelicht, auteur_id, beoordeeld_door, beoordeeld_op,
+         evenement_datum, evenement_tijd, evenement_einddatum, evenement_locatie, in_agenda, kenmerk)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24) RETURNING id`,
       [d.titel, d.organisatie, d.samenvatting, d.omschrijving, d.url, d.url ? si.normaliseerUrl(d.url) : null, si.titelSleutel(d.titel),
        si.BRON_HANDMATIG, d.bron_naam, d.doelgroep, d.plaats, d.doelbedrag, d.einddatum, d.status, d.uitgelicht, uid,
-       beoordeeld ? uid : null, beoordeeld ? new Date() : null]
+       beoordeeld ? uid : null, beoordeeld ? new Date() : null,
+       d.evenement_datum, d.evenement_tijd, d.evenement_einddatum, d.evenement_locatie, d.in_agenda, kenmerk]
     );
-    req.session.flash = { type: 'succes', message: d.status === 'geplaatst' ? 'Sponsorverzoek geplaatst.' : 'Sponsorverzoek opgeslagen.' };
+    const evId = await si.synchroniseerAgenda(rows[0].id, uid);
+    req.session.flash = { type: 'succes', message: `Sponsorverzoek ${kenmerk} ${d.status === 'geplaatst' ? 'geplaatst' : 'opgeslagen'}${evId ? ' en in de agenda gezet' : ''}.` };
     res.redirect('/sponsorverzoeken/' + rows[0].id);
   } catch (err) {
     console.error('[sponsorverzoeken nieuw]', err.message);
@@ -147,7 +163,9 @@ router.get('/:id', async (req, res) => {
       return res.status(404).render('error', { title: 'Niet gevonden', bericht: 'Dit sponsorverzoek bestaat niet (meer).' });
     }
     if (verzoek.status === 'geplaatst') {
-      const delen = [verzoek.organisatie, verzoek.plaats, verzoek.doelbedrag ? 'Doel: ' + verzoek.doelbedrag : null].filter(Boolean).join(' · ');
+      const delen = [verzoek.organisatie, verzoek.plaats, verzoek.doelbedrag ? 'Doel: ' + verzoek.doelbedrag : null,
+        verzoek.evenement_datum ? 'Evenement: ' + res.locals.h.formatDatumDag(verzoek.evenement_datum) : null,
+        verzoek.kenmerk].filter(Boolean).join(' · ');
       res.locals.meta = {
         type: 'article',
         titel: verzoek.titel,
@@ -173,7 +191,7 @@ router.post('/:id/bewerken', requireLogin, requireRedactie, async (req, res) => 
   if (!bestaand) return res.status(404).render('error', { title: 'Niet gevonden', bericht: 'Dit sponsorverzoek bestaat niet.' });
   const d = leesFormulier(req.body);
   const actie = '/sponsorverzoeken/' + bestaand.id + '/bewerken';
-  if (d.fout) return toonFormulier(res, { title: 'Sponsorverzoek bewerken', verzoek: { ...bestaand, ...req.body, id: bestaand.id }, actie, fout: d.fout, status: 400 });
+  if (d.fout) return toonFormulier(res, { title: 'Sponsorverzoek bewerken', verzoek: { ...bestaand, ...req.body, id: bestaand.id, in_agenda: d.in_agenda }, actie, fout: d.fout, status: 400 });
   try {
     const statusGewijzigd = d.status !== bestaand.status;
     await pool.query(
@@ -181,17 +199,20 @@ router.post('/:id/bewerken', requireLogin, requireRedactie, async (req, res) => 
          bron_naam=$8, doelgroep=$9, plaats=$10, doelbedrag=$11, einddatum=$12, status=$13, uitgelicht=$14,
          beoordeeld_door = CASE WHEN $15 THEN $16 ELSE beoordeeld_door END,
          beoordeeld_op   = CASE WHEN $15 THEN now() ELSE beoordeeld_op END,
+         evenement_datum=$17, evenement_tijd=$18, evenement_einddatum=$19, evenement_locatie=$20, in_agenda=$21,
          bijgewerkt=now()
-       WHERE id=$17`,
+       WHERE id=$22`,
       [d.titel, d.organisatie, d.samenvatting, d.omschrijving, d.url, d.url ? si.normaliseerUrl(d.url) : null, si.titelSleutel(d.titel),
        d.bron_naam, d.doelgroep, d.plaats, d.doelbedrag, d.einddatum, d.status, d.uitgelicht,
-       statusGewijzigd, req.session.user.id, bestaand.id]
+       statusGewijzigd, req.session.user.id,
+       d.evenement_datum, d.evenement_tijd, d.evenement_einddatum, d.evenement_locatie, d.in_agenda, bestaand.id]
     );
-    req.session.flash = { type: 'succes', message: 'Sponsorverzoek bijgewerkt.' };
+    const evId = await si.synchroniseerAgenda(bestaand.id, req.session.user.id);
+    req.session.flash = { type: 'succes', message: 'Sponsorverzoek bijgewerkt' + (evId ? ' (ook in de agenda)' : bestaand.evenement_id ? ' (uit de agenda gehaald)' : '') + '.' };
     res.redirect('/sponsorverzoeken/' + bestaand.id);
   } catch (err) {
     console.error('[sponsorverzoek bewerken]', err.message);
-    toonFormulier(res, { title: 'Sponsorverzoek bewerken', verzoek: { ...bestaand, ...req.body, id: bestaand.id }, actie, fout: 'Opslaan mislukt. Probeer het opnieuw.', status: 500 });
+    toonFormulier(res, { title: 'Sponsorverzoek bewerken', verzoek: { ...bestaand, ...req.body, id: bestaand.id, in_agenda: d.in_agenda }, actie, fout: 'Opslaan mislukt. Probeer het opnieuw.', status: 500 });
   }
 });
 
@@ -201,14 +222,15 @@ router.post('/:id/status', requireLogin, requireRedactie, async (req, res) => {
   if (!si.STATUSSEN.includes(status)) return res.redirect(terugNaar(req));
   try {
     const { rows } = await pool.query(
-      `UPDATE sponsorverzoeken SET status=$1, beoordeeld_door=$2, beoordeeld_op=now(), bijgewerkt=now() WHERE id=$3 RETURNING titel`,
+      `UPDATE sponsorverzoeken SET status=$1, beoordeeld_door=$2, beoordeeld_op=now(), bijgewerkt=now() WHERE id=$3 RETURNING id, titel, evenement_id`,
       [status, req.session.user.id, req.params.id]
     );
     if (rows.length) {
+      const evId = await si.synchroniseerAgenda(rows[0].id, req.session.user.id);
       const berichten = {
-        geplaatst: `"${rows[0].titel}" staat nu op de site.`,
-        afgewezen: `"${rows[0].titel}" is afgewezen en wordt niet opnieuw aangeboden.`,
-        nieuw: `"${rows[0].titel}" staat weer in de controlewachtrij.`
+        geplaatst: `"${rows[0].titel}" staat nu op de site${evId ? ' en in de agenda' : ''}.`,
+        afgewezen: `"${rows[0].titel}" is afgewezen en wordt niet opnieuw aangeboden${rows[0].evenement_id ? '; het agenda-item is verwijderd' : ''}.`,
+        nieuw: `"${rows[0].titel}" staat weer in de controlewachtrij${rows[0].evenement_id ? '; het agenda-item is verwijderd' : ''}.`
       };
       req.session.flash = { type: 'succes', message: berichten[status] };
     }
@@ -228,6 +250,8 @@ router.post('/:id/uitgelicht', requireLogin, requireRedactie, async (req, res) =
 // Verwijderen (let op: een verzoek van de assistent kan dan opnieuw worden aangeboden; afwijzen voorkomt dat)
 router.post('/:id/verwijderen', requireLogin, requireRedactie, async (req, res) => {
   try {
+    const verzoek = (await pool.query('SELECT id, evenement_id FROM sponsorverzoeken WHERE id = $1', [req.params.id])).rows[0];
+    await si.verwijderUitAgenda(verzoek);
     await pool.query('DELETE FROM sponsorverzoeken WHERE id = $1', [req.params.id]);
     req.session.flash = { type: 'succes', message: 'Sponsorverzoek verwijderd.' };
   } catch (err) {

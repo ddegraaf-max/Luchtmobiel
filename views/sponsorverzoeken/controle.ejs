@@ -64,9 +64,11 @@
             <div class="flex between" style="align-items:flex-start;">
               <div style="flex:1; min-width:240px;">
                 <div class="flex" style="gap:6px; margin-bottom:6px;">
+                  <% if (v.kenmerk) { %><span class="badge badge--brigade"><%= v.kenmerk %></span><% } %>
                   <% if (v.doelgroep) { %><span class="badge badge--olive"><%= v.doelgroep %></span><% } %>
                   <span class="badge" title="<%= bronLabel[v.bron] || v.bron %>"><%= v.bron === 'assistent' ? 'Assistent' : 'Handmatig' %></span>
                   <% if (v.uitgelicht) { %><span class="badge badge--maroon">Uitgelicht</span><% } %>
+                  <% if (v.evenement_id) { %><a href="/agenda/<%= v.evenement_id %>" class="badge badge--maroon" title="Staat in de agenda">In agenda</a><% } %>
                 </div>
                 <a class="card-titel" href="/sponsorverzoeken/<%= v.id %>" style="font-family:var(--font-display); font-weight:700; font-size:1.15rem; line-height:1.25;"><%= v.titel %></a>
                 <div class="meta" style="margin-top:4px;">
@@ -75,6 +77,9 @@
                   <% if (v.doelbedrag) { %> · Doel: <%= v.doelbedrag %><% } %>
                   <% if (v.einddatum) { %> · Loopt tot <%= h.formatDatumDag(v.einddatum) %><% } %>
                 </div>
+                <% if (v.evenement_datum) { %>
+                  <div class="meta" style="margin-top:4px;">📅 Evenement: <%= h.formatDatumDag(v.evenement_datum) %><%= v.evenement_tijd ? ' ' + v.evenement_tijd + ' uur' : '' %><%= v.evenement_einddatum && v.evenement_einddatum !== v.evenement_datum ? ' t/m ' + h.formatDatumDag(v.evenement_einddatum) : '' %><%= v.evenement_locatie ? ' · ' + v.evenement_locatie : '' %><%= v.in_agenda ? '' : ' (niet in de agenda)' %></div>
+                <% } %>
                 <% if (v.samenvatting) { %><p class="muted" style="margin:8px 0 0;"><%= v.samenvatting %></p><% } %>
                 <div class="meta" style="margin-top:8px;">
                   Gevonden op <%= h.formatDatum(v.aangemaakt) %><% if (v.gepubliceerd_op_bron) { %> · op de bron geplaatst <%= h.formatDatum(v.gepubliceerd_op_bron) %><% } %>

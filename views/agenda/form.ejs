@@ -67,7 +67,11 @@
         </div>
       </div>
       <% if (evenement.bron_url) { %>
-        <div class="flash flash--info">Dit evenement is overgenomen van <a href="<%= evenement.bron_url %>" target="_blank" rel="noopener">bclmb.nl</a>. Titel, omschrijving, datum en locatie worden overschreven zodra de bron wijzigt.</div>
+        <% if (evenement.bron === 'sponsorverzoek') { %>
+          <div class="flash flash--info">Dit agenda-item hoort bij een <a href="/sponsorverzoeken/<%= evenement.bron_uid %>">sponsorverzoek</a>. Titel, omschrijving, datum en locatie worden overschreven zodra dat verzoek wordt bijgewerkt; pas ze liever daar aan.</div>
+        <% } else { %>
+          <div class="flash flash--info">Dit evenement is overgenomen van <a href="<%= evenement.bron_url %>" target="_blank" rel="noopener">bclmb.nl</a>. Titel, omschrijving, datum en locatie worden overschreven zodra de bron wijzigt.</div>
+        <% } %>
       <% } %>
 
       <div class="veld">
