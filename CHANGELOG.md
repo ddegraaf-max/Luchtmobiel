@@ -3,6 +3,10 @@
 Het versienummer staat in de voettekst van elke pagina en in **Beheer** (met de code van de uitgerolde update).
 Bij elke update wordt het nummer in `package.json` opgehoogd en hier beschreven wat er is veranderd.
 
+## 1.5.0 — 31 augustus 2026
+- **LinkedIn-nieuws op de site**: de dagelijkse assistent verzamelt openbare LinkedIn-berichten van 11 Luchtmobiele Brigade, de Business Club en de Draagploeg Veteranen Luchtmobiele Brigade; ze verschijnen automatisch tussen het nieuws met een knop naar het originele bericht. Verwijderde berichten komen niet terug.
+- Nieuwspagina: blok **"Volg ons op LinkedIn"** met knoppen naar de brigade- en clubpagina (ledenwerving).
+
 ## 1.4.1 — 31 augustus 2026
 - **AIR ASSAULT!** — bij het allereerste bezoek klapt de kreet van de baretuitreiking eenmalig over het scherm, met het motto eronder. Eén keer per bezoeker; wordt overgeslagen bij een ingestelde voorkeur voor minder beweging.
 

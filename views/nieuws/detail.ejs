@@ -3,7 +3,7 @@
     <div>
       <span class="kicker"><%= bericht.categorie || 'Van het bestuur' %></span>
       <h1><%= bericht.titel %></h1>
-      <p><%= h.formatDatum(bericht.aangemaakt) %><%= bericht.auteur ? ' · ' + bericht.auteur : '' %><% if (bericht.bron_url) { %> · overgenomen van bclmb.nl<% } %><% if (!bericht.gepubliceerd) { %> · concept<% } %></p>
+      <p><%= h.formatDatum(bericht.aangemaakt) %><%= bericht.auteur ? ' · ' + bericht.auteur : '' %><% if (bericht.bron === 'linkedin') { %> · via LinkedIn<% } else if (bericht.bron_url) { %> · overgenomen van bclmb.nl<% } %><% if (!bericht.gepubliceerd) { %> · concept<% } %></p>
     </div>
     <a href="/nieuws" class="btn btn--ghost">← Nieuws</a>
   </div>
@@ -17,11 +17,16 @@
     <% if (bericht.inhoud) { %>
       <div class="prose"><% bericht.inhoud.split(/\n\n+/).forEach(function(par){ %><p><%= par %></p><% }) %></div>
     <% } %>
-    <% if (bericht.bron_url) { %>
+    <% if (bericht.bron === 'linkedin') { %>
+      <p style="margin-top:22px;"><a href="<%= bericht.bron_url %>" target="_blank" rel="noopener" class="btn btn--primary">Bekijk het bericht op LinkedIn ↗</a></p>
+      <p class="meta">Overgenomen van de openbare LinkedIn-pagina<%= bericht.categorie && bericht.categorie.indexOf('·') > -1 ? ' van' + bericht.categorie.split('·')[1] : '' %>.</p>
+    <% } else if (bericht.bron_url) { %>
       <p class="meta" style="margin-top:22px;">Dit bericht is overgenomen van de site van de Business Club. <a href="<%= bericht.bron_url %>" target="_blank" rel="noopener">Lees het op bclmb.nl ↗</a><% if (bericht.bron_bijgewerkt) { %> · bijgewerkt <%= h.formatDatum(bericht.bron_bijgewerkt) %><% } %></p>
     <% } %>
     <% if (magBeheren) { %>
-      <% if (bericht.bron_url) { %>
+      <% if (bericht.bron === 'linkedin') { %>
+        <div class="flash flash--info" style="margin-top:24px;">Dit bericht is door de assistent van LinkedIn overgenomen. Verwijder je het hier, dan komt het niet opnieuw terug.</div>
+      <% } else if (bericht.bron_url) { %>
         <div class="flash flash--info" style="margin-top:24px;">Dit bericht wordt automatisch overgenomen van bclmb.nl; titel, tekst en afbeelding worden bij een wijziging op de bron opnieuw overgeschreven. Verwijder je het hier, dan wordt het niet opnieuw geïmporteerd.</div>
       <% } %>
       <div class="flex" style="gap:8px; margin-top:24px;">

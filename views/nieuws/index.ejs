@@ -24,7 +24,7 @@
               <div class="meta flex" style="gap:8px;">
                 <span><%= h.formatDatum(n.aangemaakt) %><%= n.auteur ? ' · ' + n.auteur : '' %></span>
                 <% if (n.categorie) { %><span class="badge badge--olive"><%= n.categorie %></span><% } %>
-                <% if (n.bron_url) { %><span class="badge" title="Overgenomen van de site van de Business Club">bclmb.nl</span><% } %>
+                <% if (n.bron === 'linkedin') { %><span class="badge" title="Overgenomen van LinkedIn">LinkedIn</span><% } else if (n.bron_url) { %><span class="badge" title="Overgenomen van de site van de Business Club">bclmb.nl</span><% } %>
                 <% if (!n.gepubliceerd) { %><span class="badge">concept</span><% } %>
               </div>
               <div style="font-family:var(--font-display); font-weight:700; font-size:1.2rem; margin:4px 0 6px; color:var(--ink);"><%= n.titel %></div>
@@ -34,5 +34,16 @@
         <% }) %>
       </div>
     <% } %>
+
+    <div class="card" style="margin-top:32px; flex-direction:row; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap;">
+      <div>
+        <h3 style="margin:0 0 4px;">Volg ons op LinkedIn</h3>
+        <p class="muted mb-0" style="font-size:.92rem;">Het laatste nieuws van 11 Luchtmobiele Brigade en de Business Club — en dé plek om ondernemers met een rode baret aan de club te verbinden.</p>
+      </div>
+      <div class="flex" style="gap:8px;">
+        <a href="https://www.linkedin.com/company/11-luchtmobiele-brigade/" target="_blank" rel="noopener" class="btn btn--primary btn--sm">11 Luchtmobiele Brigade ↗</a>
+        <% if (social && social.linkedin) { %><a href="<%= social.linkedin %>" target="_blank" rel="noopener" class="btn btn--ghost btn--sm">Business Club Luchtmobiel ↗</a><% } %>
+      </div>
+    </div>
   </div>
 </section>

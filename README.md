@@ -122,6 +122,7 @@ Ook het nieuws ([bclmb.nl/service/nieuws](https://www.bclmb.nl/service/nieuws)) 
 - Titel, tekst, datum en hoofdafbeelding komen van bclmb.nl; blogs krijgen het label *Blog* met de categorie en de auteur. Wijzigt een bericht op de hoofdsite, dan wordt het hier bijgewerkt.
 - Elk overgenomen bericht linkt naar het origineel ("Lees het op bclmb.nl"). Eigen berichten van het bestuur blijven gewoon mogelijk via **+ Bericht**.
 - Verwijder je een overgenomen bericht, dan wordt het niet opnieuw geïmporteerd (terug te draaien in Beheer). Oude berichten die van de hoofdsite verdwijnen, blijven hier staan.
+- **LinkedIn**: de dagelijkse assistent (zie hieronder) verzamelt ook openbare LinkedIn-berichten van 11 Luchtmobiele Brigade, de Business Club en de Draagploeg Veteranen Luchtmobiele Brigade; die verschijnen als nieuwsbericht met het label *LinkedIn* en een knop naar het origineel. Uitzetten kan met `NIEUWS_IMPORT_LINKEDIN=0`; de bronnenlijst staat in [docs/sponsor-assistent.md](docs/sponsor-assistent.md).
 
 ## Sponsorverzoeken: dagelijks gezocht door de assistent
 Op de publieke pagina **Sponsoring** (`/sponsorverzoeken`) staan sponsor-, donatie- en steunverzoeken voor militairen en veteranen in Nederland. Zo komen ze daar:

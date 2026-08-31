@@ -71,16 +71,33 @@ worden gevraagd **voor of door Nederlandse militairen, veteranen of hun nabestaa
    - Zet `bijgewerkt` op het huidige tijdstip (ISO 8601, UTC), ook als er niets nieuws is.
    - Controleer dat het bestand geldige JSON is (`node -e "JSON.parse(require('fs').readFileSync('data/sponsorverzoeken.json','utf8'))"`).
 
-6. **Commit en push naar de tak `claude/sponsor-inbox`.**
+6. **Commit en push naar de tak `claude/sponsor-inbox`** (samen met het LinkedIn-bestand, zie hieronder).
    ```bash
-   git add data/sponsorverzoeken.json
-   git commit -m "Sponsorverzoeken: zoekronde $(date -u +%Y-%m-%d) — N nieuw"
+   git add data/sponsorverzoeken.json data/linkedin-nieuws.json
+   git commit -m "Zoekronde $(date -u +%Y-%m-%d) — N sponsorverzoeken, M LinkedIn-berichten"
    git push origin claude/sponsor-inbox
    ```
    Maak **geen** pull request en wijzig **niets** op `main` of in andere bestanden. De site haalt de lijst zelf op van
    `https://raw.githubusercontent.com/ddegraaf-max/Luchtmobiel/claude/sponsor-inbox/data/sponsorverzoeken.json`.
 
 7. **Sluit af met een kort verslag** (in het Nederlands): welke zoektermen je hebt gebruikt, hoeveel kandidaten je zag, welke je hebt toegevoegd (titel + url) en welke je hebt afgewezen en waarom. Is er niets nieuws, zeg dat dan gewoon.
+
+## LinkedIn-nieuws van de brigade (zelfde ronde)
+
+Houd in dezelfde dagelijkse ronde ook `data/linkedin-nieuws.json` bij met **nieuwe openbare
+LinkedIn-berichten** van deze pagina's:
+
+- **11 Luchtmobiele Brigade** — `linkedin.com/company/11-luchtmobiele-brigade`
+- **Business Club Luchtmobiel** — `linkedin.com/company/business-club-luchtmobiel`
+- **Draagploeg Veteranen Luchtmobiele Brigade** (draagploegveteranenlmbl.nl) — zoek naar openbare LinkedIn-berichten ván of óver de draagploeg (bijv. `site:linkedin.com/posts draagploeg veteranen luchtmobiele`); gebruik als `pagina` de waarde `Draagploeg Veteranen Luchtmobiele Brigade`. Alleen berichten die echt over de draagploeg gaan.
+
+Werkwijze:
+1. Zoek met WebSearch naar recente openbare berichten, bijv. `site:linkedin.com/posts 11-luchtmobiele-brigade`, `"11 Luchtmobiele Brigade op LinkedIn"`, `site:linkedin.com/posts business-club-luchtmobiel`. Probeer een gevonden bericht met WebFetch te openen; lukt dat niet (inlogmuur), gebruik dan letterlijk de tekst uit het zoekresultaat — **niets verzinnen of aanvullen**.
+2. Sla berichten over die al in het bestand staan (zelfde `id`). Maximaal **5 nieuwe per ronde**; kies de nieuwste. Personeelsberichten van individuele personen niet opnemen — alleen berichten van de twee pagina's zelf.
+3. Per item: `id` (uit de link: `activity-<cijfers>`), `titel` (eerste zin of kern, max. 120 tekens), `tekst` (beschikbare tekst, letterlijk, max. 2000 tekens), `url` (de volledige linkedin.com/posts-link), `datum` (alleen als zichtbaar, `JJJJ-MM-DD`), `pagina` (`11 Luchtmobiele Brigade` of `Business Club Luchtmobiel`), `gevonden_op` (vandaag).
+4. Verwijder items met `gevonden_op` ouder dan 120 dagen, zet `bijgewerkt` op nu, controleer geldige JSON, en commit dit bestand **samen met** `data/sponsorverzoeken.json` in dezelfde push naar `claude/sponsor-inbox`.
+
+Het platform zet elk nieuw item automatisch als nieuwsbericht op de site (label LinkedIn, met knop naar het originele bericht). Wat het bestuur verwijdert, komt niet terug.
 
 ## Als iets niet werkt
 

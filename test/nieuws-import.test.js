@@ -64,6 +64,28 @@ test('lege of vreemde pagina geeft geen titel en geen crash', () => {
   assert.equal(ni.amsterdamNaarDate('2026-07-15 10:00:00').toISOString(), '2026-07-15T08:00:00.000Z', 'zomertijd');
 });
 
+test('LinkedIn: activiteit-id en itemvalidatie', () => {
+  assert.equal(ni.linkedinActiviteitId('https://nl.linkedin.com/posts/11-luchtmobiele-brigade_x-activity-7040989309109202944-UAp3'), 'activity-7040989309109202944');
+  assert.equal(ni.linkedinActiviteitId('https://voorbeeld.nl/geen-activity'), null);
+
+  const it = ni.valideerLinkedInItem({
+    url: 'https://nl.linkedin.com/posts/11-luchtmobiele-brigade_x-activity-7040989309109202944-UAp3',
+    titel: '  De huidige veiligheidssituatie  vraagt om een hogere gereedheid ',
+    tekst: 'Regel 1\r\nRegel 2', datum: '2026-08-30', pagina: '11 Luchtmobiele Brigade', gevonden_op: '2026-08-31'
+  });
+  assert.equal(it.uid, 'activity-7040989309109202944');
+  assert.equal(it.titel, 'De huidige veiligheidssituatie vraagt om een hogere gereedheid');
+  assert.equal(it.tekst, 'Regel 1\nRegel 2');
+  assert.equal(it.datum.toISOString().slice(0, 10), '2026-08-30');
+  assert.equal(it.pagina, '11 Luchtmobiele Brigade');
+
+  assert.equal(ni.valideerLinkedInItem({ url: 'https://kwaadaardig.nl/posts/x-activity-7040989309109202944-x', titel: 'x' }), null, 'alleen linkedin.com');
+  assert.equal(ni.valideerLinkedInItem({ url: 'https://nl.linkedin.com/posts/zonder-id', titel: 'x' }), null, 'zonder id geen item');
+  assert.equal(ni.valideerLinkedInItem({ url: 'https://evil-linkedin.com/posts/x-activity-7040989309109202944-x' }), null, 'nep-domein');
+  assert.equal(ni.valideerLinkedInItem(null), null);
+  assert.equal(ni.valideerLinkedInItem({ id: 'activity-123456789012', url: 'https://www.linkedin.com/posts/y' }).titel, 'Bericht op LinkedIn', 'standaardtitel');
+});
+
 test('configuratie: standaard elke 6 uur met blogs; 0 zet uit', () => {
   const oud = { u: process.env.NIEUWS_IMPORT_UREN, b: process.env.NIEUWS_IMPORT_BLOG };
   try {
