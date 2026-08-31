@@ -44,6 +44,17 @@ worden gevraagd **voor of door Nederlandse militairen, veteranen of hun nabestaa
    - `veteranen monument geld nodig`, `herdenking veteranen financiering`, `reünie veteranen sponsor`
    - `nabestaanden militairen actie doneren`, `benefietconcert veteranen`, `veiling veteranen goed doel`
    - `site:doneeractie.nl veteraan`, `site:doneeractie.nl militair`, `site:gofundme.com veteraan`, `site:whydonate.com veteraan`, `site:geef.nl veteranen`, `site:steunactie.nl veteraan`
+   Gebruik ook termen die organisaties zélf gebruiken in plaats van "veteraan": `frontliner`, `frontliners sponsormars`, `marsathon militairen`, `hulpverleners en militairen PTSS actie`, `oud-militair PTSS actie steun`, `Airborne mars sponsor veteranen`, `Invictus deelnemer sponsor`, `veteranen motorrit goed doel`, `veteranendag sponsors gezocht`.
+
+   **Vaste bronnen — bekijk deze elke ronde met WebFetch** (kleine stichtingen komen zelden hoog in zoekresultaten):
+   - https://deonzichtbarefrontliner.nl/events/ (Stichting De Onzichtbare Frontliner: jaarlijkse Frontlinermarch in september)
+   - https://www.actievoorhelden.nl/evenementen/ en https://www.hulpvoorhelden.nl/ (Hulp voor Helden)
+   - https://steun.veteranensearchteam.nl/ (Veteranen Search Team)
+   - https://www.nlveteraneninstituut.nl/checkpoint-veteranen/prikbord-online/ (prikbord van het Veteraneninstituut)
+   - https://www.veteranendag.nl/ (nieuws rond de Nederlandse Veteranendag)
+   - https://www.geef.nl/nl/zoeken?q=veteranen en https://steunactie.nl/zoeken?q=veteraan (crowdfunding-platforms)
+   Het bestuur kan deze lijst aanvullen; nieuwe bronnen die het bestuur noemt, voeg je hier toe.
+
    Zoek ook naar **openbare berichten op sociale media**, waar veel sponsorverzoeken beginnen:
    `site:linkedin.com/posts veteranen sponsor`, `site:linkedin.com/posts veteraan sponsoring gezocht`, `site:linkedin.com/posts militairen benefiet`, `site:linkedin.com/pulse veteranen sponsor`, `site:facebook.com veteranen sponsoractie`, `site:facebook.com veteraan doneeractie`.
    Let op: LinkedIn en Facebook laten pagina's vaak niet openen zonder inlog. Verwijst het bericht naar een actiepagina (doneeractie, GoFundMe, website van een stichting), gebruik dan díe pagina als `url` en controleer die. Is er alleen het bericht zelf en kun je het niet openen, neem het dan alleen op als de tekst in de zoekresultaten ondubbelzinnig een lopend Nederlands verzoek voor militairen/veteranen toont, met de link naar het bericht als `url`, `bron_naam` `linkedin.com` of `facebook.com`, en eindig de `samenvatting` met "Nog niet op de pagina gecontroleerd."
