@@ -67,6 +67,11 @@ worden gevraagd **voor of door Nederlandse militairen, veteranen of hun nabestaa
 
 7. **Sluit af met een kort verslag** (in het Nederlands): welke zoektermen je hebt gebruikt, hoeveel kandidaten je zag, welke je hebt toegevoegd (titel + url) en welke je hebt afgewezen en waarom. Is er niets nieuws, zeg dat dan gewoon.
 
+## Als iets niet werkt
+
+- **WebFetch geeft `EGRESS_BLOCKED`** (de omgeving mag geen externe sites openen). Dan kun je kandidaten niet op de pagina controleren. Neem in dat geval **alleen** kandidaten op waarvan titel én zoekresultaat-tekst ondubbelzinnig een lopend Nederlands sponsor- of donatieverzoek voor militairen/veteranen tonen (bijv. een actiepagina op doneeractie.nl, steunactie.nl, whydonate.com, gofundme.com, geef.nl), laat onbekende velden op `null`, en eindig de `samenvatting` met de zin "Nog niet op de pagina gecontroleerd." Het bestuur controleert vóór plaatsing toch alles zelf. Meld in je verslag dat WebFetch geblokkeerd was, zodat het bestuur de netwerktoegang van de omgeving kan aanpassen (claude.ai → Code → Environments → *Default* → netwerktoegang).
+- **`git push` wordt geweigerd** met "Claude doesn't have GitHub access": de Claude GitHub App is niet (meer) gekoppeld aan de repository. Probeer niets anders (geen pull request, geen omwegen); zet de volledige lijst met gevonden verzoeken in je verslag, zodat ze niet verloren gaan, en vermeld dat het bestuur de app moet koppelen via https://github.com/apps/claude/installations/select_target (repository `ddegraaf-max/Luchtmobiel`).
+
 ## Formaat van `data/sponsorverzoeken.json`
 
 ```json

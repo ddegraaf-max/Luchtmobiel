@@ -80,6 +80,7 @@ test('configuratie: standaard elke 3 uur, 0 zet uit, onzin valt terug', () => {
     delete process.env.SPONSOR_IMPORT_UREN; delete process.env.SPONSOR_INBOX_URL;
     assert.equal(si.config().uren, 3);
     assert.match(si.config().url, /^https:\/\/raw\.githubusercontent\.com\/.*\/claude\/sponsor-inbox\/data\/sponsorverzoeken\.json$/);
+    assert.match(si.config().terugval, /^https:\/\/raw\.githubusercontent\.com\/.*\/main\/data\/sponsorverzoeken\.json$/, 'terugval naar main');
     process.env.SPONSOR_IMPORT_UREN = '0';
     assert.equal(si.config().uren, 0);
     process.env.SPONSOR_IMPORT_UREN = 'abc';

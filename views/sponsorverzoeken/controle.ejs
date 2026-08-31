@@ -26,7 +26,7 @@
             <% } %>
             <% if (imp.laatste) { %>
               <br>Laatst opgehaald: <%= new Date(imp.laatste.tijdstip).toLocaleString('nl-NL', { timeZone: 'Europe/Amsterdam' }) %> —
-              <%= imp.laatste.nieuw %> nieuw, <%= imp.laatste.dubbel %> al bekend<%= imp.laatste.ongeldig ? ', ' + imp.laatste.ongeldig + ' ongeldig' : '' %>.
+              <%= imp.laatste.nieuw %> nieuw, <%= imp.laatste.dubbel %> al bekend<%= imp.laatste.ongeldig ? ', ' + imp.laatste.ongeldig + ' ongeldig' : '' %><%= imp.laatste.terugval ? ' (uit het bestand op main; de tak van de assistent bestaat nog niet)' : '' %>.
               <% if (imp.laatste.assistentBijgewerkt) { %>Lijst van de assistent bijgewerkt op <%= new Date(imp.laatste.assistentBijgewerkt).toLocaleString('nl-NL', { timeZone: 'Europe/Amsterdam' }) %>.<% } %>
               <% if (imp.laatste.fouten.length) { %><br><span style="color:#8a2020;">Meldingen: <%= imp.laatste.fouten.join(' | ') %></span><% } %>
             <% } else if (imp.config.uren) { %>
