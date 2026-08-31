@@ -3,6 +3,9 @@
 Het versienummer staat in de voettekst van elke pagina en in **Beheer** (met de code van de uitgerolde update).
 Bij elke update wordt het nummer in `package.json` opgehoogd en hier beschreven wat er is veranderd.
 
+## 1.3.1 — 31 augustus 2026
+- Voettekst: link naar de hoofdsite www.bclmb.nl bij de contactgegevens.
+
 ## 1.3.0 — 31 augustus 2026
 - **Sitemap en robots.txt** voor zoekmachines: `/sitemap.xml` bevat alle openbare pagina's (nieuws, partners, geplaatste sponsorverzoeken, komende evenementen, vacatures en projecten) en wordt automatisch actueel gehouden; `robots.txt` sluit de besloten delen uit en verwijst naar de sitemap.
 
