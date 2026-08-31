@@ -3,6 +3,9 @@
 Het versienummer staat in de voettekst van elke pagina en in **Beheer** (met de code van de uitgerolde update).
 Bij elke update wordt het nummer in `package.json` opgehoogd en hier beschreven wat er is veranderd.
 
+## 1.6.1 — 31 augustus 2026
+- Mobiel: de robot-controle (Cloudflare Turnstile) blijft op smalle telefoons binnen de inlogkaart; galerijbeheer en nieuwskaarten met afbeelding stapelen netjes op kleine schermen.
+
 ## 1.6.0 — 31 augustus 2026
 - **Facebook-nieuws**: de dagelijkse assistent volgt nu ook de openbare Facebook-pagina *11 Luchtmobiele Brigade, Veteranenzaken*; berichten verschijnen tussen het nieuws met het label *Facebook* en een knop naar het originele bericht.
 

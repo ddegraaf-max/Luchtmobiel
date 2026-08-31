@@ -16,7 +16,7 @@
     <% } else { %>
       <div class="stack" style="gap:18px;">
         <% berichten.forEach(function(n){ %>
-          <a href="/nieuws/<%= n.id %>" class="card" style="flex-direction:row; gap:20px; align-items:flex-start; padding:20px 22px;">
+          <a href="/nieuws/<%= n.id %>" class="card nieuws-kaart" style="flex-direction:row; gap:20px; align-items:flex-start; padding:20px 22px;">
             <% if (n.afbeelding_id) { %>
               <img src="/media/<%= n.afbeelding_id %>" alt="" loading="lazy" style="width:150px; height:100px; object-fit:cover; border-radius:var(--radius); flex:none;">
             <% } %>

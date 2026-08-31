@@ -614,7 +614,26 @@ h1, h2, h3, .hero h1, .paginakop h1, .beeldband h2 { overflow-wrap: break-word; 
 }
 
 /* Cloudflare Turnstile (robot-controle) */
-.cf-turnstile { margin: 2px 0 4px; min-height: 65px; }
+.cf-turnstile { margin: 2px 0 4px; min-height: 65px; max-width: 100%; }
+/* De robot-controle is minimaal 300px breed; op smalle telefoons past dat niet in de kaart.
+   Kaart iets smaller opvullen en de widget licht verkleinen, zodat hij binnen de lijnen blijft. */
+@media (max-width: 480px) {
+  .auth-wrap { padding: 0 14px; margin: 40px auto; }
+  .auth-card { padding-left: 18px; padding-right: 18px; }
+}
+@media (max-width: 420px) {
+  .cf-turnstile { transform: scale(.85); transform-origin: 0 50%; }
+}
+
+/* Galerijbeheer: formulier naast de lijst, op smalle schermen eronder */
+.grid--beheer { grid-template-columns: minmax(280px, 360px) 1fr; gap: 28px; align-items: start; }
+@media (max-width: 760px) { .grid--beheer { grid-template-columns: 1fr; } }
+
+/* Nieuwskaart met afbeelding: op smalle schermen afbeelding boven de tekst */
+@media (max-width: 520px) {
+  .nieuws-kaart { flex-direction: column !important; }
+  .nieuws-kaart img { width: 100% !important; height: 170px !important; }
+}
 
 /* ============================================================
    Partners & initiatieven
