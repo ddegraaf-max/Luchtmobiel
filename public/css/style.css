@@ -288,6 +288,35 @@ input[type=file] { font-size: .88rem; }
 .lege-staat { text-align: center; padding: 64px 24px; border: 2px dashed var(--line-strong); border-radius: var(--radius); color: var(--ink-soft); }
 .divider { height: 1px; background: var(--line); border: none; margin: 28px 0; }
 
+/* AIR ASSAULT!-kreet bij het eerste bezoek (zoals bij de baretuitreiking) */
+.air-assault {
+  position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center;
+  text-align: center; pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(74,20,29,.94), rgba(28,23,20,.97));
+  animation: aa-weg .5s ease 2s forwards;
+}
+.air-assault .kreet {
+  font-family: var(--font-display); font-weight: 800; text-transform: uppercase;
+  font-size: clamp(2.4rem, 11vw, 7rem); line-height: 1; letter-spacing: .03em;
+  color: var(--bone); transform: rotate(-4deg);
+  text-shadow: 0 6px 40px rgba(0,0,0,.6);
+  animation: aa-klap .55s cubic-bezier(.2, 1.4, .3, 1) both;
+}
+.air-assault .kreet span { color: var(--brass); }
+.air-assault .motto {
+  margin-top: 14px; font-family: var(--font-display); font-size: clamp(.8rem, 2vw, 1.05rem);
+  letter-spacing: .35em; text-transform: uppercase; color: rgba(244,239,229,.65);
+  opacity: 0; animation: aa-motto .4s ease .5s forwards;
+}
+@keyframes aa-klap {
+  0%   { transform: scale(3.4) rotate(-4deg); opacity: 0; }
+  55%  { transform: scale(.94) rotate(-4deg); opacity: 1; }
+  75%  { transform: scale(1.05) rotate(-4deg); }
+  100% { transform: scale(1) rotate(-4deg); }
+}
+@keyframes aa-motto { to { opacity: 1; } }
+@keyframes aa-weg { to { opacity: 0; visibility: hidden; } }
+
 /* reveal-on-load */
 .reveal { opacity: 0; transform: translateY(14px); animation: reveal .6s cubic-bezier(.2,.7,.2,1) forwards; }
 @keyframes reveal { to { opacity: 1; transform: none; } }

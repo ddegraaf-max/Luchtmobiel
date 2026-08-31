@@ -3,6 +3,9 @@
 Het versienummer staat in de voettekst van elke pagina en in **Beheer** (met de code van de uitgerolde update).
 Bij elke update wordt het nummer in `package.json` opgehoogd en hier beschreven wat er is veranderd.
 
+## 1.4.1 — 31 augustus 2026
+- **AIR ASSAULT!** — bij het allereerste bezoek klapt de kreet van de baretuitreiking eenmalig over het scherm, met het motto eronder. Eén keer per bezoeker; wordt overgeslagen bij een ingestelde voorkeur voor minder beweging.
+
 ## 1.4.0 — 31 augustus 2026
 - **YouTube-video's in de galerij**: plak in *Galerij beheren* een YouTube-link (watch, youtu.be, shorts) en de video verschijnt tussen de foto's met een afspeelknop; afspelen gebeurt op de pagina zelf via de privacyvriendelijke youtube-nocookie-speler (geen cookies vóór het klikken).
 

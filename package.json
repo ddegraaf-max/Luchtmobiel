@@ -1,6 +1,6 @@
 {
   "name": "luchtmobiel-platform",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Ledenplatform Business Club Luchtmobiel",
   "main": "server.js",
   "type": "commonjs",

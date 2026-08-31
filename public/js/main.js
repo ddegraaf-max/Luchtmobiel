@@ -56,7 +56,23 @@ document.addEventListener('error', function (e) {
   if (img && img.tagName === 'IMG' && (img.dataset.fallback || img.hasAttribute('data-fallback-verberg'))) afbeeldingTerugval(img);
 }, true);
 
+// Eenmalige AIR ASSAULT-kreet voor nieuwe bezoekers — zoals bij de baretuitreiking.
+function airAssault() {
+  try {
+    if (localStorage.getItem('airAssaultGezien')) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    localStorage.setItem('airAssaultGezien', new Date().toISOString());
+    const overlay = document.createElement('div');
+    overlay.className = 'air-assault';
+    overlay.setAttribute('aria-hidden', 'true');
+    overlay.innerHTML = '<div class="air-assault__blok"><div class="kreet">AIR <span>ASSAULT!</span></div><div class="motto">Nec temere, nec timide</div></div>';
+    document.body.appendChild(overlay);
+    setTimeout(function () { overlay.remove(); }, 2600);
+  } catch (e) { /* opslag geblokkeerd: dan geen kreet, geen probleem */ }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
+  airAssault();
   verfraaiBestandsvelden(document);
   document.querySelectorAll('img[data-fallback], img[data-fallback-verberg]').forEach(function (img) {
     if (img.complete && img.naturalWidth === 0) afbeeldingTerugval(img);
