@@ -3,6 +3,9 @@
 Het versienummer staat in de voettekst van elke pagina en in **Beheer** (met de code van de uitgerolde update).
 Bij elke update wordt het nummer in `package.json` opgehoogd en hier beschreven wat er is veranderd.
 
+## 1.5.1 — 31 augustus 2026
+- Geen onnodige foutmelding in Beheer zolang het LinkedIn-bestand van de assistent nog niet bestaat (404 wordt stil overgeslagen).
+
 ## 1.5.0 — 31 augustus 2026
 - **LinkedIn-nieuws op de site**: de dagelijkse assistent verzamelt openbare LinkedIn-berichten van 11 Luchtmobiele Brigade, de Business Club en de Draagploeg Veteranen Luchtmobiele Brigade; ze verschijnen automatisch tussen het nieuws met een knop naar het originele bericht. Verwijderde berichten komen niet terug.
 - Nieuwspagina: blok **"Volg ons op LinkedIn"** met knoppen naar de brigade- en clubpagina (ledenwerving).
