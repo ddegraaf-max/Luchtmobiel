@@ -3,6 +3,9 @@
 Het versienummer staat in de voettekst van elke pagina en in **Beheer** (met de code van de uitgerolde update).
 Bij elke update wordt het nummer in `package.json` opgehoogd en hier beschreven wat er is veranderd.
 
+## 1.2.5 — 31 augustus 2026
+- Bug: na het wijzigen van het inlogadres van de beheerder maakte de site bij elke herstart opnieuw een beheerdersaccount met het oude adres uit `ADMIN_EMAIL` aan (waardoor het ledental klopte noch veilig was). Er wordt nu alleen een beheerder aangemaakt als er nog geen enkele is.
+
 ## 1.2.4 — 31 augustus 2026
 - Embleem in e-mails laadde niet in webmail: afbeeldingen onder `/static/img` mogen nu ook vanaf andere sites worden getoond (Cross-Origin-Resource-Policy).
 - Wachtwoord-vergeten-mail: dubbele "Werkt de knop niet?"-regel verwijderd.

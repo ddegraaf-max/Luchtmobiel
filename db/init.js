@@ -314,28 +314,7 @@ async function init() {
   `);
   await pool.query(`CREATE INDEX IF NOT EXISTS wachtwoord_resets_user_idx ON wachtwoord_resets(user_id);`);
 
-  // Adminaccount seeden vanuit omgevingsvariabelen.
-  const adminEmail = (process.env.ADMIN_EMAIL || '').trim().toLowerCase();
-  const adminPass = process.env.ADMIN_PASSWORD;
-  const adminNaam = process.env.ADMIN_NAAM || 'Beheerder';
-
-  if (adminEmail && adminPass) {
-    const { rows } = await pool.query('SELECT id, rol FROM users WHERE email = $1', [adminEmail]);
-    if (rows.length === 0) {
-      const hash = await bcrypt.hash(adminPass, 12);
-      await pool.query(
-        `INSERT INTO users (naam, email, wachtwoord_hash, rol, actief)
-         VALUES ($1, $2, $3, 'admin', true)`,
-        [adminNaam, adminEmail, hash]
-      );
-      console.log('[db] Adminaccount aangemaakt voor', adminEmail);
-    } else if (rows[0].rol !== 'admin') {
-      await pool.query("UPDATE users SET rol = 'admin' WHERE email = $1", [adminEmail]);
-      console.log('[db] Bestaand account gepromoveerd tot admin:', adminEmail);
-    }
-  } else {
-    console.warn('[db] ADMIN_EMAIL/ADMIN_PASSWORD niet ingesteld; geen admin geseed.');
-  }
+  await seedAdmin();
 
   // Voorbeeld-evenementen seeden (alleen als er nog geen agenda is).
   try {
@@ -394,4 +373,37 @@ async function init() {
   console.log('[db] Initialisatie voltooid.');
 }
 
+// Adminaccount seeden vanuit omgevingsvariabelen. Alleen aanmaken als er nog géén beheerder is:
+// anders zou, zodra de beheerder zijn inlogadres wijzigt, bij elke herstart een tweede
+// admin-account met het oude adres uit ADMIN_EMAIL ontstaan.
+async function seedAdmin() {
+  const adminEmail = (process.env.ADMIN_EMAIL || '').trim().toLowerCase();
+  const adminPass = process.env.ADMIN_PASSWORD;
+  const adminNaam = process.env.ADMIN_NAAM || 'Beheerder';
+
+  if (!adminEmail || !adminPass) {
+    console.warn('[db] ADMIN_EMAIL/ADMIN_PASSWORD niet ingesteld; geen admin geseed.');
+    return;
+  }
+  const { rows } = await pool.query('SELECT id, rol FROM users WHERE email = $1', [adminEmail]);
+  if (rows.length === 0) {
+    const admins = (await pool.query("SELECT COUNT(*)::int AS n FROM users WHERE rol = 'admin'")).rows[0].n;
+    if (admins > 0) {
+      console.log(`[db] ADMIN_EMAIL (${adminEmail}) bestaat niet als account, maar er is al een beheerder; geen nieuw account aangemaakt. Pas ADMIN_EMAIL op Railway aan als het inlogadres is gewijzigd.`);
+      return;
+    }
+    const hash = await bcrypt.hash(adminPass, 12);
+    await pool.query(
+      `INSERT INTO users (naam, email, wachtwoord_hash, rol, actief)
+       VALUES ($1, $2, $3, 'admin', true)`,
+      [adminNaam, adminEmail, hash]
+    );
+    console.log('[db] Adminaccount aangemaakt voor', adminEmail);
+  } else if (rows[0].rol !== 'admin') {
+    await pool.query("UPDATE users SET rol = 'admin' WHERE email = $1", [adminEmail]);
+    console.log('[db] Bestaand account gepromoveerd tot admin:', adminEmail);
+  }
+}
+
 module.exports = init;
+module.exports.seedAdmin = seedAdmin;
