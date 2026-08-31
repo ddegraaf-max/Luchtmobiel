@@ -4,7 +4,7 @@ const pool = require('../db/pool');
 const { requireLogin, requireAdmin, idParams } = require('../middleware/auth');
 const { beeindigSessies } = require('../lib/sessies');
 const tfa = require('../lib/tfa');
-const { sendMail, mailLayout, escHtml, verstuur, mailInstellingen } = require('../lib/mail');
+const { sendMail, mailLayout, mailKnop, escHtml, verstuur, mailInstellingen } = require('../lib/mail');
 const versie = require('../lib/versie');
 const agendaImportLib = require('../lib/agenda-import');
 const sponsorImportLib = require('../lib/sponsor-import');
@@ -64,8 +64,10 @@ router.post('/testmail', async (req, res) => {
     subject: 'Testmail van het ledenplatform',
     html: mailLayout('Test geslaagd',
       `<p>Beste ${escHtml(u.naam)},</p>
-       <p>Deze testmail is verstuurd vanuit <strong>Beheer</strong> op het ledenplatform. Komt hij aan, dan werkt het versturen van e-mail.</p>
-       <p style="font-size:12px;color:#8a8178;">Afzender: ${escHtml(inst.van)} · Versie ${escHtml(versie.label)} · ${new Date().toLocaleString('nl-NL', { timeZone: 'Europe/Amsterdam' })}</p>`)
+       <p>Deze testmail is verstuurd vanuit <strong>Beheer</strong> op het ledenplatform. Komt hij aan, dan werkt het versturen van e-mail — en zo zien de e-mails van het platform eruit.</p>
+       ${mailKnop((inst.appUrl || 'https://luchtmobiel.red') + '/beheer', 'Naar het beheerpaneel')}
+       <p style="font-size:12px;color:#8a8178;">Afzender ${escHtml(inst.van)} &middot; versie ${escHtml(versie.label)} &middot; ${new Date().toLocaleString('nl-NL', { timeZone: 'Europe/Amsterdam' })}</p>`,
+      { voorproefje: 'Als je dit leest, werkt het versturen van e-mail vanuit het ledenplatform.' })
   });
   req.session.flash = r.ok
     ? { type: 'succes', message: `Testmail verstuurd naar ${u.email} (Resend-id ${r.id || 'onbekend'}). Niet ontvangen? Kijk in je spammap en in Resend onder Emails.` }

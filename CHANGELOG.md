@@ -3,6 +3,9 @@
 Het versienummer staat in de voettekst van elke pagina en in **Beheer** (met de code van de uitgerolde update).
 Bij elke update wordt het nummer in `package.json` opgehoogd en hier beschreven wat er is veranderd.
 
+## 1.2.3 — 31 augustus 2026
+- E-mails in huisstijl: kop met embleem en messing accent, rustige typografie, knoppen voor links (met terugvallink), verzorgde voettekst met adres en site; voorproefje naast het onderwerp. Geldt voor alle mails (welkom, wachtwoord, 2FA, meldingen aan het bestuur, sponsorverzoeken, testmail).
+
 ## 1.2.2 — 31 augustus 2026
 - Beheer: opmaakfout in de e-mailkaart hersteld (`<code>` werd als tekst getoond).
 
