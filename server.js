@@ -128,6 +128,7 @@ app.use((req, res, next) => {
 });
 
 // Routes
+app.use('/', require('./routes/sitemap'));
 app.use('/', require('./routes/pages'));
 app.use('/', require('./routes/auth'));
 app.use('/profiel/beveiliging', require('./routes/beveiliging'));

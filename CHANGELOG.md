@@ -3,6 +3,9 @@
 Het versienummer staat in de voettekst van elke pagina en in **Beheer** (met de code van de uitgerolde update).
 Bij elke update wordt het nummer in `package.json` opgehoogd en hier beschreven wat er is veranderd.
 
+## 1.3.0 — 31 augustus 2026
+- **Sitemap en robots.txt** voor zoekmachines: `/sitemap.xml` bevat alle openbare pagina's (nieuws, partners, geplaatste sponsorverzoeken, komende evenementen, vacatures en projecten) en wordt automatisch actueel gehouden; `robots.txt` sluit de besloten delen uit en verwijst naar de sitemap.
+
 ## 1.2.7 — 31 augustus 2026
 - Embleem in e-mails krijgt het versienummer in zijn adres, zodat Cloudflare niet de oude gecachete kopie (met de oude beveiligingskop) blijft uitleveren.
 
