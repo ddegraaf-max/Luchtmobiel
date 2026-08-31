@@ -27,12 +27,13 @@ worden gevraagd **voor of door Nederlandse militairen, veteranen of hun nabestaa
 
 ## Stap voor stap
 
-1. **Haal de huidige lijst op.**
+1. **Haal de huidige lijst op.** De werkkopie in de omgeving kan verouderd zijn; haal daarom altijd eerst alles vers op en werk vanaf de remote-takken:
    ```bash
-   git fetch origin claude/sponsor-inbox
-   git checkout claude/sponsor-inbox 2>/dev/null || git checkout -b claude/sponsor-inbox origin/main
+   git fetch origin
+   git checkout -B claude/sponsor-inbox origin/claude/sponsor-inbox 2>/dev/null || git checkout -B claude/sponsor-inbox origin/main
+   git show origin/main:data/sponsorverzoeken.json   # startlijst/handmatige aanvullingen van het bestuur
    ```
-   Lees `data/sponsorverzoeken.json`. De `url`'s en `id`'s die daarin staan zijn al bekend: die hoef je niet opnieuw op te voeren. (Het bestand bestaat alleen nog niet op de allereerste ronde; maak het dan aan met `{"bijgewerkt": null, "items": []}`.)
+   Lees `data/sponsorverzoeken.json` op de tak én de versie op `origin/main` (bovenstaande `git show`). Alle `url`'s en `id`'s die in een van beide staan zijn al bekend: die hoef je niet opnieuw op te voeren. Het platform leest beide bestanden en voegt ze samen, dus je hoeft niets van `main` over te nemen. (Bestaat het bestand nog niet, maak het dan aan met `{"bijgewerkt": null, "items": []}`.)
 
 2. **Zoek.** Gebruik WebSearch met Nederlandse zoektermen. Zoek breed; combineer termen en varieer per ronde. Voorbeelden (voeg waar zinvol de huidige maand of het jaar toe):
    - `veteranen sponsor gezocht`, `veteraan sponsoring`, `sponsorloop veteranen`, `sponsoractie veteranen`
