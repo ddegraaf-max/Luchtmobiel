@@ -171,6 +171,7 @@ if (require.main === module) {
     .finally(() => {
       app.listen(PORT, () => console.log(`[server] Luchtmobiel-platform draait op poort ${PORT}`));
       require('./lib/agenda-import').planImport();
+      require('./lib/nieuws-import').planImport();
       require('./lib/sponsor-import').planImport();
     });
 }

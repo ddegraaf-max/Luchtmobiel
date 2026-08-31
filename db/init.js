@@ -126,6 +126,17 @@ async function init() {
     );
   `);
 
+  // Nieuws: automatische import van bclmb.nl (nieuws en blog) met afbeelding
+  await pool.query(`ALTER TABLE nieuws ADD COLUMN IF NOT EXISTS categorie TEXT;`);
+  await pool.query(`ALTER TABLE nieuws ADD COLUMN IF NOT EXISTS afbeelding_id INTEGER REFERENCES media(id) ON DELETE SET NULL;`);
+  await pool.query(`ALTER TABLE nieuws ADD COLUMN IF NOT EXISTS bron TEXT;`);
+  await pool.query(`ALTER TABLE nieuws ADD COLUMN IF NOT EXISTS bron_uid TEXT;`);
+  await pool.query(`ALTER TABLE nieuws ADD COLUMN IF NOT EXISTS bron_url TEXT;`);
+  await pool.query(`ALTER TABLE nieuws ADD COLUMN IF NOT EXISTS bron_hash TEXT;`);
+  await pool.query(`ALTER TABLE nieuws ADD COLUMN IF NOT EXISTS bron_afbeelding_url TEXT;`);
+  await pool.query(`ALTER TABLE nieuws ADD COLUMN IF NOT EXISTS bron_bijgewerkt TIMESTAMPTZ;`);
+  await pool.query(`CREATE INDEX IF NOT EXISTS nieuws_bron_idx ON nieuws(bron, bron_uid);`);
+
   // Besloten media: profielfoto's en bedrijfslogo's alleen voor ingelogde leden
   await pool.query(`ALTER TABLE media ADD COLUMN IF NOT EXISTS besloten BOOLEAN NOT NULL DEFAULT false;`);
   try {

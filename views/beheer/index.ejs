@@ -54,6 +54,40 @@
     <div class="card" style="margin-bottom:32px;">
       <div class="flex between" style="align-items:flex-start;">
         <div>
+          <h3 style="margin:0 0 4px;">Nieuws-import van bclmb.nl</h3>
+          <p class="muted mb-0" style="font-size:.9rem;">
+            <% if (!nieuwsImport.config.uren) { %>
+              Uitgeschakeld (NIEUWS_IMPORT_UREN=0).
+            <% } else { %>
+              Nieuws<%= nieuwsImport.config.blog ? ' en blogs' : '' %> van de hoofdsite worden automatisch overgenomen (elke <%= nieuwsImport.config.uren %> uur). <%= nieuwsImport.aantal %> overgenomen bericht<%= nieuwsImport.aantal === 1 ? '' : 'en' %>.
+            <% } %>
+            <% if (nieuwsImport.laatste) { %>
+              <br>Laatste import: <%= new Date(nieuwsImport.laatste.tijdstip).toLocaleString('nl-NL', { timeZone: 'Europe/Amsterdam' }) %> —
+              <%= nieuwsImport.laatste.nieuw %> nieuw, <%= nieuwsImport.laatste.bijgewerkt %> bijgewerkt, <%= nieuwsImport.laatste.ongewijzigd %> ongewijzigd<%= nieuwsImport.laatste.overgeslagen ? ', ' + nieuwsImport.laatste.overgeslagen + ' genegeerd' : '' %>.
+              <% if (nieuwsImport.laatste.fouten.length) { %><br><span style="color:#8a2020;">Meldingen: <%= nieuwsImport.laatste.fouten.join(' | ') %></span><% } %>
+            <% } else if (nieuwsImport.config.uren) { %>
+              <br>Nog niet gedraaid sinds de laatste herstart.
+            <% } %>
+          </p>
+        </div>
+        <div class="flex" style="gap:8px;">
+          <form action="/beheer/nieuws-import" method="post" class="inline-form">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button class="btn btn--primary btn--sm" type="submit" <%= nieuwsImport.bezig ? 'disabled' : '' %>>Nu importeren</button>
+          </form>
+          <% if (nieuwsImport.genegeerd > 0) { %>
+            <form action="/beheer/nieuws-import/negeer-wissen" method="post" class="inline-form" data-bevestig="De <%= nieuwsImport.genegeerd %> door jou verwijderde bericht(en) van bclmb.nl worden bij de volgende import weer overgenomen. Doorgaan?">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <button class="btn btn--ghost btn--sm" type="submit">Verwijderde weer toestaan (<%= nieuwsImport.genegeerd %>)</button>
+            </form>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:32px;">
+      <div class="flex between" style="align-items:flex-start;">
+        <div>
           <h3 style="margin:0 0 4px;">Sponsorverzoeken voor militairen &amp; veteranen</h3>
           <p class="muted mb-0" style="font-size:.9rem;">
             <% if (sponsor.teControleren) { %>

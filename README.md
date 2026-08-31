@@ -11,6 +11,7 @@ Een besloten netwerk waar leden (en de brigade) **zelf** alles beheren: hun prof
 - **Ondersteuningsprojecten** — vraag steun (financieel, vrijwilligers, expertise…) en meld je aan bij projecten van anderen.
 - **Veteranenzaken** — een hub met hulpbronnen en passend werk, beheerd door de brigade en het bestuur.
 - **Partners & initiatieven** — publieke pagina met organisaties, stichtingen, sponsors en initiatieven (logo, omschrijving, website), gefilterd op categorie; uitgelichte partners staan ook op de homepage. Leden kunnen zelf een initiatief aandragen; dat komt als concept bij het bestuur/de brigade terecht om aan te vullen en te publiceren.
+- **Nieuws** — berichten van het bestuur plus het nieuws en de blogs van bclmb.nl, automatisch overgenomen met afbeelding en link naar het origineel.
 - **Sponsorverzoeken** — een assistent zoekt elke ochtend het Nederlandse web af naar sponsor-, donatie- en steunverzoeken voor militairen en veteranen. Alles komt eerst in een controlewachtrij; wat jij plaatst verschijnt op de publieke pagina *Sponsoring*. Zie [Sponsorverzoeken](#sponsorverzoeken-dagelijks-gezocht-door-de-assistent).
 - **Zelfservice** — leden registreren met een toegangscode en beheren daarna alles zelf. Jij hoeft niets goed te keuren.
 - **Beheer** — jij bepaalt rollen (lid / brigade / admin) en kunt leden activeren of verwijderen.
@@ -49,6 +50,7 @@ Ga naar je app-service → tabblad **Variables** en voeg toe:
 | `NODE_ENV` | `production` |
 | `AGENDA_IMPORT_UREN` | (optioneel) om de hoeveel uur de agenda van bclmb.nl wordt overgenomen; standaard `6`, `0` = uit |
 | `SPONSOR_IMPORT_UREN` | (optioneel) om de hoeveel uur de gevonden sponsorverzoeken van de assistent worden opgehaald; standaard `3`, `0` = uit |
+| `NIEUWS_IMPORT_UREN` | (optioneel) om de hoeveel uur het nieuws en de blogs van bclmb.nl worden overgenomen; standaard `6`, `0` = uit (`NIEUWS_IMPORT_BLOG=0` laat de blogs weg) |
 | `TFA_VERPLICHT_ADMIN` | (optioneel) `1` = beheerders moeten eerst tweestapsverificatie instellen voordat ze bij Beheer kunnen |
 | `APP_URL` | het adres van de site, bijv. `https://jouw-app.up.railway.app` (voor links in e-mails) |
 | `ENCRYPTIE_SLEUTEL` | (aanbevolen) nog een lange willekeurige tekst; hiermee worden 2FA-geheimen versleuteld. Daarna **niet meer wijzigen** |
@@ -112,6 +114,13 @@ De activiteiten op de hoofdsite van de Business Club ([bclmb.nl/evenementen](htt
 - Evenementen zonder tijd worden als "hele dag" getoond; dat kun je ook voor handmatige evenementen aanvinken.
 
 > Bij de eerste import komen de echte activiteiten naast eventuele oude voorbeeld-evenementen te staan. Verwijder de voorbeelden (of dubbele handmatige versies) één keer via de agenda.
+
+## Nieuws en blogs van bclmb.nl
+Ook het nieuws ([bclmb.nl/service/nieuws](https://www.bclmb.nl/service/nieuws)) en de blogs ([bclmb.nl/service/blog](https://www.bclmb.nl/service/blog)) van de hoofdsite worden automatisch overgenomen: bij het starten en daarna elke 6 uur (`NIEUWS_IMPORT_UREN`; `0` = uit). In **Beheer** zie je de laatste import en kun je met **Nu importeren** direct bijwerken.
+
+- Titel, tekst, datum en hoofdafbeelding komen van bclmb.nl; blogs krijgen het label *Blog* met de categorie en de auteur. Wijzigt een bericht op de hoofdsite, dan wordt het hier bijgewerkt.
+- Elk overgenomen bericht linkt naar het origineel ("Lees het op bclmb.nl"). Eigen berichten van het bestuur blijven gewoon mogelijk via **+ Bericht**.
+- Verwijder je een overgenomen bericht, dan wordt het niet opnieuw geïmporteerd (terug te draaien in Beheer). Oude berichten die van de hoofdsite verdwijnen, blijven hier staan.
 
 ## Sponsorverzoeken: dagelijks gezocht door de assistent
 Op de publieke pagina **Sponsoring** (`/sponsorverzoeken`) staan sponsor-, donatie- en steunverzoeken voor militairen en veteranen in Nederland. Zo komen ze daar:

@@ -7,6 +7,7 @@ const tfa = require('../lib/tfa');
 const { sendMail, mailLayout, escHtml } = require('../lib/mail');
 const agendaImportLib = require('../lib/agenda-import');
 const sponsorImportLib = require('../lib/sponsor-import');
+const nieuwsImportLib = require('../lib/nieuws-import');
 
 router.use(requireLogin, requireAdmin);
 idParams(router);
@@ -28,7 +29,9 @@ router.get('/', async (req, res) => {
       aantal: (await pool.query('SELECT COUNT(*)::int AS n FROM evenementen WHERE bron = $1', [agendaImportLib.BRON])).rows[0].n };
     const sponsor = { ...sponsorImportLib.status(), teControleren: await sponsorImportLib.aantalTeControleren(),
       geplaatst: (await pool.query("SELECT COUNT(*)::int AS n FROM sponsorverzoeken WHERE status = 'geplaatst'")).rows[0].n };
-    res.render('beheer/index', { title: 'Beheer', leden, stats, agendaImport, sponsor });
+    const nieuwsImport = { ...nieuwsImportLib.status(), genegeerd: await nieuwsImportLib.aantalGenegeerd(),
+      aantal: (await pool.query('SELECT COUNT(*)::int AS n FROM nieuws WHERE bron = $1', [nieuwsImportLib.BRON])).rows[0].n };
+    res.render('beheer/index', { title: 'Beheer', leden, stats, agendaImport, sponsor, nieuwsImport });
   } catch (err) {
     console.error('[beheer]', err.message);
     res.status(500).render('error', { title: 'Fout', bericht: 'Het beheerpaneel kon niet worden geladen.' });
@@ -48,6 +51,22 @@ router.post('/agenda-import', async (req, res) => {
 router.post('/agenda-import/negeer-wissen', async (req, res) => {
   await agendaImportLib.negeerlijstWissen();
   req.session.flash = { type: 'succes', message: 'Genegeerde evenementen worden bij de volgende import weer toegevoegd.' };
+  res.redirect('/beheer');
+});
+
+// Nieuws-import vanaf bclmb.nl handmatig draaien
+router.post('/nieuws-import', async (req, res) => {
+  const r = await nieuwsImportLib.importeerNieuws();
+  const samenvatting = `${r.nieuw} nieuw, ${r.bijgewerkt} bijgewerkt, ${r.ongewijzigd} ongewijzigd${r.overgeslagen ? ', ' + r.overgeslagen + ' genegeerd' : ''}.`;
+  req.session.flash = r.fouten.length
+    ? { type: 'fout', message: `Nieuws-import afgerond met meldingen: ${samenvatting} ${r.fouten.join(' | ')}` }
+    : { type: 'succes', message: `Nieuws-import afgerond: ${samenvatting}` };
+  res.redirect('/beheer');
+});
+
+router.post('/nieuws-import/negeer-wissen', async (req, res) => {
+  await nieuwsImportLib.negeerlijstWissen();
+  req.session.flash = { type: 'succes', message: 'Verwijderde nieuwsberichten worden bij de volgende import weer overgenomen.' };
   res.redirect('/beheer');
 });
 

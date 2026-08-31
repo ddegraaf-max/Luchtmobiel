@@ -3,6 +3,10 @@
 Het versienummer staat in de voettekst van elke pagina en in **Beheer** (met de code van de uitgerolde update).
 Bij elke update wordt het nummer in `package.json` opgehoogd en hier beschreven wat er is veranderd.
 
+## 1.2.0 — 31 augustus 2026
+- **Nieuws van bclmb.nl**: het nieuws en de blogs van de hoofdsite worden automatisch overgenomen (titel, tekst, datum, hoofdafbeelding, auteur en categorie van blogs), elke 6 uur en via **Nu importeren** in Beheer. Overgenomen berichten linken naar het origineel; verwijderde berichten komen niet terug.
+- Nieuwsoverzicht met afbeeldingen en labels; nieuwsdetail met afbeelding, ook in de deelvoorvertoning.
+
 ## 1.1.1 — 31 augustus 2026
 - Deelvoorvertoning: eigen embleem-afbeelding (800×800, crème achtergrond, 36 kB) in plaats van het grote transparante logo, zodat WhatsApp het embleem betrouwbaar toont.
 

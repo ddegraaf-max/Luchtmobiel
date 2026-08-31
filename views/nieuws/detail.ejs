@@ -1,9 +1,9 @@
 <div class="paginakop">
   <div class="wrap">
     <div>
-      <span class="kicker">Van het bestuur</span>
+      <span class="kicker"><%= bericht.categorie || 'Van het bestuur' %></span>
       <h1><%= bericht.titel %></h1>
-      <p><%= h.formatDatum(bericht.aangemaakt) %><%= bericht.auteur ? ' · ' + bericht.auteur : '' %><% if (!bericht.gepubliceerd) { %> · concept<% } %></p>
+      <p><%= h.formatDatum(bericht.aangemaakt) %><%= bericht.auteur ? ' · ' + bericht.auteur : '' %><% if (bericht.bron_url) { %> · overgenomen van bclmb.nl<% } %><% if (!bericht.gepubliceerd) { %> · concept<% } %></p>
     </div>
     <a href="/nieuws" class="btn btn--ghost">← Nieuws</a>
   </div>
@@ -11,13 +11,22 @@
 
 <section class="section">
   <div class="wrap" style="max-width:760px;">
+    <% if (bericht.afbeelding_id) { %>
+      <img src="/media/<%= bericht.afbeelding_id %>" alt="<%= bericht.titel %>" style="width:100%; max-height:420px; object-fit:cover; border-radius:var(--radius); margin-bottom:26px;">
+    <% } %>
     <% if (bericht.inhoud) { %>
       <div class="prose"><% bericht.inhoud.split(/\n\n+/).forEach(function(par){ %><p><%= par %></p><% }) %></div>
     <% } %>
+    <% if (bericht.bron_url) { %>
+      <p class="meta" style="margin-top:22px;">Dit bericht is overgenomen van de site van de Business Club. <a href="<%= bericht.bron_url %>" target="_blank" rel="noopener">Lees het op bclmb.nl ↗</a><% if (bericht.bron_bijgewerkt) { %> · bijgewerkt <%= h.formatDatum(bericht.bron_bijgewerkt) %><% } %></p>
+    <% } %>
     <% if (magBeheren) { %>
+      <% if (bericht.bron_url) { %>
+        <div class="flash flash--info" style="margin-top:24px;">Dit bericht wordt automatisch overgenomen van bclmb.nl; titel, tekst en afbeelding worden bij een wijziging op de bron opnieuw overgeschreven. Verwijder je het hier, dan wordt het niet opnieuw geïmporteerd.</div>
+      <% } %>
       <div class="flex" style="gap:8px; margin-top:24px;">
         <a href="/nieuws/<%= bericht.id %>/bewerken" class="btn btn--ghost btn--sm">Bewerken</a>
-        <form action="/nieuws/<%= bericht.id %>/verwijderen" method="post" class="inline-form" data-bevestig="Bericht verwijderen?"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <form action="/nieuws/<%= bericht.id %>/verwijderen" method="post" class="inline-form" data-bevestig="Bericht verwijderen?<%= bericht.bron_url ? ' Het wordt dan niet opnieuw van bclmb.nl overgenomen.' : '' %>"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <button class="btn btn--ghost btn--sm" type="submit">Verwijderen</button>
         </form>
       </div>

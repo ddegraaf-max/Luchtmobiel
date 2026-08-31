@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db/pool');
 const { requireRedactie, idParams } = require('../middleware/auth');
+const nieuwsImport = require('../lib/nieuws-import');
 
 idParams(router);
 
@@ -58,7 +59,14 @@ router.get('/:id', async (req, res) => {
       return res.status(404).render('error', { title: 'Niet gevonden', bericht: 'Dit bericht bestaat niet (meer).' });
     }
     if (bericht.gepubliceerd) {
-      res.locals.meta = { type: 'article', titel: bericht.titel, beschrijving: res.locals.h.kort(bericht.inhoud, 200) || 'Nieuws van de Business Club Luchtmobiel.' };
+      res.locals.meta = {
+        type: 'article',
+        titel: bericht.titel,
+        beschrijving: res.locals.h.kort(bericht.inhoud, 200) || 'Nieuws van de Business Club Luchtmobiel.',
+        afbeelding: bericht.afbeelding_id ? '/media/' + bericht.afbeelding_id : null,
+        afbeeldingAlt: bericht.afbeelding_id ? bericht.titel : null,
+        kaart: bericht.afbeelding_id ? 'summary_large_image' : 'summary'
+      };
     }
     res.render('nieuws/detail', { title: bericht.titel, bericht, magBeheren: beheer });
   } catch (err) {
@@ -86,7 +94,13 @@ router.post('/:id/bewerken', requireRedactie, async (req, res) => {
 });
 
 router.post('/:id/verwijderen', requireRedactie, async (req, res) => {
+  const bericht = (await pool.query('SELECT bron, bron_uid, afbeelding_id FROM nieuws WHERE id = $1', [req.params.id])).rows[0];
   await pool.query('DELETE FROM nieuws WHERE id = $1', [req.params.id]);
+  if (bericht) {
+    // Overgenomen bericht: niet opnieuw importeren; meegekomen afbeelding opruimen
+    if (bericht.bron === nieuwsImport.BRON && bericht.bron_uid) await nieuwsImport.negeer(bericht.bron_uid);
+    if (bericht.afbeelding_id) await pool.query('DELETE FROM media WHERE id = $1 AND eigenaar_id IS NULL', [bericht.afbeelding_id]);
+  }
   req.session.flash = { type: 'succes', message: 'Nieuwsbericht verwijderd.' };
   res.redirect('/nieuws');
 });

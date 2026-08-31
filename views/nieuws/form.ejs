@@ -8,6 +8,9 @@
 <section class="section section--tight">
   <div class="wrap" style="max-width:720px;">
     <% if (fout) { %><div class="flash flash--fout"><%= fout %></div><% } %>
+    <% if (bericht.bron_url) { %>
+      <div class="flash flash--info">Dit bericht is overgenomen van <a href="<%= bericht.bron_url %>" target="_blank" rel="noopener">bclmb.nl</a>. Titel en tekst worden overschreven zodra de bron wijzigt; pas het bericht liever daar aan.</div>
+    <% } %>
     <form action="<%= actie %>" method="post" class="form-card stack"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <div class="veld">
         <label for="titel">Titel *</label>

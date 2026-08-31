@@ -1,24 +1,35 @@
 <div class="paginakop">
   <div class="wrap">
     <div>
-      <span class="kicker">Van het bestuur</span>
+      <span class="kicker">Van het bestuur &amp; de club</span>
       <h1>Nieuws</h1>
+      <p>Berichten van het bestuur en het nieuws en de blogs van bclmb.nl, automatisch overgenomen.</p>
     </div>
     <% if (magBeheren) { %><a href="/nieuws/nieuw" class="btn btn--primary">+ Bericht</a><% } %>
   </div>
 </div>
 
 <section class="section section--tight">
-  <div class="wrap" style="max-width:760px;">
+  <div class="wrap" style="max-width:820px;">
     <% if (!berichten.length) { %>
       <div class="lege-staat"><p>Er is nog geen nieuws geplaatst.</p></div>
     <% } else { %>
       <div class="stack" style="gap:18px;">
         <% berichten.forEach(function(n){ %>
-          <a href="/nieuws/<%= n.id %>" class="card" style="display:block;">
-            <div class="meta"><%= h.formatDatum(n.aangemaakt) %><%= n.auteur ? ' · ' + n.auteur : '' %><% if (!n.gepubliceerd) { %> · <span class="badge">concept</span><% } %></div>
-            <div style="font-family:var(--font-display); font-weight:700; font-size:1.2rem; margin:4px 0 6px; color:var(--ink);"><%= n.titel %></div>
-            <p class="muted mb-0"><%= h.kort(n.inhoud, 160) %></p>
+          <a href="/nieuws/<%= n.id %>" class="card" style="flex-direction:row; gap:20px; align-items:flex-start; padding:20px 22px;">
+            <% if (n.afbeelding_id) { %>
+              <img src="/media/<%= n.afbeelding_id %>" alt="" loading="lazy" style="width:150px; height:100px; object-fit:cover; border-radius:var(--radius); flex:none;">
+            <% } %>
+            <div style="flex:1; min-width:0;">
+              <div class="meta flex" style="gap:8px;">
+                <span><%= h.formatDatum(n.aangemaakt) %><%= n.auteur ? ' · ' + n.auteur : '' %></span>
+                <% if (n.categorie) { %><span class="badge badge--olive"><%= n.categorie %></span><% } %>
+                <% if (n.bron_url) { %><span class="badge" title="Overgenomen van de site van de Business Club">bclmb.nl</span><% } %>
+                <% if (!n.gepubliceerd) { %><span class="badge">concept</span><% } %>
+              </div>
+              <div style="font-family:var(--font-display); font-weight:700; font-size:1.2rem; margin:4px 0 6px; color:var(--ink);"><%= n.titel %></div>
+              <p class="muted mb-0"><%= h.kort(n.inhoud, 160) %></p>
+            </div>
           </a>
         <% }) %>
       </div>
