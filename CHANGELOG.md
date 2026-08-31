@@ -3,6 +3,9 @@
 Het versienummer staat in de voettekst van elke pagina en in **Beheer** (met de code van de uitgerolde update).
 Bij elke update wordt het nummer in `package.json` opgehoogd en hier beschreven wat er is veranderd.
 
+## 1.2.7 — 31 augustus 2026
+- Embleem in e-mails krijgt het versienummer in zijn adres, zodat Cloudflare niet de oude gecachete kopie (met de oude beveiligingskop) blijft uitleveren.
+
 ## 1.2.6 — 31 augustus 2026
 - Bug: browsers en Cloudflare bleven een oude versie van het script van de site gebruiken (o.a. geen logo-voorbeeld en kale bestandsknop in formulieren). CSS en JS krijgen nu het versienummer van de site in hun adres, zodat elke update direct doorkomt.
 
