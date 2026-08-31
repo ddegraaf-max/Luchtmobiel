@@ -6,6 +6,7 @@ const { beeindigSessies } = require('../lib/sessies');
 const tfa = require('../lib/tfa');
 const { sendMail, mailLayout, escHtml } = require('../lib/mail');
 const agendaImportLib = require('../lib/agenda-import');
+const sponsorImportLib = require('../lib/sponsor-import');
 
 router.use(requireLogin, requireAdmin);
 idParams(router);
@@ -25,7 +26,9 @@ router.get('/', async (req, res) => {
     `)).rows[0];
     const agendaImport = { ...agendaImportLib.status(), genegeerd: await agendaImportLib.aantalGenegeerd(),
       aantal: (await pool.query('SELECT COUNT(*)::int AS n FROM evenementen WHERE bron = $1', [agendaImportLib.BRON])).rows[0].n };
-    res.render('beheer/index', { title: 'Beheer', leden, stats, agendaImport });
+    const sponsor = { ...sponsorImportLib.status(), teControleren: await sponsorImportLib.aantalTeControleren(),
+      geplaatst: (await pool.query("SELECT COUNT(*)::int AS n FROM sponsorverzoeken WHERE status = 'geplaatst'")).rows[0].n };
+    res.render('beheer/index', { title: 'Beheer', leden, stats, agendaImport, sponsor });
   } catch (err) {
     console.error('[beheer]', err.message);
     res.status(500).render('error', { title: 'Fout', bericht: 'Het beheerpaneel kon niet worden geladen.' });

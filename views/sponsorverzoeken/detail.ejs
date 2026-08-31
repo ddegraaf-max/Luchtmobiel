@@ -1,0 +1,81 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker" style="margin-bottom:6px;">Sponsorverzoek<% if (verzoek.doelgroep) { %> · <%= verzoek.doelgroep %><% } %><% if (verzoek.uitgelicht) { %> · Uitgelicht<% } %><% if (verzoek.status !== 'geplaatst') { %> · <%= statusLabel[verzoek.status].toLowerCase() %><% } %></span>
+      <h1 style="margin:0;"><%= verzoek.titel %></h1>
+      <% if (verzoek.organisatie || verzoek.plaats) { %><p style="margin:.4rem 0 0; color:var(--sand); font-weight:600;"><%= verzoek.organisatie || '' %><%= verzoek.organisatie && verzoek.plaats ? ' · ' : '' %><%= verzoek.plaats || '' %></p><% } %>
+    </div>
+    <a href="<%= magBeheren && verzoek.status !== 'geplaatst' ? '/sponsorverzoeken/controle?status=' + verzoek.status : '/sponsorverzoeken' %>" class="btn btn--ghost">← <%= magBeheren && verzoek.status !== 'geplaatst' ? 'Controlewachtrij' : 'Alle sponsorverzoeken' %></a>
+  </div>
+</div>
+
+<section class="section">
+  <div class="wrap">
+    <div class="detail-grid">
+      <div>
+        <% if (verzoek.samenvatting) { %><p style="font-size:1.1rem; font-weight:600;"><%= verzoek.samenvatting %></p><% } %>
+        <% if (verzoek.omschrijving) { %>
+          <div class="prose"><% verzoek.omschrijving.split(/\n\n+/).forEach(function(par){ %><p><%= par %></p><% }) %></div>
+        <% } else if (!verzoek.samenvatting) { %>
+          <p class="muted">Er is nog geen toelichting toegevoegd.<% if (verzoek.url) { %> Bekijk het verzoek zelf via de link.<% } %></p>
+        <% } %>
+
+        <% if (magBeheren) { %>
+          <hr class="divider">
+          <% if (verzoek.status === 'nieuw') { %>
+            <div class="flash flash--info">Dit verzoek staat nog in de controlewachtrij en is niet zichtbaar voor bezoekers. Bekijk de bron, pas de tekst eventueel aan en kies <em>Plaatsen</em> of <em>Afwijzen</em>.</div>
+          <% } else if (verzoek.status === 'afgewezen') { %>
+            <div class="flash flash--info">Dit verzoek is afgewezen en niet zichtbaar voor bezoekers.</div>
+          <% } %>
+          <div class="flex">
+            <% if (verzoek.status !== 'geplaatst') { %>
+              <form action="/sponsorverzoeken/<%= verzoek.id %>/status" method="post" class="inline-form">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="status" value="geplaatst"><input type="hidden" name="terug" value="detail">
+                <button class="btn btn--primary btn--sm" type="submit">Plaatsen</button>
+              </form>
+            <% } %>
+            <a href="/sponsorverzoeken/<%= verzoek.id %>/bewerken" class="btn btn--ghost btn--sm">Bewerken</a>
+            <% if (verzoek.status === 'geplaatst') { %>
+              <form action="/sponsorverzoeken/<%= verzoek.id %>/uitgelicht" method="post" class="inline-form">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="terug" value="detail">
+                <button class="btn btn--ghost btn--sm" type="submit"><%= verzoek.uitgelicht ? 'Niet meer uitlichten' : 'Uitlichten' %></button>
+              </form>
+            <% } %>
+            <% if (verzoek.status !== 'afgewezen') { %>
+              <form action="/sponsorverzoeken/<%= verzoek.id %>/status" method="post" class="inline-form">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="status" value="afgewezen"><input type="hidden" name="terug" value="detail">
+                <button class="btn btn--danger btn--sm" type="submit"><%= verzoek.status === 'geplaatst' ? 'Van de site halen' : 'Afwijzen' %></button>
+              </form>
+            <% } else { %>
+              <form action="/sponsorverzoeken/<%= verzoek.id %>/status" method="post" class="inline-form">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="status" value="nieuw"><input type="hidden" name="terug" value="detail">
+                <button class="btn btn--ghost btn--sm" type="submit">Terug naar controle</button>
+              </form>
+            <% } %>
+          </div>
+        <% } %>
+      </div>
+
+      <aside class="zijbalk">
+        <dl style="margin:0 0 16px;">
+          <% if (verzoek.organisatie) { %><dt>Organisatie</dt><dd><%= verzoek.organisatie %></dd><% } %>
+          <% if (verzoek.doelgroep) { %><dt>Voor wie</dt><dd><%= verzoek.doelgroep %></dd><% } %>
+          <% if (verzoek.plaats) { %><dt>Plaats / regio</dt><dd><%= verzoek.plaats %></dd><% } %>
+          <% if (verzoek.doelbedrag) { %><dt>Doelbedrag</dt><dd><%= verzoek.doelbedrag %></dd><% } %>
+          <% if (verzoek.einddatum) { %><dt>Loopt tot</dt><dd><%= h.formatDatumDag(verzoek.einddatum) %></dd><% } %>
+          <% if (verzoek.bron_naam) { %><dt>Bron</dt><dd><%= verzoek.bron_naam %></dd><% } %>
+          <dt>Gevonden op</dt><dd><%= h.formatDatum(verzoek.aangemaakt) %></dd>
+          <% if (magBeheren) { %>
+            <dt>Status</dt><dd><%= statusLabel[verzoek.status] %><% if (verzoek.beoordeeld_naam && verzoek.status !== 'nieuw') { %> door <%= verzoek.beoordeeld_naam %><% } %></dd>
+            <dt>Herkomst</dt><dd><%= bronLabel[verzoek.bron] || verzoek.bron %></dd>
+          <% } %>
+        </dl>
+        <% if (verzoek.url) { %>
+          <a href="<%= verzoek.url %>" target="_blank" rel="noopener nofollow" class="btn btn--primary btn--block">Naar het verzoek ↗</a>
+          <p class="meta" style="margin:10px 0 0; text-align:center;"><%= h.toonUrl(verzoek.url).slice(0, 60) %><%= h.toonUrl(verzoek.url).length > 60 ? '…' : '' %></p>
+        <% } %>
+        <p class="meta" style="margin-top:16px;">Dit verzoek komt van een derde partij. Controleer de actie zelf voordat je bijdraagt.</p>
+      </aside>
+    </div>
+  </div>
+</section>

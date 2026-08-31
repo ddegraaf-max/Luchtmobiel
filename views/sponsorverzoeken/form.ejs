@@ -1,0 +1,88 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Sponsoring</span>
+      <h1><%= title %></h1>
+    </div>
+    <a href="<%= verzoek.id ? '/sponsorverzoeken/' + verzoek.id : '/sponsorverzoeken/controle' %>" class="btn btn--ghost">← Annuleren</a>
+  </div>
+</div>
+
+<section class="section">
+  <div class="wrap" style="max-width:760px;">
+    <% if (fout) { %><div class="flash flash--fout"><%= fout %></div><% } %>
+    <% if (verzoek.bron === 'assistent') { %>
+      <div class="flash flash--info">Dit verzoek is gevonden door de assistent. Je kunt de tekst vrij aanpassen; de assistent overschrijft hem niet meer.</div>
+    <% } %>
+    <form action="<%= actie %>" method="post" class="form-card">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <div class="veld">
+        <label for="titel">Titel *</label>
+        <input type="text" id="titel" name="titel" value="<%= verzoek.titel || '' %>" required maxlength="200" autofocus placeholder="Bijv. Sponsorloop voor veteranen met PTSS">
+      </div>
+      <div class="veld-rij">
+        <div class="veld">
+          <label for="organisatie">Organisatie of initiatiefnemer</label>
+          <input type="text" id="organisatie" name="organisatie" value="<%= verzoek.organisatie || '' %>" maxlength="150" placeholder="Stichting, vereniging of persoon">
+        </div>
+        <div class="veld">
+          <label for="doelgroep">Voor wie</label>
+          <select id="doelgroep" name="doelgroep">
+            <% doelgroepen.forEach(function(d){ %>
+              <option value="<%= d %>" <%= (verzoek.doelgroep || 'Veteranen') === d ? 'selected' : '' %>><%= d %></option>
+            <% }) %>
+          </select>
+        </div>
+      </div>
+      <div class="veld">
+        <label for="samenvatting">Korte omschrijving</label>
+        <input type="text" id="samenvatting" name="samenvatting" value="<%= verzoek.samenvatting || '' %>" maxlength="300" placeholder="In één of twee zinnen: wat wordt er gevraagd en waarvoor?">
+      </div>
+      <div class="veld">
+        <label for="omschrijving">Uitgebreide toelichting</label>
+        <textarea id="omschrijving" name="omschrijving" rows="7" maxlength="5000" placeholder="Achtergrond van het verzoek, wat er met de bijdragen gebeurt en hoe leden kunnen helpen. Laat een lege regel tussen alinea's."><%= verzoek.omschrijving || '' %></textarea>
+      </div>
+      <div class="veld-rij">
+        <div class="veld">
+          <label for="url">Link naar het verzoek</label>
+          <input type="text" id="url" name="url" value="<%= verzoek.url || '' %>" maxlength="500" placeholder="www.voorbeeld.nl/actie">
+        </div>
+        <div class="veld">
+          <label for="bron_naam">Bron (website)</label>
+          <input type="text" id="bron_naam" name="bron_naam" value="<%= verzoek.bron_naam || '' %>" maxlength="100" placeholder="Wordt uit de link afgeleid als je dit leeg laat">
+        </div>
+      </div>
+      <div class="veld-rij">
+        <div class="veld">
+          <label for="plaats">Plaats / regio</label>
+          <input type="text" id="plaats" name="plaats" value="<%= verzoek.plaats || '' %>" maxlength="100">
+        </div>
+        <div class="veld">
+          <label for="doelbedrag">Doelbedrag</label>
+          <input type="text" id="doelbedrag" name="doelbedrag" value="<%= verzoek.doelbedrag || '' %>" maxlength="50" placeholder="Bijv. € 5.000">
+        </div>
+        <div class="veld">
+          <label for="einddatum">Loopt tot</label>
+          <input type="date" id="einddatum" name="einddatum" value="<%= verzoek.einddatum || '' %>">
+        </div>
+      </div>
+      <div class="veld-rij">
+        <div class="veld">
+          <label for="status">Status</label>
+          <select id="status" name="status">
+            <% statussen.forEach(function(s){ %>
+              <option value="<%= s %>" <%= (verzoek.status || 'nieuw') === s ? 'selected' : '' %>><%= statusLabel[s] %></option>
+            <% }) %>
+          </select>
+          <span class="hint">Alleen <strong>Geplaatst</strong> is zichtbaar voor bezoekers.</span>
+        </div>
+        <label class="check" style="cursor:pointer; align-self:center;">
+          <input type="checkbox" name="uitgelicht" <%= verzoek.uitgelicht === true || verzoek.uitgelicht === 'on' ? 'checked' : '' %>>
+          Uitgelicht (bovenaan tonen)
+        </label>
+      </div>
+      <button type="submit" class="btn btn--primary">Opslaan</button>
+    </form>
+  </div>
+</section>

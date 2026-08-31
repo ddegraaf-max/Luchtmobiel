@@ -121,6 +121,7 @@ app.use('/projecten', require('./routes/projecten'));
 app.use('/agenda', require('./routes/agenda'));
 app.use('/nieuws', require('./routes/nieuws'));
 app.use('/partners', require('./routes/partners'));
+app.use('/sponsorverzoeken', require('./routes/sponsorverzoeken'));
 app.use('/veteranen', require('./routes/veteranen'));
 app.use('/media', require('./routes/media'));
 app.use('/beheer', require('./routes/beheer'));
@@ -148,13 +149,15 @@ app.use((err, req, res, next) => {
 // Laatste vangnet: log in plaats van crashen.
 process.on('unhandledRejection', (err) => console.error('[server] Onafgehandelde promise-fout:', err));
 
-// Start: eerst DB klaarzetten, dan luisteren en de agenda-import inplannen.
+// Start: eerst DB klaarzetten, dan luisteren en de agenda-import en het ophalen van
+// sponsorverzoeken inplannen.
 if (require.main === module) {
   initDb()
     .catch((err) => console.error('[server] DB-init mislukt (server start toch):', err.message))
     .finally(() => {
       app.listen(PORT, () => console.log(`[server] Luchtmobiel-platform draait op poort ${PORT}`));
       require('./lib/agenda-import').planImport();
+      require('./lib/sponsor-import').planImport();
     });
 }
 

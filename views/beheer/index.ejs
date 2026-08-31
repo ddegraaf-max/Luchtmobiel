@@ -51,6 +51,39 @@
       </div>
     </div>
 
+    <div class="card" style="margin-bottom:32px;">
+      <div class="flex between" style="align-items:flex-start;">
+        <div>
+          <h3 style="margin:0 0 4px;">Sponsorverzoeken voor militairen &amp; veteranen</h3>
+          <p class="muted mb-0" style="font-size:.9rem;">
+            <% if (sponsor.teControleren) { %>
+              <strong style="color:var(--maroon);"><%= sponsor.teControleren === 1 ? '1 nieuw verzoek wacht' : sponsor.teControleren + ' nieuwe verzoeken wachten' %> op controle.</strong>
+            <% } else { %>
+              Geen verzoeken die op controle wachten.
+            <% } %>
+            <%= sponsor.geplaatst %> <%= sponsor.geplaatst === 1 ? 'verzoek staat' : 'verzoeken staan' %> op de site.
+            <% if (!sponsor.config.uren) { %>
+              <br>Automatisch ophalen staat uit (SPONSOR_IMPORT_UREN=0).
+            <% } else { %>
+              <br>De assistent zoekt elke ochtend; de lijst wordt elke <%= sponsor.config.uren %> uur opgehaald.
+            <% } %>
+            <% if (sponsor.laatste) { %>
+              Laatst opgehaald: <%= new Date(sponsor.laatste.tijdstip).toLocaleString('nl-NL', { timeZone: 'Europe/Amsterdam' }) %> —
+              <%= sponsor.laatste.nieuw %> nieuw, <%= sponsor.laatste.dubbel %> al bekend.
+              <% if (sponsor.laatste.fouten.length) { %><br><span style="color:#8a2020;">Meldingen: <%= sponsor.laatste.fouten.join(' | ') %></span><% } %>
+            <% } %>
+          </p>
+        </div>
+        <div class="flex" style="gap:8px;">
+          <a href="/sponsorverzoeken/controle" class="btn btn--primary btn--sm">Controleren<%= sponsor.teControleren ? ' (' + sponsor.teControleren + ')' : '' %></a>
+          <form action="/sponsorverzoeken/controle/ophalen" method="post" class="inline-form">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button class="btn btn--ghost btn--sm" type="submit" <%= sponsor.bezig ? 'disabled' : '' %>>Nu ophalen</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <div style="overflow-x:auto;">
       <table class="tabel">
         <thead>

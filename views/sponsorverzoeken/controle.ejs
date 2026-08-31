@@ -1,0 +1,127 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Sponsoring · controle</span>
+      <h1>Sponsorverzoeken controleren</h1>
+      <p>Alles wat de assistent vindt komt eerst hier terecht. Plaats wat past bij het netwerk, wijs de rest af.</p>
+    </div>
+    <div class="flex" style="gap:8px;">
+      <a href="/sponsorverzoeken" class="btn btn--ghost">Publieke pagina</a>
+      <a href="/sponsorverzoeken/nieuw" class="btn btn--primary">+ Handmatig toevoegen</a>
+    </div>
+  </div>
+</div>
+
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="card" style="margin-bottom:28px;">
+      <div class="flex between" style="align-items:flex-start;">
+        <div>
+          <h3 style="margin:0 0 4px;">Dagelijkse zoekronde van de assistent</h3>
+          <p class="muted mb-0" style="font-size:.9rem;">
+            <% if (!imp.config.uren) { %>
+              Automatisch ophalen staat uit (SPONSOR_IMPORT_UREN=0).
+            <% } else { %>
+              De assistent zoekt elke ochtend het Nederlandse web af; de gevonden verzoeken worden elke <%= imp.config.uren %> uur opgehaald.
+            <% } %>
+            <% if (imp.laatste) { %>
+              <br>Laatst opgehaald: <%= new Date(imp.laatste.tijdstip).toLocaleString('nl-NL', { timeZone: 'Europe/Amsterdam' }) %> —
+              <%= imp.laatste.nieuw %> nieuw, <%= imp.laatste.dubbel %> al bekend<%= imp.laatste.ongeldig ? ', ' + imp.laatste.ongeldig + ' ongeldig' : '' %>.
+              <% if (imp.laatste.assistentBijgewerkt) { %>Lijst van de assistent bijgewerkt op <%= new Date(imp.laatste.assistentBijgewerkt).toLocaleString('nl-NL', { timeZone: 'Europe/Amsterdam' }) %>.<% } %>
+              <% if (imp.laatste.fouten.length) { %><br><span style="color:#8a2020;">Meldingen: <%= imp.laatste.fouten.join(' | ') %></span><% } %>
+            <% } else if (imp.config.uren) { %>
+              <br>Nog niet opgehaald sinds de laatste herstart.
+            <% } %>
+          </p>
+        </div>
+        <form action="/sponsorverzoeken/controle/ophalen" method="post" class="inline-form">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <button class="btn btn--primary btn--sm" type="submit" <%= imp.bezig ? 'disabled' : '' %>>Nu ophalen</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="filterchips">
+      <a href="/sponsorverzoeken/controle?status=nieuw" class="<%= status === 'nieuw' ? 'actief' : '' %>">Te controleren (<%= tellingen.nieuw %>)</a>
+      <a href="/sponsorverzoeken/controle?status=geplaatst" class="<%= status === 'geplaatst' ? 'actief' : '' %>">Geplaatst (<%= tellingen.geplaatst %>)</a>
+      <a href="/sponsorverzoeken/controle?status=afgewezen" class="<%= status === 'afgewezen' ? 'actief' : '' %>">Afgewezen (<%= tellingen.afgewezen %>)</a>
+    </div>
+
+    <% if (!verzoeken.length) { %>
+      <div class="lege-staat">
+        <% if (status === 'nieuw') { %>
+          <p>Geen nieuwe verzoeken om te controleren. De assistent zoekt elke ochtend opnieuw.</p>
+        <% } else if (status === 'geplaatst') { %>
+          <p>Er zijn nog geen verzoeken geplaatst.</p>
+        <% } else { %>
+          <p>Er zijn geen afgewezen verzoeken.</p>
+        <% } %>
+      </div>
+    <% } else { %>
+      <div class="stack">
+        <% verzoeken.forEach(function(v){ %>
+          <div class="card" style="padding:20px 22px; gap:8px;">
+            <div class="flex between" style="align-items:flex-start;">
+              <div style="flex:1; min-width:240px;">
+                <div class="flex" style="gap:6px; margin-bottom:6px;">
+                  <% if (v.doelgroep) { %><span class="badge badge--olive"><%= v.doelgroep %></span><% } %>
+                  <span class="badge" title="<%= bronLabel[v.bron] || v.bron %>"><%= v.bron === 'assistent' ? 'Assistent' : 'Handmatig' %></span>
+                  <% if (v.uitgelicht) { %><span class="badge badge--maroon">Uitgelicht</span><% } %>
+                </div>
+                <a class="card-titel" href="/sponsorverzoeken/<%= v.id %>" style="font-family:var(--font-display); font-weight:700; font-size:1.15rem; line-height:1.25;"><%= v.titel %></a>
+                <div class="meta" style="margin-top:4px;">
+                  <%= v.organisatie || '' %><%= v.organisatie && v.plaats ? ' · ' : '' %><%= v.plaats || '' %>
+                  <% if (v.bron_naam) { %><%= (v.organisatie || v.plaats) ? ' · ' : '' %>Bron: <%= v.bron_naam %><% } %>
+                  <% if (v.doelbedrag) { %> · Doel: <%= v.doelbedrag %><% } %>
+                  <% if (v.einddatum) { %> · Loopt tot <%= h.formatDatumDag(v.einddatum) %><% } %>
+                </div>
+                <% if (v.samenvatting) { %><p class="muted" style="margin:8px 0 0;"><%= v.samenvatting %></p><% } %>
+                <div class="meta" style="margin-top:8px;">
+                  Gevonden op <%= h.formatDatum(v.aangemaakt) %><% if (v.gepubliceerd_op_bron) { %> · op de bron geplaatst <%= h.formatDatum(v.gepubliceerd_op_bron) %><% } %>
+                  <% if (v.beoordeeld_naam && v.status !== 'nieuw') { %> · <%= statusLabel[v.status].toLowerCase() %> door <%= v.beoordeeld_naam %><%= v.beoordeeld_op ? ' op ' + h.formatDatum(v.beoordeeld_op) : '' %><% } %>
+                  <% if (v.zoekterm) { %> · zoekterm: <em><%= v.zoekterm %></em><% } %>
+                </div>
+              </div>
+              <div class="flex" style="gap:6px; flex-direction:column; align-items:stretch; min-width:170px;">
+                <% if (v.url) { %><a href="<%= v.url %>" target="_blank" rel="noopener nofollow" class="btn btn--ghost btn--sm">Bekijk de bron ↗</a><% } %>
+                <% if (status !== 'geplaatst') { %>
+                  <form action="/sponsorverzoeken/<%= v.id %>/status" method="post" class="inline-form">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="status" value="geplaatst"><input type="hidden" name="terug" value="<%= status %>">
+                    <button class="btn btn--primary btn--sm btn--block" type="submit">Plaatsen</button>
+                  </form>
+                <% } %>
+                <a href="/sponsorverzoeken/<%= v.id %>/bewerken" class="btn btn--ghost btn--sm">Bewerken</a>
+                <% if (status !== 'afgewezen') { %>
+                  <form action="/sponsorverzoeken/<%= v.id %>/status" method="post" class="inline-form">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="status" value="afgewezen"><input type="hidden" name="terug" value="<%= status %>">
+                    <button class="btn btn--danger btn--sm btn--block" type="submit"><%= status === 'geplaatst' ? 'Van de site halen' : 'Afwijzen' %></button>
+                  </form>
+                <% } %>
+                <% if (status === 'geplaatst') { %>
+                  <form action="/sponsorverzoeken/<%= v.id %>/uitgelicht" method="post" class="inline-form">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="terug" value="<%= status %>">
+                    <button class="btn btn--ghost btn--sm btn--block" type="submit"><%= v.uitgelicht ? 'Niet meer uitlichten' : 'Uitlichten' %></button>
+                  </form>
+                <% } %>
+                <% if (status === 'afgewezen') { %>
+                  <form action="/sponsorverzoeken/<%= v.id %>/status" method="post" class="inline-form">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="status" value="nieuw"><input type="hidden" name="terug" value="<%= status %>">
+                    <button class="btn btn--ghost btn--sm btn--block" type="submit">Terug naar controle</button>
+                  </form>
+                  <form action="/sponsorverzoeken/<%= v.id %>/verwijderen" method="post" class="inline-form" data-bevestig="Dit verzoek definitief verwijderen?<%= v.bron === 'assistent' ? ' Let op: de assistent kan het dan opnieuw aanbieden. Laat het op Afgewezen staan als je het nooit meer wilt zien.' : '' %>">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="terug" value="<%= status %>">
+                    <button class="btn btn--danger btn--sm btn--block" type="submit">Verwijderen</button>
+                  </form>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+
+    <p class="muted" style="margin-top:24px; font-size:.85rem; max-width:90ch;">
+      <strong>Zo werkt het:</strong> de assistent zoekt elke ochtend naar Nederlandse sponsor-, donatie- en steunverzoeken voor militairen en veteranen en zet ze hier neer. Klik op <em>Bekijk de bron</em> om het verzoek zelf te beoordelen, pas eventueel de tekst aan via <em>Bewerken</em>, en kies <em>Plaatsen</em> om het op de publieke pagina te zetten. <em>Afgewezen</em> verzoeken worden niet opnieuw aangeboden.
+    </p>
+  </div>
+</section>

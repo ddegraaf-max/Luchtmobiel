@@ -234,6 +234,38 @@ async function init() {
     );
   `);
 
+  // Sponsorverzoeken voor militairen en veteranen (gevonden door de assistent of handmatig; eerst controle, dan publiek)
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS sponsorverzoeken (
+      id                   SERIAL PRIMARY KEY,
+      titel                TEXT NOT NULL,
+      organisatie          TEXT,
+      samenvatting         TEXT,
+      omschrijving         TEXT,
+      url                  TEXT,
+      url_sleutel          TEXT,
+      titel_sleutel        TEXT,
+      bron                 TEXT NOT NULL DEFAULT 'handmatig',
+      bron_uid             TEXT,
+      bron_naam            TEXT,
+      doelgroep            TEXT,
+      plaats               TEXT,
+      doelbedrag           TEXT,
+      einddatum            TEXT,
+      gepubliceerd_op_bron TIMESTAMPTZ,
+      zoekterm             TEXT,
+      status               TEXT NOT NULL DEFAULT 'nieuw',
+      uitgelicht           BOOLEAN NOT NULL DEFAULT false,
+      beoordeeld_door      INTEGER REFERENCES users(id) ON DELETE SET NULL,
+      beoordeeld_op        TIMESTAMPTZ,
+      auteur_id            INTEGER REFERENCES users(id) ON DELETE SET NULL,
+      aangemaakt           TIMESTAMPTZ DEFAULT now(),
+      bijgewerkt           TIMESTAMPTZ DEFAULT now()
+    );
+  `);
+  await pool.query(`CREATE INDEX IF NOT EXISTS sponsorverzoeken_status_idx ON sponsorverzoeken(status);`);
+  await pool.query(`CREATE INDEX IF NOT EXISTS sponsorverzoeken_url_idx ON sponsorverzoeken(url_sleutel);`);
+
   // Beveiliging: tweestapsverificatie en wachtwoord-herstel (idempotent)
   await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS totp_secret TEXT;`);
   await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS totp_ingeschakeld BOOLEAN NOT NULL DEFAULT false;`);

@@ -1,0 +1,60 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Sponsoring</span>
+      <h1>Sponsorverzoeken voor militairen &amp; veteranen</h1>
+      <p>Acties, stichtingen en initiatieven in Nederland die op zoek zijn naar sponsors, donateurs of steun. Door het bestuur bekeken voordat ze hier verschijnen.</p>
+    </div>
+    <% if (magBeheren) { %>
+      <div class="flex" style="gap:8px;">
+        <a href="/sponsorverzoeken/controle" class="btn btn--ghost">Controle<%= teControleren ? ' (' + teControleren + ')' : '' %></a>
+        <a href="/sponsorverzoeken/nieuw" class="btn btn--primary">+ Verzoek</a>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<section class="section section--tight">
+  <div class="wrap">
+    <% if (magBeheren && teControleren) { %>
+      <div class="flash flash--info" style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:center;">
+        <span><%= teControleren === 1 ? 'Er wacht 1 nieuw sponsorverzoek' : 'Er wachten ' + teControleren + ' nieuwe sponsorverzoeken' %> op controle.</span>
+        <a href="/sponsorverzoeken/controle" class="btn btn--primary btn--sm">Nu controleren</a>
+      </div>
+    <% } %>
+
+    <% if (!verzoeken.length) { %>
+      <div class="lege-staat">
+        <p>Er staan op dit moment geen sponsorverzoeken op de site.</p>
+        <% if (magBeheren) { %><a href="/sponsorverzoeken/controle" class="btn btn--primary">Naar de controlewachtrij</a><% } %>
+      </div>
+    <% } else { %>
+      <div class="grid grid--auto">
+        <% verzoeken.forEach(function(v){ %>
+          <div class="card" style="gap:10px;">
+            <div class="flex" style="gap:6px;">
+              <% if (v.doelgroep) { %><span class="badge badge--olive"><%= v.doelgroep %></span><% } %>
+              <% if (v.uitgelicht) { %><span class="badge badge--maroon">Uitgelicht</span><% } %>
+            </div>
+            <a class="card-titel" href="/sponsorverzoeken/<%= v.id %>" style="font-family:var(--font-display); font-weight:700; font-size:1.15rem; line-height:1.2;"><%= v.titel %></a>
+            <% if (v.organisatie) { %><div class="meta" style="margin-top:-4px;"><%= v.organisatie %><%= v.plaats ? ' · ' + v.plaats : '' %></div><% } else if (v.plaats) { %><div class="meta" style="margin-top:-4px;"><%= v.plaats %></div><% } %>
+            <% if (v.samenvatting) { %><p class="muted mb-0" style="flex:1;"><%= v.samenvatting %></p><% } %>
+            <div class="meta">
+              <% if (v.doelbedrag) { %>Doel: <strong><%= v.doelbedrag %></strong><% } %>
+              <% if (v.doelbedrag && v.einddatum) { %> · <% } %>
+              <% if (v.einddatum) { %>Loopt tot <%= h.formatDatumDag(v.einddatum) %><% } %>
+            </div>
+            <div class="flex between" style="margin-top:auto;">
+              <a href="/sponsorverzoeken/<%= v.id %>" style="font-weight:700;">Bekijk →</a>
+              <% if (v.url) { %><a href="<%= v.url %>" target="_blank" rel="noopener nofollow" class="btn btn--primary btn--sm">Naar het verzoek ↗</a><% } %>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+
+    <p class="muted" style="margin-top:32px; font-size:.85rem; max-width:80ch;">
+      De verzoeken op deze pagina komen van derden en worden dagelijks op het Nederlandse web verzameld. Het bestuur bekijkt elk verzoek voordat het hier verschijnt, maar is niet verantwoordelijk voor de inhoud of de besteding van bijdragen. Controleer altijd zelf de actie voordat je doneert of sponsort.
+    </p>
+  </div>
+</section>

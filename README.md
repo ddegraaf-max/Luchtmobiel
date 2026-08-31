@@ -11,6 +11,7 @@ Een besloten netwerk waar leden (en de brigade) **zelf** alles beheren: hun prof
 - **Ondersteuningsprojecten** — vraag steun (financieel, vrijwilligers, expertise…) en meld je aan bij projecten van anderen.
 - **Veteranenzaken** — een hub met hulpbronnen en passend werk, beheerd door de brigade en het bestuur.
 - **Partners & initiatieven** — publieke pagina met organisaties, stichtingen, sponsors en initiatieven (logo, omschrijving, website), gefilterd op categorie; uitgelichte partners staan ook op de homepage. Leden kunnen zelf een initiatief aandragen; dat komt als concept bij het bestuur/de brigade terecht om aan te vullen en te publiceren.
+- **Sponsorverzoeken** — een assistent zoekt elke ochtend het Nederlandse web af naar sponsor-, donatie- en steunverzoeken voor militairen en veteranen. Alles komt eerst in een controlewachtrij; wat jij plaatst verschijnt op de publieke pagina *Sponsoring*. Zie [Sponsorverzoeken](#sponsorverzoeken-dagelijks-gezocht-door-de-assistent).
 - **Zelfservice** — leden registreren met een toegangscode en beheren daarna alles zelf. Jij hoeft niets goed te keuren.
 - **Beheer** — jij bepaalt rollen (lid / brigade / admin) en kunt leden activeren of verwijderen.
 - **Veilig inloggen** — wachtwoord vergeten via e-mail, tweestapsverificatie met een authenticator-app (Google/Microsoft Authenticator, Authy, 1Password), herstelcodes, en bescherming tegen brute force en CSRF.
@@ -47,6 +48,7 @@ Ga naar je app-service → tabblad **Variables** en voeg toe:
 | `REGISTRATIE_CODE` | de toegangscode voor nieuwe leden, bijv. `LUCHTMOBIEL` |
 | `NODE_ENV` | `production` |
 | `AGENDA_IMPORT_UREN` | (optioneel) om de hoeveel uur de agenda van bclmb.nl wordt overgenomen; standaard `6`, `0` = uit |
+| `SPONSOR_IMPORT_UREN` | (optioneel) om de hoeveel uur de gevonden sponsorverzoeken van de assistent worden opgehaald; standaard `3`, `0` = uit |
 | `TFA_VERPLICHT_ADMIN` | (optioneel) `1` = beheerders moeten eerst tweestapsverificatie instellen voordat ze bij Beheer kunnen |
 | `APP_URL` | het adres van de site, bijv. `https://jouw-app.up.railway.app` (voor links in e-mails) |
 | `ENCRYPTIE_SLEUTEL` | (aanbevolen) nog een lange willekeurige tekst; hiermee worden 2FA-geheimen versleuteld. Daarna **niet meer wijzigen** |
@@ -110,6 +112,16 @@ De activiteiten op de hoofdsite van de Business Club ([bclmb.nl/evenementen](htt
 - Evenementen zonder tijd worden als "hele dag" getoond; dat kun je ook voor handmatige evenementen aanvinken.
 
 > Bij de eerste import komen de echte activiteiten naast eventuele oude voorbeeld-evenementen te staan. Verwijder de voorbeelden (of dubbele handmatige versies) één keer via de agenda.
+
+## Sponsorverzoeken: dagelijks gezocht door de assistent
+Op de publieke pagina **Sponsoring** (`/sponsorverzoeken`) staan sponsor-, donatie- en steunverzoeken voor militairen en veteranen in Nederland. Zo komen ze daar:
+
+1. **Zoeken (elke ochtend, automatisch).** Een Claude-routine in de cloud zoekt rond 7 uur het Nederlandstalige web af (crowdfunding-platforms, stichtingen, nieuws) naar nieuwe verzoeken: sponsorlopen, benefietacties, hulphonden, Invictus-deelname, monumenten, reünies, stichtingen die sponsors zoeken, enzovoort. Ze controleert elke vondst op de pagina zelf, vat hem neutraal samen en zet hem in de repository op de tak `claude/sponsor-inbox` in `data/sponsorverzoeken.json`. De werkinstructie van de routine staat in [docs/sponsor-assistent.md](docs/sponsor-assistent.md); pas die aan als je andere zoektermen of bronnen wilt.
+2. **Ophalen.** Het platform haalt die lijst elke 3 uur op (`SPONSOR_IMPORT_UREN`) en zet alleen nog onbekende verzoeken in de controlewachtrij. Is `MAIL_BESTUUR` ingesteld, dan krijg je een e-mail zodra er iets nieuws is.
+3. **Controle.** Onder **Sponsoring → Controle** (ook via **Beheer**) zie je alles wat wacht. Klik op *Bekijk de bron*, pas eventueel de tekst aan met *Bewerken* en kies **Plaatsen** of **Afwijzen**. Afgewezen verzoeken worden nooit opnieuw aangeboden; geplaatste kun je later weer van de site halen of uitlichten (bovenaan tonen).
+4. **Handmatig.** Kom je zelf een verzoek tegen? Voeg het toe via **+ Handmatig toevoegen**.
+
+De routine beheer je op [claude.ai/code/routines](https://claude.ai/code/routines) (aan/uit zetten, tijdstip wijzigen, direct laten draaien, logboek bekijken). Draait de routine niet, dan blijft de site gewoon werken; er komen alleen geen nieuwe verzoeken binnen. Met **Nu ophalen** haal je de lijst direct op zonder op het volgende interval te wachten.
 
 ## Beveiliging: wachtwoord vergeten & tweestapsverificatie
 
