@@ -37,7 +37,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/style.css?v=9">
+  <%# Versie in de adressen van CSS en JS: browsers en Cloudflare cachen statische bestanden 7 dagen,
+      zonder versienummer zouden updates dagenlang niet doorkomen. %>
+  <% const cacheVersie = encodeURIComponent((typeof versie !== 'undefined' && versie) ? (versie.nummer + (versie.commit ? '-' + versie.commit : '')) : '0'); %>
+  <link rel="stylesheet" href="/static/css/style.css?v=<%= cacheVersie %>">
   <link rel="icon" type="image/png" href="/static/img/favicon.png?v=2">
   <link rel="apple-touch-icon" href="/static/img/logo.png?v=2">
 </head>
@@ -49,6 +52,6 @@
   </main>
   <%- include('footer') %>
   
-  <script src="/static/js/main.js"></script>
+  <script src="/static/js/main.js?v=<%= cacheVersie %>"></script>
 </body>
 </html>

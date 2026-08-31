@@ -3,6 +3,9 @@
 Het versienummer staat in de voettekst van elke pagina en in **Beheer** (met de code van de uitgerolde update).
 Bij elke update wordt het nummer in `package.json` opgehoogd en hier beschreven wat er is veranderd.
 
+## 1.2.6 — 31 augustus 2026
+- Bug: browsers en Cloudflare bleven een oude versie van het script van de site gebruiken (o.a. geen logo-voorbeeld en kale bestandsknop in formulieren). CSS en JS krijgen nu het versienummer van de site in hun adres, zodat elke update direct doorkomt.
+
 ## 1.2.5 — 31 augustus 2026
 - Bug: na het wijzigen van het inlogadres van de beheerder maakte de site bij elke herstart opnieuw een beheerdersaccount met het oude adres uit `ADMIN_EMAIL` aan (waardoor het ledental klopte noch veilig was). Er wordt nu alleen een beheerder aangemaakt als er nog geen enkele is.
 
