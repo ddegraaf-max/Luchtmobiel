@@ -1,6 +1,42 @@
 {
-  "bijgewerkt": "2026-09-04T06:00:00Z",
+  "bijgewerkt": "2026-09-05T06:00:00Z",
   "items": [
+    {
+      "id": "hulpvoorhelden-airborne-freedom-run-lars-stuij",
+      "titel": "60 km in 6 uur - Lars Stuij loopt de Airborne Freedom Run voor Hulp voor Helden",
+      "organisatie": "Hulp voor Helden (actie van Lars Stuij)",
+      "doelgroep": "Militairen & veteranen",
+      "samenvatting": "Lars Stuij loopt op 14 september de Airborne Freedom Run in Arnhem (60 km in 6 uur) en haalt sponsorgeld op voor Stichting Hulp voor Helden, dat militairen en veteranen ondersteunt.",
+      "omschrijving": null,
+      "url": "https://www.hulpvoorhelden.nl/actie-details-individu/975756da-1d9f-433b-9c7d-a07aa8689662",
+      "bron_naam": "hulpvoorhelden.nl",
+      "plaats": "Arnhem",
+      "doelbedrag": null,
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-09-05",
+      "zoekterm": "Airborne mars sponsor veteranen 2026",
+      "evenement_datum": "2026-09-14",
+      "evenement_tijd": null,
+      "evenement_einddatum": null,
+      "evenement_locatie": "Arnhem"
+    },
+    {
+      "id": "veteranenbegraafplaats-loenen-grafsteen",
+      "titel": "Doneer voor een grafsteen op de Nationale Veteranenbegraafplaats Loenen",
+      "organisatie": "Stichting Nationale Veteranenbegraafplaats Loenen",
+      "doelgroep": "Veteranen",
+      "samenvatting": "De stichting die de Nationale Veteranenbegraafplaats Loenen beheert, vraagt doorlopend om donaties voor grafstenen en naamplaten van overleden veteranen; een steen kost gemiddeld ca. € 1.100.",
+      "omschrijving": "De witte marmeren grafstenen dragen de naam, geboorte- en overlijdensdatum, rang en het insigne van de veteraan en worden bekostigd uit een apart donatiebudget. Doneren kan via een bankoverschrijving naar IBAN NL61RABO0324878826 (t.n.v. St. Nationale Veteranenbegraafplaats Loenen, o.v.v. 'steendonatie') of via een betaalverzoeklink/QR-code op de website. De stichting heeft ANBI-status.",
+      "url": "https://veteranenbegraafplaats.org/steun-ons/",
+      "bron_naam": "veteranenbegraafplaats.org",
+      "plaats": "Loenen",
+      "doelbedrag": "± € 1.100 per grafsteen (gemiddeld)",
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-09-05",
+      "zoekterm": "Nationaal Veteranenmonument Loenen doneren bijdrage"
+    },
     {
       "id": "knilmonument-winterswijk-2026",
       "titel": "Crowdfunding Moluks KNIL-monument Winterswijk",
