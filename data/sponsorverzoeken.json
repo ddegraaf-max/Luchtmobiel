@@ -1,6 +1,22 @@
 {
-  "bijgewerkt": "2026-09-11T05:16:00Z",
+  "bijgewerkt": "2026-09-12T06:00:00Z",
   "items": [
+    {
+      "id": "surfivor-word-sponsor",
+      "titel": "Word sponsor van Stichting Surfivor (surftherapie voor veteranen en hulpverleners met PTSS)",
+      "organisatie": "Stichting Surfivor",
+      "doelgroep": "Militairen & veteranen",
+      "samenvatting": "Stichting Surfivor biedt gratis surftherapie aan militaire veteranen en hulpverleners met PTSS en nodigt bedrijven uit in gesprek te gaan over sponsoring, omdat de therapie niet door zorgverzekeraars wordt vergoed.",
+      "omschrijving": null,
+      "url": "https://surfivor.nl/sponsor/",
+      "bron_naam": "surfivor.nl",
+      "plaats": null,
+      "doelbedrag": null,
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-09-12",
+      "zoekterm": "stichting Surfivor doneren sponsoren veteranen PTSS"
+    },
     {
       "id": "veteranenwestland-sponsoren",
       "titel": "Veteranen Westland vraagt sponsors voor uitjes en ontspanning",
