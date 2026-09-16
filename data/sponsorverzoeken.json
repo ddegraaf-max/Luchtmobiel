@@ -1,6 +1,38 @@
 {
-  "bijgewerkt": "2026-09-15T05:12:27Z",
+  "bijgewerkt": "2026-09-16T05:13:43Z",
   "items": [
+    {
+      "id": "veteranenpurmerend-sponsoren",
+      "titel": "Stichting Veteranen Purmerend zoekt sponsors",
+      "organisatie": "Stichting Veteranen Purmerend",
+      "doelgroep": "Veteranen",
+      "samenvatting": "De stichting (ANBI) verwelkomt bedrijven en organisaties die haar en haar leden steunen met financiële bijdragen en/of kennis en expertise. Nog niet op de pagina gecontroleerd.",
+      "omschrijving": null,
+      "url": "https://www.veteranenpurmerend.nl/index.php/sponsoren",
+      "bron_naam": "veteranenpurmerend.nl",
+      "plaats": "Purmerend",
+      "doelbedrag": null,
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-09-16",
+      "zoekterm": "veteranen zoekt sponsors bedrijven september 2026"
+    },
+    {
+      "id": "svon-sponsoren",
+      "titel": "Stichting Veteranen Oost-Nederland zoekt donateurs en sponsors",
+      "organisatie": "Stichting Veteranen Oost-Nederland",
+      "doelgroep": "Militairen & veteranen",
+      "samenvatting": "De stichting voor actief dienende militairen, oud-militairen, veteranen en hun thuisfront in Oost-Nederland vraagt donateurs en sponsors; giften kunnen via een bankrekening worden overgemaakt. Nog niet op de pagina gecontroleerd.",
+      "omschrijving": null,
+      "url": "https://svon.nl/sponsoren/",
+      "bron_naam": "svon.nl",
+      "plaats": "Oost-Nederland",
+      "doelbedrag": null,
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-09-16",
+      "zoekterm": "stichting militairen thuisfront donateurs gezocht 2026"
+    },
     {
       "id": "hulpvoorhelden-veva-marcheert-sponsoring",
       "titel": "VeVa Marcheert zoekt zakelijke sponsors voor jaarlijkse veteranenmars",
