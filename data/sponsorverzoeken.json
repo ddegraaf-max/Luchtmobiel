@@ -1,6 +1,22 @@
 {
-  "bijgewerkt": "2026-09-21T05:11:22Z",
+  "bijgewerkt": "2026-09-22T05:12:34Z",
   "items": [
+    {
+      "id": "onsleger-sponsor-worden",
+      "titel": "KNV Ons Leger zoekt bedrijfssponsors",
+      "organisatie": "Koninklijke Nederlandse Vereniging \"Ons Leger\"",
+      "doelgroep": "Militairen",
+      "samenvatting": "KNV Ons Leger, een vereniging die zich sinds 1912 inzet voor een sterke krijgsmacht, nodigt bedrijven uit sponsor te worden vanaf €50 per jaar, met vermelding op de website en (bij hogere bijdragen) advertentieruimte in verenigingsblad ARMEX.",
+      "omschrijving": null,
+      "url": "https://onsleger.nl/sponser-worden/",
+      "bron_naam": "onsleger.nl",
+      "plaats": null,
+      "doelbedrag": null,
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-09-22",
+      "zoekterm": "sponsoractie leger krijgsmacht militair thuisfront 2026"
+    },
     {
       "id": "veteranenzaanstad-sponsoring",
       "titel": "Stichting Veteranen Zaanstad zoekt sponsors en donateurs",
