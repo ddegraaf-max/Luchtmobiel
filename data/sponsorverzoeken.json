@@ -1,6 +1,38 @@
 {
-  "bijgewerkt": "2026-09-28T05:08:51Z",
+  "bijgewerkt": "2026-09-29T05:12:35Z",
   "items": [
+    {
+      "id": "veteranenmaastricht-sponsoring",
+      "titel": "Sponsors en vrienden gezocht - Stichting Veteranen Maastricht",
+      "organisatie": "Stichting Veteranen Maastricht",
+      "doelgroep": "Veteranen",
+      "samenvatting": "Stichting Veteranen Maastricht zoekt maatschappelijke partners en sponsors (pakketten vanaf € 100) en particuliere donateurs om ontmoetings- en zorgactiviteiten voor circa 400 veteranen in Maastricht mogelijk te maken.",
+      "omschrijving": null,
+      "url": "https://www.veteranenmaastricht.nl/sponsoring",
+      "bron_naam": "veteranenmaastricht.nl",
+      "plaats": "Maastricht",
+      "doelbedrag": null,
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-09-29",
+      "zoekterm": "\"steun ons\" veteranenverening 2026 sponsor word lid"
+    },
+    {
+      "id": "gofundme-helmen-vol-verhalen",
+      "titel": "Help Helmen Vol Verhalen reizen door Nederland",
+      "organisatie": "Helmen Vol Verhalen (Amy van Son e.a.)",
+      "doelgroep": "Veteranen",
+      "samenvatting": "Crowdfundingactie voor het project Helmen Vol Verhalen, dat met exposities en evenementen de verhalen van Nederlandse veteranen en hun thuisfront eert; het geld is o.a. bedoeld voor reizen in 2026 en het borgen van de collectie. Doel € 15.000, ruim € 4.250 opgehaald.",
+      "omschrijving": null,
+      "url": "https://www.gofundme.com/f/help-helmen-vol-verhalen-reizen-door-nederland-in-24-en-25",
+      "bron_naam": "gofundme.com",
+      "plaats": "Arnhem",
+      "doelbedrag": "€ 15.000",
+      "einddatum": null,
+      "gepubliceerd_op_bron": "2024-05-06",
+      "gevonden_op": "2026-09-29",
+      "zoekterm": "site:gofundme.com veteraan Nederland 2026"
+    },
     {
       "id": "actievoorhelden-awevsthesun-2026",
       "titel": "AWE vs THE SUN 2026",
