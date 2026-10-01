@@ -1,6 +1,38 @@
 {
-  "bijgewerkt": "2026-09-30T05:09:49Z",
+  "bijgewerkt": "2026-10-01T05:10:43Z",
   "items": [
+    {
+      "id": "actievoorhelden-lopen-voor-veteranen-hulphonden",
+      "titel": "Lopen voor veteranen hulphonden",
+      "organisatie": "Actie voor Helden / Stichting Hulp voor Helden (initiatief Alexander Routers)",
+      "doelgroep": "Veteranen",
+      "samenvatting": "Alexander Routers organiseert wandeltochten om geld in te zamelen voor de opleiding en aanschaf van hulphonden voor veteranen met PTSS; doel € 20.000, ruim € 6.476 opgehaald.",
+      "omschrijving": null,
+      "url": "https://www.actievoorhelden.nl/evenementen/4517/lopen-voor-veteranen-hulphonden/",
+      "bron_naam": "actievoorhelden.nl",
+      "plaats": null,
+      "doelbedrag": "€ 20.000",
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-10-01",
+      "zoekterm": "actievoorhelden.nl/evenementen (vaste bron)"
+    },
+    {
+      "id": "veteranenharlingen-doneren",
+      "titel": "Stichting Veteranen Harlingen vraagt steun voor herdenkingen en projecten",
+      "organisatie": "Stichting Veteranen Harlingen",
+      "doelgroep": "Veteranen",
+      "samenvatting": "De stichting vraagt doorlopend donaties (via QR-code of bankoverschrijving) om herdenkingen te organiseren en verhalen van veteranen vast te leggen voor toekomstige generaties.",
+      "omschrijving": null,
+      "url": "https://veteranen-harlingen.nl/Donaties/",
+      "bron_naam": "veteranen-harlingen.nl",
+      "plaats": "Harlingen",
+      "doelbedrag": null,
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-10-01",
+      "zoekterm": "\"doneren\" OR \"donateur worden\" veteranen stichting nieuw 2026"
+    },
     {
       "id": "veteranenmaastricht-sponsoring",
       "titel": "Sponsors en vrienden gezocht - Stichting Veteranen Maastricht",
