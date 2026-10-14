@@ -1,6 +1,38 @@
 {
-  "bijgewerkt": "2026-10-13T00:00:00Z",
+  "bijgewerkt": "2026-10-14T05:10:03Z",
   "items": [
+    {
+      "id": "hulpvoorhelden-178-dagen-film",
+      "titel": "Steun de film '178 Dagen' van Libanon-veteraan Armand",
+      "organisatie": "Stichting Hulp voor Helden",
+      "doelgroep": "Militairen & veteranen",
+      "samenvatting": "Libanon-veteraan Armand maakte de documentaire '178 Dagen' over de laatste dagen van een Britse WOII-soldaat; Hulp voor Helden maakte de film mede mogelijk en vraagt bezoekers het project verder te steunen met een donatie.",
+      "omschrijving": null,
+      "url": "https://www.hulpvoorhelden.nl/178-dagen-film",
+      "bron_naam": "hulpvoorhelden.nl",
+      "plaats": null,
+      "doelbedrag": null,
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-10-14",
+      "zoekterm": "hulpvoorhelden.nl (vaste bron, projectenoverzicht)"
+    },
+    {
+      "id": "hulpvoorhelden-vets-angels",
+      "titel": "Vets Angels: steun voor thuisfrontjongeren van veteranen met PTSS",
+      "organisatie": "Stichting Hulp voor Helden, i.s.m. Nederlands Veteraneninstituut",
+      "doelgroep": "Nabestaanden & gezinnen",
+      "samenvatting": "Hulp voor Helden vraagt een donatie voor Vets Angels: een begeleide midweek voor jongeren van 12-18 jaar met een veteraan-ouder met PTSS; de projectkosten zijn geraamd op € 24.000.",
+      "omschrijving": null,
+      "url": "https://www.hulpvoorhelden.nl/vets-angels",
+      "bron_naam": "hulpvoorhelden.nl",
+      "plaats": null,
+      "doelbedrag": "€ 24.000",
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-10-14",
+      "zoekterm": "hulpvoorhelden.nl (vaste bron, projectenoverzicht)"
+    },
     {
       "id": "commandofamilysupport-doneren",
       "titel": "Steun (voormalig) Special Forces-collega's en hun gezinnen - Commando & Family Support",
