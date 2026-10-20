@@ -1,6 +1,38 @@
 {
-  "bijgewerkt": "2026-10-19T05:12:17Z",
+  "bijgewerkt": "2026-10-20T05:16:40Z",
   "items": [
+    {
+      "id": "actievoorhelden-150-jaar-echos",
+      "titel": "150 jaar ECHOS! - doneer aan de ECHOS-verbindingsteams",
+      "organisatie": "Stichting Hulp voor Helden / ECHOS-teams",
+      "doelgroep": "Militairen",
+      "samenvatting": "Actie Voor Helden vraagt het hele jaar donaties voor de ECHOS-verbindingsteams, die uitgezonden militairen ondersteunen met satellietcommunicatie; doel € 20.000, tot nu toe ruim € 440 opgehaald.",
+      "omschrijving": "Ter gelegenheid van het 150-jarig bestaan van de ECHOS-verbindingstroepen zamelt Actie Voor Helden het hele jaar geld in voor de ECHOS-teams, met knoppen om te doneren aan de verschillende ECHOS-locaties. Op 24 oktober is er een bijeenkomst ter viering van het jubileum, maar de doneeractie zelf heeft geen vermelde einddatum.",
+      "url": "https://www.actievoorhelden.nl/evenementen/4532/150-jaar-echos/",
+      "bron_naam": "actievoorhelden.nl",
+      "plaats": null,
+      "doelbedrag": "€ 20.000",
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-10-20",
+      "zoekterm": "vaste bron: actievoorhelden.nl/evenementen"
+    },
+    {
+      "id": "dmrc-doneren-2026",
+      "titel": "Dutch Marines Rowing Challenge: word sponsor of donateur voor buddy's met PTSS",
+      "organisatie": "Stichting Dutch Marines Rowing Challenge (DMRC)",
+      "doelgroep": "Militairen & veteranen",
+      "samenvatting": "DMRC vraagt donateurs, sponsors en roeiers voor (voormalige) mariniers en andere uniformberoepen die mentaal overbelast zijn, zoals door PTSS; doel 2026 is € 36.100, ongeveer 56% (€ 20.145) is al opgehaald.",
+      "omschrijving": null,
+      "url": "https://www.dmrc.nl/doneren",
+      "bron_naam": "dmrc.nl",
+      "plaats": null,
+      "doelbedrag": "€ 36.100",
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-10-20",
+      "zoekterm": "Stichting Dutch Marines Rowing Challenge hulphond donatie 2026"
+    },
     {
       "id": "hulpvoorhelden-onderzoek-ptss-preventie",
       "titel": "Steun het onderzoek naar PTSS-preventie bij militairen",
