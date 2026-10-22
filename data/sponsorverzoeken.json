@@ -1,6 +1,38 @@
 {
-  "bijgewerkt": "2026-10-21T05:12:04Z",
+  "bijgewerkt": "2026-10-22T05:13:44Z",
   "items": [
+    {
+      "id": "hulpvoorhelden-missionkit",
+      "titel": "MissionKit: steun het pakket voor uitgezonden militairen en hun thuisfront",
+      "organisatie": "Stichting Hulp voor Helden",
+      "doelgroep": "Militairen",
+      "samenvatting": "Hulp voor Helden vraagt via 'Omarm dit project' steun voor de MissionKit, een pakket met o.a. een thuisfrontboekje en countdownkalender voor uitgezonden militairen en hun gezin; projectkosten € 10.000.",
+      "omschrijving": "De MissionKit is een pakket van Stichting Hulp voor Helden voor militairen op uitzending en hun thuisfront (partner, kinderen, ouders, vrienden). Het pakket bevat onder meer zeven ansichtkaarten, een gedachten-en-gebedenboekje, een countdownkalender, een voucher voor het Thuisfrontboekje, pennen en een herbruikbare doos, bedoeld om het contact tussen uitgezonden militair en thuisfront te onderhouden tijdens en na de missie. De pagina nodigt bezoekers uit het project te 'omarmen' via een contactformulier; de projectkosten worden vermeld als € 10.000.",
+      "url": "https://www.hulpvoorhelden.nl/missionkit",
+      "bron_naam": "hulpvoorhelden.nl",
+      "plaats": null,
+      "doelbedrag": "€ 10.000",
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-10-22",
+      "zoekterm": "hulpvoorhelden.nl (vaste bron, projectenoverzicht)"
+    },
+    {
+      "id": "hulpvoorhelden-geestelijke-verzorging",
+      "titel": "Steun geestelijke verzorging voor militairen - Diaconaal Fonds Militairen",
+      "organisatie": "Stichting Hulp voor Helden, met Protestantse kerken en de Protestantse Theologische Universiteit",
+      "doelgroep": "Militairen",
+      "samenvatting": "Hulp voor Helden vraagt steun voor geestelijke verzorging van militairen, onder meer via het Diaconaal Fonds Militairen waarvoor kerken wordt gevraagd te doneren of te collecteren, en voor projecten als Vets Angels en het PTSS-preventieonderzoek.",
+      "omschrijving": "De pagina 'Geestelijke verzorging' van Stichting Hulp voor Helden gaat over hulp bij stress, trauma, morele vraagstukken en de scheiding van het thuisfront bij militairen. Ze noemt onder meer Vets Angels (voor kinderen van militairen met PTSS), het PTSS-preventieonderzoek, geestelijke verzorging bij ECHOS Homes, de protestantse krijgsmachtpredikant en een bijzondere leerstoel ethiek en geestelijke verzorging in de krijgsmacht aan de Protestantse Theologische Universiteit. Een 'Steun ons'-knop verwijst naar het donatieformulier, en kerken wordt gevraagd te doneren of te collecteren voor het Diaconaal Fonds Militairen, dat projecten voor het welzijn van militairen financiert.",
+      "url": "https://www.hulpvoorhelden.nl/geestelijke-verzorging",
+      "bron_naam": "hulpvoorhelden.nl",
+      "plaats": null,
+      "doelbedrag": null,
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-10-22",
+      "zoekterm": "hulpvoorhelden.nl (vaste bron, projectenoverzicht)"
+    },
     {
       "id": "actievoorhelden-150-jaar-echos",
       "titel": "150 jaar ECHOS! - doneer aan de ECHOS-verbindingsteams",
