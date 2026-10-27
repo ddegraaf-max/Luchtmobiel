@@ -65,6 +65,7 @@ Ga naar je app-service → tabblad **Variables** en voeg toe:
 | `TURNSTILE_SITE_KEY` | (optioneel) site-sleutel van je Cloudflare Turnstile-widget (robot-controle), zie hieronder |
 | `TURNSTILE_SECRET_KEY` | (optioneel) geheime sleutel van dezelfde Turnstile-widget |
 | `RECLAME_CONTACT` | (optioneel) e-mailadres voor bedrijven die willen adverteren (de regel onder het grote reclameblok); standaard `info@bclmb.nl` |
+| `BEZOEKERS_START` | (optioneel) aantal bezoekers van vóór de bezoekersteller (bijv. uit Cloudflare); wordt bij het totaal in het vizier opgeteld |
 
 > `DATABASE_URL` staat er al door stap 3 — die laat je met rust.
 >
@@ -144,12 +145,15 @@ Bedrijven uit het netwerk kunnen een **reclameblok** krijgen op de openbare pagi
 
 - **Waar het verschijnt.** Een groot blok op de homepage (onder de vier modules), een balk onder het nieuws, de agenda, partners, sponsoring, vacatures, projecten, De Brigade en Veteranenzaken, en een kaart in de zijbalk van detailpagina's (agenda, partner, sponsorverzoek). Per bezochte pagina wordt één lopend blok getoond.
 - **Maken.** Ga naar **Beheer → Reclameblokken**. Onderaan staan de bedrijven uit de ledengids die nog geen blok hebben: met **Maak blok** worden naam, omschrijving, website, contactgegevens en logo van het bedrijfsprofiel overgenomen (het logo als openbare kopie; het profiel zelf blijft besloten). Vul kop, tekst, diensten (gescheiden door komma's), kenmerken, knoptekst en eventueel een foto aan en kies een kleurstelling (donker, baret of licht) en een accentkleur, bijvoorbeeld de huisstijlkleur van het bedrijf. Na het opslaan zie je direct een voorbeeld in de drie maten.
-- **Rotatie en planning.** Zijn er meerdere blokken, dan bepaalt het *gewicht* (1–5) hoe vaak een blok aan de beurt is. Met *zichtbaar vanaf* en *tot en met* plan je een campagne; daarbuiten wordt het blok niet getoond. Met **Uitzetten** haal je een blok direct van de site zonder het te verwijderen.
+- **Diavoorstelling, rotatie en planning.** Zijn er meerdere blokken, dan wisselen ze op dezelfde plek om de beurt (met stippen en pijltjes); het *gewicht* (1–5) bepaalt welk blok als eerste staat en hoe vaak. Met *zichtbaar vanaf* en *tot en met* plan je een campagne; daarbuiten wordt het blok niet getoond. Met **Uitzetten** haal je een blok direct van de site zonder het te verwijderen.
 - **Resultaat.** Vertoningen en kliks (op knop, logo of foto) worden per blok geteld en staan in het overzicht, zodat je een adverteerder kunt laten zien wat het oplevert.
-- **Eerste blok.** Bij de eerste start met versie 1.7.0 wordt het blok van **De Graaf Bouwbedrijf** geplaatst (teksten en beeld van degraaf-bouwbedrijf.nl). Pas het aan via *Bewerken*; verwijder je het, dan komt het niet terug.
+- **Startblokken.** Bij de eerste start worden de blokken van **De Graaf Bouwbedrijf** (versie 1.7.0) en **Honor Residence Poland** (versie 1.8.0) geplaatst, met teksten en beeld van hun eigen websites. Pas ze aan via *Bewerken*; verwijder je er een, dan komt het niet terug.
 - **Adverteren.** Onder het grote blok staat een uitnodiging voor andere bedrijven om te adverteren; die mailt naar `info@bclmb.nl` (ander adres: variabele `RECLAME_CONTACT`).
 
 Elk blok is herkenbaar gemarkeerd als *Advertentie* en linkt via `/reclame/<nummer>/klik` door naar de adverteerder; zoekmachines slaan die links en het beheer over (robots.txt).
+
+## Bezoekersteller
+In de voettekst van elke pagina staat een vizier met het aantal bezoekers. Elke browser telt één keer (een cookie van een jaar, zonder persoonsgegevens); bekende zoekrobots en de voorvertoningen van WhatsApp, LinkedIn en dergelijke tellen niet mee. De aantallen worden per dag bewaard; in **Beheer** zie je het totaal en de laatste dagen. Wil je de bezoekers van vóór de teller meetellen (bijvoorbeeld het aantal uit Cloudflare), zet dan op Railway de variabele `BEZOEKERS_START` op dat getal.
 
 ## Beveiliging: wachtwoord vergeten & tweestapsverificatie
 

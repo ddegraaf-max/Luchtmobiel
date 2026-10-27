@@ -138,6 +138,19 @@
       </div>
     </div>
 
+    <div class="card" style="margin-bottom:32px;">
+      <h3 style="margin:0 0 4px;">Bezoekers</h3>
+      <p class="muted mb-0" style="font-size:.9rem;">
+        <% if (!bezoekers) { %>
+          De bezoekersteller kon niet worden geladen.
+        <% } else { %>
+          <strong><%= bezoekers.totaal.toLocaleString('nl-NL') %></strong> bezoekers in totaal<% if (bezoekers.start) { %> (waarvan <%= bezoekers.start.toLocaleString('nl-NL') %> als startwaarde uit <code>BEZOEKERS_START</code>)<% } %><% if (bezoekers.sinds) { %>, geteld sinds <%= h.formatDatumDag(bezoekers.sinds) %><% } %>.
+          <% if (bezoekers.dagen.length) { %><br>Per dag: <%= bezoekers.dagen.map(function(d){ return h.formatDatumKort(d.dag) + ' ' + d.aantal; }).join(' · ') %>.<% } %>
+          <br>Elke browser telt één keer (cookie, een jaar geldig); bekende zoekrobots en voorvertoningen tellen niet mee. Het totaal staat in het vizier in de voettekst van elke pagina.
+        <% } %>
+      </p>
+    </div>
+
     <div style="overflow-x:auto;">
       <table class="tabel">
         <thead>

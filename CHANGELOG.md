@@ -3,6 +3,14 @@
 Het versienummer staat in de voettekst van elke pagina en in **Beheer** (met de code van de uitgerolde update).
 Bij elke update wordt het nummer in `package.json` opgehoogd en hier beschreven wat er is veranderd.
 
+## 1.8.0 — 27 oktober 2026
+- **Diavoorstelling**: staan er meerdere reclameblokken aan, dan wisselen ze op dezelfde plek om de beurt (elke 8 à 9 seconden, met stippen en pijltjes; pauzeert bij aanwijzen en bij "minder beweging"). Elke getoonde dia telt als vertoning.
+- Tweede blok: **Honor Residence Poland**, het privé vakantiehuis voor veteranen, militairen en hun gezin in Mazovië (baret-kleurstelling met goud, zegel-logo, huisfoto, voorzieningen, prijzen en reserveerknop).
+- De Graaf Bouwbedrijf: scherpe foto (voordeur uit het eigen portfolio) in plaats van de wazige uitsnede.
+- Beheer: per blok een eigen kopje boven de labels (bijv. "Voorzieningen" in plaats van "Diensten"); het veld regio/werkgebied wordt letterlijk getoond.
+- **Bezoekersteller**: een vizier in de voettekst met het aantal bezoekers (elke browser telt één keer via een cookie van een jaar; zoekrobots en voorvertoningen niet); telt bij het laden op naar de stand. In Beheer staan het totaal en de aantallen per dag; met `BEZOEKERS_START` tel je de bezoekers van vóór de teller erbij op.
+- **Zoekmachines (Search Console: "dubbele pagina zonder canonieke versie")**: elke pagina krijgt een canonical-adres zonder filters en op het hoofdadres uit `APP_URL`; www.luchtmobiel.red verwijst definitief door naar luchtmobiel.red; inlog-, profiel-, beheer- en ledenpagina's krijgen `noindex`; de overzichtspagina's hebben elk een eigen omschrijving; agenda-bestanden (.ics) worden niet meer gecrawld.
+
 ## 1.7.0 — 27 oktober 2026
 - **Reclameblokken**: advertenties van bedrijven uit het netwerk op de openbare pagina's — een groot blok op de homepage, een balk onder nieuws, agenda, partners, sponsoring, vacatures, projecten, De Brigade en Veteranenzaken, en een kaart in de zijbalk van detailpagina's. Per bezoek wordt één lopend blok getoond (gewogen rotatie, met begin- en einddatum); vertoningen en kliks worden geteld.
 - Beheer → **Reclameblokken**: een blok maken vanuit een bedrijf in de ledengids (gegevens en logo worden overgenomen), logo en foto uploaden, kleurstelling en accentkleur kiezen, voorbeeld in drie maten, aan- en uitzetten, statistieken per blok.

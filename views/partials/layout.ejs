@@ -10,19 +10,23 @@
     const m = (typeof meta !== 'undefined' && meta) ? meta : {};
     const basis = typeof basisUrl !== 'undefined' ? basisUrl : '';
     const ogTitel = m.titel || (typeof title !== 'undefined' && title) || siteNaam;
-    const ogBeschrijving = m.beschrijving || 'Het netwerk van de Business Club Luchtmobiel: ondernemers, professionals en de brigade — met bijzondere aandacht voor veteranenzaken.';
+    const ogBeschrijving = m.beschrijving || (typeof standaardBeschrijving !== 'undefined' && standaardBeschrijving) || 'Het netwerk van de Business Club Luchtmobiel: ondernemers, professionals en de brigade — met bijzondere aandacht voor veteranenzaken.';
+    const canoniek = typeof paginaUrl !== 'undefined' && paginaUrl ? paginaUrl : basis;
     const eigenAfbeelding = !!m.afbeelding;
     // Standaard: het embleem op crème achtergrond (800x800 JPG, klein en zonder transparantie — WhatsApp weigert
     // grote of maakt doorzichtige afbeeldingen soms zwart).
     const ogAfbeelding = eigenAfbeelding ? (/^https?:\/\//i.test(m.afbeelding) ? m.afbeelding : basis + m.afbeelding) : basis + '/static/img/og-embleem.jpg?v=1';
   %>
   <meta name="description" content="<%= ogBeschrijving %>">
+  <%# Eén canoniek adres per pagina (zonder filters/querystring, altijd op APP_URL): voorkomt "dubbele pagina's" bij Google. %>
+  <link rel="canonical" href="<%= canoniek %>">
+  <% if (typeof noindex !== 'undefined' && noindex) { %><meta name="robots" content="noindex, nofollow"><% } %>
   <meta property="og:type" content="<%= m.type || 'website' %>">
   <meta property="og:site_name" content="<%= siteNaam %>">
   <meta property="og:locale" content="nl_NL">
   <meta property="og:title" content="<%= ogTitel %>">
   <meta property="og:description" content="<%= ogBeschrijving %>">
-  <meta property="og:url" content="<%= typeof paginaUrl !== 'undefined' ? paginaUrl : basis %>">
+  <meta property="og:url" content="<%= canoniek %>">
   <meta property="og:image" content="<%= ogAfbeelding %>">
   <meta property="og:image:alt" content="<%= m.afbeeldingAlt || 'Embleem van de Business Club Luchtmobiel' %>">
   <% if (!eigenAfbeelding) { %>

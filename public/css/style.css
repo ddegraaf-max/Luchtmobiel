@@ -269,6 +269,28 @@ input[type=file] { font-size: .88rem; }
 .site-footer a:hover { color: var(--bone); }
 /* Links ín het adresblok (e-mail, website) horen gewoon in de tekstregel, niet als losse blokjes. */
 .footer-brand p a { display: inline; padding: 0; font-size: inherit; }
+.footer-brand { display: flex; gap: 28px; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; }
+.footer-brand__tekst { min-width: 0; flex: 1 1 260px; }
+
+/* Bezoekersteller: vizier met het aantal bezoekers in het midden */
+.vizier { position: relative; width: 118px; flex: none; text-align: center; }
+.vizier svg { width: 118px; height: 118px; display: block; overflow: visible; }
+.vizier__ring1 { fill: none; stroke: var(--brass); stroke-width: 2; }
+.vizier__ring2 { fill: none; stroke: rgba(244,239,229,.3); stroke-width: 1; }
+.vizier__ring3 { fill: none; stroke: rgba(244,239,229,.25); stroke-width: 1; stroke-dasharray: 3 5; transform-origin: 60px 60px; animation: vizier-draai 70s linear infinite; }
+.vizier__arm { stroke: var(--brass); stroke-width: 2; stroke-linecap: round; }
+.vizier__tik { stroke: rgba(244,239,229,.6); stroke-width: 1.5; }
+.vizier__stip { fill: var(--brass); }
+.vizier__getal {
+  position: absolute; left: 0; right: 0; top: 0; height: 118px; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 800; font-size: 1.45rem; letter-spacing: -.02em; color: var(--bone);
+  font-variant-numeric: tabular-nums; text-shadow: 0 1px 3px rgba(0,0,0,.45); pointer-events: none;
+}
+.vizier--lang .vizier__getal { font-size: 1.1rem; }
+.vizier__label { display: block; margin-top: 6px; font-size: .62rem; letter-spacing: .24em; text-transform: uppercase; color: var(--brass); font-weight: 700; }
+.vizier:hover .vizier__ring1 { stroke: #c8a24a; }
+@keyframes vizier-draai { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .vizier__ring3 { animation: none; } }
 .footer-brand .naam { font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; color: var(--bone); }
 .footer-onder { border-top: 1px solid rgba(244,239,229,.14); margin-top: 36px; padding-top: 22px; font-size: .82rem; color: rgba(244,239,229,.55); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
 
@@ -732,12 +754,17 @@ input[type=color] { width: 64px; height: 42px; padding: 3px; background: var(--b
 /* kop: logo + naam + label */
 .reclame__kop { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
 .reclame__titels { min-width: 0; flex: 1 1 200px; }
+/* Het logovak voegt zich naar de vorm van het logo: breed voor een liggend woordmerk, vierkant voor een rond zegel. */
 .reclame__logo {
   display: flex; align-items: center; justify-content: center; flex: none;
-  width: 150px; height: 84px; padding: 10px 14px; background: var(--rc-logo-bg);
+  width: auto; min-width: 92px; max-width: 160px; height: 84px; padding: 10px 14px; background: var(--rc-logo-bg);
   border: 1px solid var(--rc-lijn); border-radius: var(--radius); overflow: hidden;
 }
-.reclame__logo img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+/* Vaste beeldhoogte (niet 100%): zo rekent de browser de breedte van het vak uit op basis van de
+   verkleinde afbeelding en krijgt een rond zegel een vierkant vak. */
+.reclame__logo img { height: 64px; width: auto; max-width: 100%; object-fit: contain; }
+.reclame--balk .reclame__logo img { height: 56px; }
+.reclame--kaart .reclame__logo img { height: 52px; }
 .reclame__kicker { display: block; text-transform: uppercase; letter-spacing: .2em; font-size: .68rem; font-weight: 700; color: var(--rc-accent); }
 .reclame__naam { font-family: var(--font-display); font-weight: 800; font-size: 1.5rem; line-height: 1.1; letter-spacing: -.01em; margin: 2px 0 0; color: inherit; }
 .reclame__slogan { color: var(--rc-tekst-zacht); font-weight: 600; font-size: .95rem; margin-top: 2px; }
@@ -769,6 +796,8 @@ input[type=color] { width: 64px; height: 42px; padding: 3px; background: var(--b
 .reclame .btn--ghost:hover { border-color: currentColor; background: rgba(127,127,127,.14); color: inherit; }
 .reclame__voet { margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--rc-lijn); display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: .8rem; color: var(--rc-tekst-zacht); }
 .reclame__adverteren { margin: 10px 0 0; font-size: .78rem; color: var(--ink-soft); text-align: right; }
+.reclame__kader .reclame__inhoud { display: flex; flex-direction: column; }
+.reclame__kader .reclame__acties { margin-top: auto; padding-top: 4px; }
 .reclame__adverteren a { color: var(--maroon); text-decoration: underline; }
 
 /* foto */
@@ -782,10 +811,36 @@ input[type=color] { width: 64px; height: 42px; padding: 3px; background: var(--b
 .reclame--groot .reclame__foto::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, var(--rc-schaduw), transparent 42%); }
 .reclame--licht.reclame--groot .reclame__foto::after { display: none; }
 
+/* diavoorstelling: meerdere blokken op dezelfde plek, gestapeld en om de beurt zichtbaar */
+.reclame-slider { position: relative; }
+.reclame-slides { display: grid; }
+.reclame-slides > .reclame-slide { grid-area: 1 / 1; margin: 0; opacity: 0; visibility: hidden; transition: opacity .6s ease, visibility 0s linear .6s; }
+.reclame-slides > .reclame-slide.actief { opacity: 1; visibility: visible; transition: opacity .6s ease; z-index: 1; }
+.reclame-slide .reclame__kader { height: 100%; }
+.reclame__onder { display: flex; align-items: center; justify-content: space-between; gap: 10px 18px; flex-wrap: wrap; margin-top: 10px; }
+.reclame__onder .reclame__adverteren { margin: 0 0 0 auto; }
+.reclame-slider__nav { display: inline-flex; align-items: center; gap: 8px; }
+.reclame-slider__pijl {
+  width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line-strong); background: var(--white); color: var(--ink);
+  font-size: 1.25rem; line-height: 1; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 0 0 3px;
+  transition: border-color .15s, color .15s, background .15s;
+}
+.reclame-slider__pijl:hover { border-color: var(--maroon); color: var(--maroon); background: rgba(110,34,48,.06); }
+.reclame-slider__stippen { display: inline-flex; gap: 7px; padding: 0 4px; }
+.reclame-slider__stip { width: 10px; height: 10px; border-radius: 50%; border: 1px solid var(--line-strong); background: transparent; padding: 0; cursor: pointer; transition: background .2s, transform .2s, border-color .2s; }
+.reclame-slider__stip:hover { border-color: var(--maroon); }
+.reclame-slider__stip.actief { background: var(--maroon); border-color: var(--maroon); transform: scale(1.25); }
+.reclame-slider--balk { margin-top: 36px; }
+.reclame-slider--balk .reclame__onder { justify-content: center; margin-top: 8px; }
+@media (prefers-reduced-motion: reduce) {
+  .reclame-slides > .reclame-slide, .reclame-slides > .reclame-slide.actief { transition: none; }
+}
+
 /* balk (onder lijsten en berichten) */
 .reclame--balk { margin-top: 36px; }
+.reclame-slide.reclame--balk { margin-top: 0; }
 .reclame--balk .reclame__kader { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 22px; align-items: center; padding: 20px 24px; }
-.reclame--balk .reclame__logo { width: 132px; height: 76px; }
+.reclame--balk .reclame__logo { min-width: 84px; max-width: 140px; height: 76px; }
 .reclame--balk .reclame__midden { min-width: 0; position: relative; z-index: 1; }
 .reclame--balk .reclame__naam { font-size: 1.2rem; margin-top: 4px; }
 .reclame--balk .reclame__slogan { font-size: .9rem; display: inline; }
@@ -799,7 +854,7 @@ input[type=color] { width: 64px; height: 42px; padding: 3px; background: var(--b
 .reclame--kaart .reclame__inhoud { padding: 18px 20px 20px; }
 .reclame--kaart .reclame__kicker { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
 .reclame--kaart .reclame__kicker .reclame__label { margin-left: auto; }
-.reclame--kaart .reclame__logo { width: 100%; height: 72px; margin: 12px 0 12px; }
+.reclame--kaart .reclame__logo { display: inline-flex; width: auto; min-width: 84px; max-width: 100%; height: 72px; margin: 12px 0 12px; }
 .reclame--kaart .reclame__naam { font-size: 1.15rem; }
 .reclame--kaart .reclame__tekst { font-size: .9rem; margin: 8px 0 10px; }
 .reclame--kaart .reclame__cta { margin-top: 14px; width: 100%; }
@@ -816,7 +871,8 @@ input[type=color] { width: 64px; height: 42px; padding: 3px; background: var(--b
 }
 @media (max-width: 520px) {
   .reclame--groot .reclame__inhoud { padding: 22px 18px 24px; }
-  .reclame__logo { width: 130px; height: 74px; }
+  .reclame__logo { max-width: 130px; height: 74px; }
+  .reclame__logo img { height: 54px; }
   .reclame__titel { font-size: 1.3rem; }
   .reclame__acties .btn { flex: 1 1 auto; }
 }

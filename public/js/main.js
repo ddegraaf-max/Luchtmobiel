@@ -71,8 +71,100 @@ function airAssault() {
   } catch (e) { /* opslag geblokkeerd: dan geen kreet, geen probleem */ }
 }
 
+// Reclameblokken: diavoorstelling. Meerdere blokken staan gestapeld op dezelfde plek; om de beurt is er
+// één zichtbaar. Bediening met stippen, pijltjes en vegen; pauzeert bij aanwijzen, focus en een verborgen
+// tabblad, en wisselt niet vanzelf bij een voorkeur voor minder beweging. Elke dia die in beeld komt telt
+// één keer als vertoning (de eerste telt de server al).
+function startReclameSliders() {
+  document.querySelectorAll('[data-reclame-slider]').forEach(function (slider) {
+    var slides = Array.prototype.slice.call(slider.querySelectorAll('.reclame-slide'));
+    if (slides.length < 2) return;
+    var stippen = Array.prototype.slice.call(slider.querySelectorAll('[data-slide-naar]'));
+    var interval = Math.max(4000, Number(slider.getAttribute('data-interval')) || 9000);
+    var stil = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var huidig = 0, timer = null, geteld = {}, startX = null;
+    slides.forEach(function (s, i) { if (s.classList.contains('actief')) huidig = i; });
+    geteld[huidig] = true;
+
+    function telVertoning(i) {
+      if (geteld[i]) return;
+      geteld[i] = true;
+      var id = slides[i].getAttribute('data-reclame-id');
+      if (!id || !window.fetch) return;
+      try {
+        fetch('/reclame/' + encodeURIComponent(id) + '/vertoning', { credentials: 'same-origin', cache: 'no-store', keepalive: true }).catch(function () {});
+      } catch (e) { /* tellen is niet essentieel */ }
+    }
+    function toon(i) {
+      huidig = (i + slides.length) % slides.length;
+      slides.forEach(function (s, j) {
+        var aan = j === huidig;
+        s.classList.toggle('actief', aan);
+        s.setAttribute('aria-hidden', aan ? 'false' : 'true');
+      });
+      stippen.forEach(function (d, j) {
+        d.classList.toggle('actief', j === huidig);
+        d.setAttribute('aria-selected', j === huidig ? 'true' : 'false');
+      });
+      telVertoning(huidig);
+    }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+    function start() {
+      stop();
+      if (stil || document.hidden) return;
+      timer = setInterval(function () { toon(huidig + 1); }, interval);
+    }
+
+    slider.addEventListener('click', function (e) {
+      var naar = e.target.closest('[data-slide-naar]');
+      if (naar) { toon(Number(naar.getAttribute('data-slide-naar'))); start(); return; }
+      if (e.target.closest('[data-slide-vorige]')) { toon(huidig - 1); start(); }
+      else if (e.target.closest('[data-slide-volgende]')) { toon(huidig + 1); start(); }
+    });
+    slider.addEventListener('mouseenter', stop);
+    slider.addEventListener('mouseleave', start);
+    slider.addEventListener('focusin', stop);
+    slider.addEventListener('focusout', start);
+    slider.addEventListener('touchstart', function (e) {
+      startX = e.touches && e.touches.length === 1 ? e.touches[0].clientX : null;
+    }, { passive: true });
+    slider.addEventListener('touchend', function (e) {
+      if (startX === null) return;
+      var eind = e.changedTouches && e.changedTouches[0] ? e.changedTouches[0].clientX : startX;
+      var dx = eind - startX;
+      startX = null;
+      if (Math.abs(dx) < 45) return;
+      toon(dx < 0 ? huidig + 1 : huidig - 1);
+      start();
+    }, { passive: true });
+    document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); else start(); });
+    start();
+  });
+}
+
+// Bezoekersteller: het getal in het vizier telt bij het laden op naar de echte stand.
+function telOp() {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('[data-teller]').forEach(function (el) {
+    var doel = Number(el.getAttribute('data-teller'));
+    if (!isFinite(doel) || doel <= 0) return;
+    var van = doel < 1000 ? 0 : Math.floor(doel * 0.9);
+    var duur = 1400, begin = null;
+    function stap(t) {
+      if (begin === null) begin = t;
+      var p = Math.min(1, (t - begin) / duur);
+      var e = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(van + (doel - van) * e).toLocaleString('nl-NL');
+      if (p < 1) requestAnimationFrame(stap);
+    }
+    requestAnimationFrame(stap);
+  });
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   airAssault();
+  startReclameSliders();
+  telOp();
   verfraaiBestandsvelden(document);
   document.querySelectorAll('img[data-fallback], img[data-fallback-verberg]').forEach(function (img) {
     if (img.complete && img.naturalWidth === 0) afbeeldingTerugval(img);

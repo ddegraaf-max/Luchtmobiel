@@ -79,26 +79,60 @@ test('lijsten en afbeeldingsbronnen', () => {
   assert.equal(reclame.contactAdres(), (process.env.RECLAME_CONTACT || 'info@bclmb.nl'));
 });
 
-test('startblok De Graaf Bouwbedrijf is compleet, geldig en heeft zijn afbeeldingen', () => {
-  const s = reclame.STARTBLOK;
-  assert.equal(s.naam, 'De Graaf Bouwbedrijf');
-  assert.equal(s.sleutel, 'degraaf-bouwbedrijf');
-  assert.ok(reclame.netteHex(s.accent));
-  assert.ok(reclame.netteHex(s.logo_achtergrond));
-  assert.ok(reclame.waUrl(s.whatsapp));
-  assert.ok(reclame.telHref(s.telefoon));
-  assert.match(s.website, /^https:\/\//);
-  assert.match(s.cta_url, /^https:\/\//);
-  assert.ok(reclame.THEMAS[s.thema]);
-  const diensten = reclame.lijst(s.diensten);
-  assert.ok(diensten.length >= 10 && diensten.length <= 14, 'alle diensten passen in het blok');
-  const kenmerken = reclame.lijst(s.kenmerken, 6);
-  assert.ok(kenmerken.length >= 4 && kenmerken.length <= 6);
-  for (const p of [s.logo_url, s.foto_url]) {
-    const bestand = path.join(__dirname, '..', 'public', p.replace(/^\/static\//, ''));
-    assert.ok(fs.existsSync(bestand), 'ontbreekt: ' + bestand);
+test('kiesVolgorde: gewogen volgorde zonder herhaling, begrensd, alleen lopende blokken', () => {
+  const dag = '2026-10-27';
+  const a = { id: 1, actief: true, gewicht: 1 };
+  const b = { id: 2, actief: true, gewicht: 5 };
+  const c = { id: 3, actief: true, gewicht: 2 };
+  const uit = { id: 4, actief: false, gewicht: 5 };
+  assert.deepEqual(reclame.kiesVolgorde([], 6, Math.random, dag), []);
+  const v = reclame.kiesVolgorde([a, b, c, uit], 6, Math.random, dag);
+  assert.equal(v.length, 3);
+  assert.equal(new Set(v.map((r) => r.id)).size, 3, 'geen herhaling');
+  assert.ok(!v.includes(uit));
+  assert.equal(reclame.kiesVolgorde([a, b, c], 2, Math.random, dag).length, 2);
+  assert.deepEqual(reclame.kiesVolgorde([a, b, c], 6, () => 0, dag).map((r) => r.id), [1, 2, 3]);
+  let eerstB = 0;
+  for (let i = 0; i < 2000; i++) if (reclame.kiesVolgorde([a, b], 6, Math.random, dag)[0].id === 2) eerstB++;
+  assert.ok(eerstB > 1400, 'gewicht 5 staat meestal vooraan (' + eerstB + ' van 2000)');
+  assert.ok(reclame.MAX_DIA >= 2);
+});
+
+test('startblokken (De Graaf Bouwbedrijf, Honor Residence Poland) zijn compleet, geldig en hebben hun afbeeldingen', () => {
+  assert.equal(reclame.STARTBLOKKEN.length, 2);
+  assert.equal(new Set(reclame.STARTBLOKKEN.map((s) => s.marker)).size, 2);
+  for (const s of reclame.STARTBLOKKEN) {
+    assert.ok(s.naam && s.sleutel && s.marker, s.naam);
+    assert.ok(Array.isArray(s.bedrijfPatronen) && s.bedrijfPatronen.length === 2);
+    assert.ok(reclame.netteHex(s.accent));
+    assert.ok(reclame.netteHex(s.logo_achtergrond));
+    assert.ok(reclame.telHref(s.telefoon), s.naam + ': telefoon');
+    assert.match(s.website, /^https:\/\//);
+    assert.match(s.cta_url, /^https:\/\//);
+    assert.ok(reclame.THEMAS[s.thema]);
+    const diensten = reclame.lijst(s.diensten);
+    assert.ok(diensten.length >= 8 && diensten.length <= 14, s.naam + ': alle labels passen in het blok');
+    const kenmerken = reclame.lijst(s.kenmerken, 6);
+    assert.ok(kenmerken.length >= 4 && kenmerken.length <= 6);
+    for (const p of [s.logo_url, s.foto_url]) {
+      const bestand = path.join(__dirname, '..', 'public', p.replace(/^\/static\//, ''));
+      assert.ok(fs.existsSync(bestand), 'ontbreekt: ' + bestand);
+    }
+    assert.ok(reclame.loopt({ ...s, id: 1 }));
   }
-  assert.ok(reclame.loopt({ ...s, id: 1 }));
+  const dg = reclame.STARTBLOK;
+  assert.equal(dg.naam, 'De Graaf Bouwbedrijf');
+  assert.equal(dg.sleutel, 'degraaf-bouwbedrijf');
+  assert.equal(dg.marker, 'reclame_startblok_degraaf');
+  assert.ok(reclame.waUrl(dg.whatsapp));
+  assert.match(dg.regio, /^Werkgebied: /);
+  assert.match(dg.foto_url, /degraaf-bouwbedrijf-deur\.jpg$/);
+  const hr = reclame.STARTBLOK_HONOR;
+  assert.equal(hr.naam, 'Honor Residence Poland');
+  assert.equal(hr.thema, 'baret');
+  assert.equal(hr.diensten_label, 'Wat je er vindt');
+  assert.equal(reclame.telHref(hr.telefoon), 'tel:+48452823838');
+  assert.equal(hr.whatsapp, null);
 });
 
 test('telVertoning negeert ongeldige nummers zonder fout', () => {

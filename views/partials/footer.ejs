@@ -2,17 +2,34 @@
   <div class="wrap">
     <div class="footer-grid">
       <div class="footer-brand">
-        <div class="naam">Business Club Luchtmobiel</div>
-        <p style="max-width:42ch; margin-top:10px;">Het besloten netwerk voor ondernemers, professionals en de brigade — met bijzondere aandacht voor veteranenzaken. Verbinden, ondernemen en ondersteunen.</p>
-        <p style="margin-top:12px; font-size:.85rem; line-height:1.7;">
-          Huijghenslaan 68, 6824 JJ Arnhem<br>
-          <a href="mailto:info@bclmb.nl">info@bclmb.nl</a><br>
-          <a href="https://www.bclmb.nl" target="_blank" rel="noopener">www.bclmb.nl</a><br>
-          KvK 96659084
-        </p>
-        <% if (social.linkedin || social.facebook || social.instagram) { %>
-          <h4 style="margin-top:18px;">Volg ons</h4>
-          <%- include('social') %>
+        <div class="footer-brand__tekst">
+          <div class="naam">Business Club Luchtmobiel</div>
+          <p style="max-width:42ch; margin-top:10px;">Het besloten netwerk voor ondernemers, professionals en de brigade — met bijzondere aandacht voor veteranenzaken. Verbinden, ondernemen en ondersteunen.</p>
+          <p style="margin-top:12px; font-size:.85rem; line-height:1.7;">
+            Huijghenslaan 68, 6824 JJ Arnhem<br>
+            <a href="mailto:info@bclmb.nl">info@bclmb.nl</a><br>
+            <a href="https://www.bclmb.nl" target="_blank" rel="noopener">www.bclmb.nl</a><br>
+            KvK 96659084
+          </p>
+          <% if (social.linkedin || social.facebook || social.instagram) { %>
+            <h4 style="margin-top:18px;">Volg ons</h4>
+            <%- include('social') %>
+          <% } %>
+        </div>
+        <% if (typeof bezoekers !== 'undefined' && bezoekers) { var bz = Number(bezoekers.totaal || 0); var bzTekst = bz.toLocaleString('nl-NL'); %>
+          <%# Bezoekersteller in een vizier: het totaal aantal bezoekers sinds de start van de teller. %>
+          <div class="vizier<%= bzTekst.length > 6 ? ' vizier--lang' : '' %>" title="Aantal bezoekers van het platform" role="img" aria-label="<%= bzTekst %> bezoekers">
+            <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+              <circle class="vizier__ring1" cx="60" cy="60" r="56"/>
+              <circle class="vizier__ring2" cx="60" cy="60" r="47"/>
+              <circle class="vizier__ring3" cx="60" cy="60" r="40"/>
+              <g class="vizier__arm"><line x1="60" y1="1" x2="60" y2="13"/><line x1="60" y1="107" x2="60" y2="119"/><line x1="1" y1="60" x2="13" y2="60"/><line x1="107" y1="60" x2="119" y2="60"/></g>
+              <g class="vizier__tik"><line x1="60" y1="13" x2="60" y2="20"/><line x1="60" y1="100" x2="60" y2="107"/><line x1="13" y1="60" x2="20" y2="60"/><line x1="100" y1="60" x2="107" y2="60"/></g>
+              <g class="vizier__stip"><circle cx="23.2" cy="23.2" r="1.6"/><circle cx="96.8" cy="23.2" r="1.6"/><circle cx="23.2" cy="96.8" r="1.6"/><circle cx="96.8" cy="96.8" r="1.6"/></g>
+            </svg>
+            <span class="vizier__getal" data-teller="<%= bz %>"><%= bzTekst %></span>
+            <span class="vizier__label">bezoekers</span>
+          </div>
         <% } %>
       </div>
       <div>

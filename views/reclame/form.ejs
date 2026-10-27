@@ -41,7 +41,7 @@
         </div>
         <div class="veld-rij">
           <div class="veld"><label for="plaats">Plaats</label><input type="text" id="plaats" name="plaats" value="<%= item.plaats || '' %>" maxlength="120"></div>
-          <div class="veld"><label for="regio">Werkgebied</label><input type="text" id="regio" name="regio" value="<%= item.regio || '' %>" maxlength="300" placeholder="bijv. Arnhem, Ede en de Veluwe"></div>
+          <div class="veld"><label for="regio">Regio of werkgebied</label><input type="text" id="regio" name="regio" value="<%= item.regio || '' %>" maxlength="300" placeholder="bijv. Werkgebied: Arnhem, Ede en de Veluwe"><span class="hint">Wordt letterlijk getoond onderaan het grote blok.</span></div>
         </div>
         <div class="veld-rij">
           <div class="veld"><label for="telefoon">Telefoon</label><input type="tel" id="telefoon" name="telefoon" value="<%= item.telefoon || '' %>" maxlength="40" placeholder="06 12 34 56 78"></div>
@@ -68,6 +68,11 @@
           <label for="diensten">Diensten</label>
           <textarea id="diensten" name="diensten" maxlength="1000" style="min-height:80px;" placeholder="Kozijnen, Dakkapellen, Uitbouwen, Renovaties, …"><%= item.diensten || '' %></textarea>
           <span class="hint">Gescheiden door komma's; elke dienst wordt een label (maximaal 14). In de balk en de kaart staan de eerste vijf of zes.</span>
+        </div>
+        <div class="veld">
+          <label for="diensten_label">Kopje boven de labels</label>
+          <input type="text" id="diensten_label" name="diensten_label" value="<%= item.diensten_label || '' %>" maxlength="40" placeholder="Diensten">
+          <span class="hint">Bijvoorbeeld "Voorzieningen", "Specialismen" of "Wat je er vindt". Leeg = Diensten.</span>
         </div>
         <div class="veld">
           <label for="kenmerken">Kenmerken en zekerheden</label>

@@ -1,114 +1,160 @@
 <%
-  // Reclameblok. Gebruik: include('partials/reclame', { variant: 'groot' | 'balk' | 'kaart' }).
-  // Zonder 'item' kiest de site zelf een lopend blok (één per pagina, gewogen toeval); met 'item'
-  // wordt precies dat blok getoond (voorbeeld in Beheer). tel: false telt geen vertoning;
+  // Reclameblok(ken). Gebruik: include('partials/reclame', { variant: 'groot' | 'balk' | 'kaart' }).
+  // Zonder 'item' kiest de site zelf de lopende blokken: bij 'groot' en 'balk' als diavoorstelling
+  // (om de beurt zichtbaar, bediening met stippen en pijltjes), bij 'kaart' alleen het eerste blok.
+  // Met 'item' wordt precies dat blok getoond (voorbeeld in Beheer). tel: false telt geen vertoning;
   // kaal: true laat bij 'groot' de sectie-omlijsting weg.
   var rcVariant = (typeof variant !== 'undefined' && variant) || 'balk';
   var rcLib = typeof reclameLib !== 'undefined' ? reclameLib : null;
-  var rc = (typeof item !== 'undefined' && item) ? item : (typeof kiesReclame === 'function' ? kiesReclame() : null);
   var rcKaal = typeof kaal !== 'undefined' && !!kaal;
+  var rcTellen = typeof tel === 'undefined' || tel;
+  var rcLijst = [];
+  if (typeof item !== 'undefined' && item) rcLijst = [item];
+  else if (rcVariant === 'kaart') { var rcEen = typeof kiesReclame === 'function' ? kiesReclame() : null; if (rcEen) rcLijst = [rcEen]; }
+  else if (typeof kiesReclames === 'function') rcLijst = kiesReclames() || [];
+  else if (typeof kiesReclame === 'function' && kiesReclame()) rcLijst = [kiesReclame()];
+
+  function rcGegevens(rc) {
+    var accent = rcLib.netteHex(rc.accent) || '#a98443';
+    var thema = ['donker', 'baret', 'licht'].indexOf(rc.thema) >= 0 ? rc.thema : 'donker';
+    return {
+      logo: rcLib.logoSrc(rc),
+      foto: rcLib.fotoSrc(rc),
+      diensten: rcLib.lijst(rc.diensten, 14),
+      dienstenLabel: rc.diensten_label || 'Diensten',
+      kenmerken: rcLib.lijst(rc.kenmerken, 6),
+      klik: '/reclame/' + rc.id + '/klik',
+      link: !!(rc.cta_url || rc.website),
+      cta: rc.cta_tekst || 'Bekijk website',
+      wa: rcLib.waUrl(rc.whatsapp),
+      tel: rcLib.telHref(rc.telefoon),
+      stijl: '--rc-accent:' + accent + '; --rc-accent-tekst:' + rcLib.tekstKleur(accent) + '; --rc-logo-bg:' + (rcLib.netteHex(rc.logo_achtergrond) || '#ffffff') + ';',
+      klasse: 'reclame reclame--' + rcVariant + ' reclame--' + thema
+    };
+  }
 %>
-<% if (rc && rcLib) {
-  if (typeof tel === 'undefined' || tel) rcLib.telVertoning(rc.id);
-  var rcLogo = rcLib.logoSrc(rc);
-  var rcFoto = rcLib.fotoSrc(rc);
-  var rcDiensten = rcLib.lijst(rc.diensten, 14);
-  var rcKenmerken = rcLib.lijst(rc.kenmerken, 6);
-  var rcAccent = rcLib.netteHex(rc.accent) || '#a98443';
-  var rcLogoBg = rcLib.netteHex(rc.logo_achtergrond) || '#ffffff';
-  var rcKlik = '/reclame/' + rc.id + '/klik';
-  var rcLink = !!(rc.cta_url || rc.website);
-  var rcCta = rc.cta_tekst || 'Bekijk website';
-  var rcWa = rcLib.waUrl(rc.whatsapp);
-  var rcTel = rcLib.telHref(rc.telefoon);
-  var rcThema = ['donker', 'baret', 'licht'].indexOf(rc.thema) >= 0 ? rc.thema : 'donker';
-  var rcStijl = '--rc-accent:' + rcAccent + '; --rc-accent-tekst:' + rcLib.tekstKleur(rcAccent) + '; --rc-logo-bg:' + rcLogoBg + ';';
-  var rcKlasse = 'reclame reclame--' + rcVariant + ' reclame--' + rcThema;
+<% if (rcLijst.length && rcLib) {
+  if (rcTellen) rcLib.telVertoning(rcLijst[0].id);
+  var rcMeerdere = rcLijst.length > 1;
   var rcMail = 'mailto:' + rcLib.contactAdres() + '?subject=' + encodeURIComponent('Adverteren op het ledenplatform van de Business Club Luchtmobiel');
 %>
 <% if (rcVariant === 'groot') { %>
 <% if (!rcKaal) { %><section class="section section--tight reclame-sectie"><div class="wrap"><% } %>
-<article class="<%= rcKlasse %>" style="<%= rcStijl %>" aria-label="Advertentie: <%= rc.naam %>">
-  <div class="reclame__kader">
-    <div class="reclame__inhoud">
-      <div class="reclame__kop">
-        <% if (rcLogo) { %>
-          <% if (rcLink) { %><a class="reclame__logo" href="<%= rcKlik %>" target="_blank" rel="noopener sponsored"><img src="<%= rcLogo %>" alt="Logo <%= rc.naam %>" loading="lazy"></a><% } else { %><div class="reclame__logo"><img src="<%= rcLogo %>" alt="Logo <%= rc.naam %>" loading="lazy"></div><% } %>
+<div class="reclame-slider reclame-slider--groot" data-reclame-slider data-interval="9000" aria-roledescription="diavoorstelling" aria-label="Partners van het netwerk">
+  <div class="reclame-slides">
+  <% rcLijst.forEach(function(rc, i){ var g = rcGegevens(rc); %>
+    <article class="<%= g.klasse %> reclame-slide<%= i === 0 ? ' actief' : '' %>" style="<%= g.stijl %>" data-reclame-id="<%= rc.id %>" aria-label="Advertentie: <%= rc.naam %>" aria-hidden="<%= i === 0 ? 'false' : 'true' %>">
+      <div class="reclame__kader">
+        <div class="reclame__inhoud">
+          <div class="reclame__kop">
+            <% if (g.logo) { %>
+              <% if (g.link) { %><a class="reclame__logo" href="<%= g.klik %>" target="_blank" rel="noopener sponsored"><img src="<%= g.logo %>" alt="Logo <%= rc.naam %>" loading="lazy"></a><% } else { %><div class="reclame__logo"><img src="<%= g.logo %>" alt="Logo <%= rc.naam %>" loading="lazy"></div><% } %>
+            <% } %>
+            <div class="reclame__titels">
+              <span class="reclame__kicker">Partner van het netwerk</span>
+              <h2 class="reclame__naam"><%= rc.naam %></h2>
+              <% if (rc.slogan) { %><div class="reclame__slogan"><%= rc.slogan %></div><% } %>
+            </div>
+            <span class="reclame__label" title="Betaalde vermelding van een bedrijf uit het netwerk">Advertentie</span>
+          </div>
+          <% if (rc.kop) { %><p class="reclame__titel"><%= rc.kop %></p><% } %>
+          <% if (rc.tekst) { %><p class="reclame__tekst"><%= rc.tekst %></p><% } %>
+          <% if (g.diensten.length) { %>
+            <div class="reclame__kopje"><%= g.dienstenLabel %></div>
+            <ul class="reclame__diensten"><% g.diensten.forEach(function(d){ %><li><%= d %></li><% }) %></ul>
+          <% } %>
+          <% if (g.kenmerken.length) { %>
+            <ul class="reclame__kenmerken"><% g.kenmerken.forEach(function(k){ %><li><%= k %></li><% }) %></ul>
+          <% } %>
+          <div class="reclame__acties">
+            <% if (g.link) { %><a class="btn reclame__cta" href="<%= g.klik %>" target="_blank" rel="noopener sponsored"><%= g.cta %> ↗</a><% } %>
+            <% if (g.tel) { %><a class="btn btn--ghost" href="<%= g.tel %>">Bel <%= rc.telefoon %></a><% } %>
+            <% if (g.wa) { %><a class="btn btn--ghost" href="<%= g.wa %>" target="_blank" rel="noopener">WhatsApp</a><% } %>
+            <% if (rc.email) { %><a class="btn btn--ghost" href="mailto:<%= rc.email %>">E-mail</a><% } %>
+          </div>
+          <% if (rc.website || rc.plaats || rc.regio) { %>
+            <div class="reclame__voet">
+              <% if (rc.website) { %><span><%= h.toonUrl(rc.website) %></span><% } %>
+              <% if (rc.plaats) { %><span><%= rc.plaats %></span><% } %>
+              <% if (rc.regio) { %><span><%= rc.regio %></span><% } %>
+            </div>
+          <% } %>
+        </div>
+        <% if (g.foto) { %>
+          <% if (g.link) { %><a class="reclame__foto" href="<%= g.klik %>" target="_blank" rel="noopener sponsored" tabindex="-1" aria-hidden="true"><img src="<%= g.foto %>" alt="" loading="lazy"></a><% } else { %><div class="reclame__foto"><img src="<%= g.foto %>" alt="" loading="lazy"></div><% } %>
         <% } %>
-        <div class="reclame__titels">
-          <span class="reclame__kicker">Partner van het netwerk</span>
-          <h2 class="reclame__naam"><%= rc.naam %></h2>
-          <% if (rc.slogan) { %><div class="reclame__slogan"><%= rc.slogan %></div><% } %>
-        </div>
-        <span class="reclame__label" title="Betaalde vermelding van een bedrijf uit het netwerk">Advertentie</span>
       </div>
-      <% if (rc.kop) { %><p class="reclame__titel"><%= rc.kop %></p><% } %>
-      <% if (rc.tekst) { %><p class="reclame__tekst"><%= rc.tekst %></p><% } %>
-      <% if (rcDiensten.length) { %>
-        <div class="reclame__kopje">Diensten</div>
-        <ul class="reclame__diensten"><% rcDiensten.forEach(function(d){ %><li><%= d %></li><% }) %></ul>
-      <% } %>
-      <% if (rcKenmerken.length) { %>
-        <ul class="reclame__kenmerken"><% rcKenmerken.forEach(function(k){ %><li><%= k %></li><% }) %></ul>
-      <% } %>
-      <div class="reclame__acties">
-        <% if (rcLink) { %><a class="btn reclame__cta" href="<%= rcKlik %>" target="_blank" rel="noopener sponsored"><%= rcCta %> ↗</a><% } %>
-        <% if (rcTel) { %><a class="btn btn--ghost" href="<%= rcTel %>">Bel <%= rc.telefoon %></a><% } %>
-        <% if (rcWa) { %><a class="btn btn--ghost" href="<%= rcWa %>" target="_blank" rel="noopener">WhatsApp</a><% } %>
-        <% if (rc.email) { %><a class="btn btn--ghost" href="mailto:<%= rc.email %>">E-mail</a><% } %>
-      </div>
-      <% if (rc.website || rc.plaats || rc.regio) { %>
-        <div class="reclame__voet">
-          <% if (rc.website) { %><span><%= h.toonUrl(rc.website) %></span><% } %>
-          <% if (rc.plaats) { %><span><%= rc.plaats %></span><% } %>
-          <% if (rc.regio) { %><span>Werkgebied: <%= rc.regio %></span><% } %>
-        </div>
-      <% } %>
-    </div>
-    <% if (rcFoto) { %>
-      <% if (rcLink) { %><a class="reclame__foto" href="<%= rcKlik %>" target="_blank" rel="noopener sponsored" tabindex="-1" aria-hidden="true"><img src="<%= rcFoto %>" alt="" loading="lazy"></a><% } else { %><div class="reclame__foto"><img src="<%= rcFoto %>" alt="" loading="lazy"></div><% } %>
-    <% } %>
+    </article>
+  <% }) %>
   </div>
-  <p class="reclame__adverteren">Ook jouw bedrijf onder de aandacht van het netwerk? <a href="<%= rcMail %>">Mail het bestuur</a>.</p>
-</article>
+  <div class="reclame__onder">
+    <% if (rcMeerdere) { %>
+      <div class="reclame-slider__nav">
+        <button type="button" class="reclame-slider__pijl" data-slide-vorige aria-label="Vorige advertentie">&#8249;</button>
+        <div class="reclame-slider__stippen">
+          <% rcLijst.forEach(function(rc, i){ %><button type="button" class="reclame-slider__stip<%= i === 0 ? ' actief' : '' %>" data-slide-naar="<%= i %>" aria-label="Advertentie <%= i + 1 %> van <%= rcLijst.length %>: <%= rc.naam %>" aria-selected="<%= i === 0 ? 'true' : 'false' %>"></button><% }) %>
+        </div>
+        <button type="button" class="reclame-slider__pijl" data-slide-volgende aria-label="Volgende advertentie">&#8250;</button>
+      </div>
+    <% } %>
+    <p class="reclame__adverteren">Ook jouw bedrijf onder de aandacht van het netwerk? <a href="<%= rcMail %>">Mail het bestuur</a>.</p>
+  </div>
+</div>
 <% if (!rcKaal) { %></div></section><% } %>
 
-<% } else if (rcVariant === 'kaart') { %>
-<aside class="<%= rcKlasse %>" style="<%= rcStijl %>" aria-label="Advertentie: <%= rc.naam %>">
+<% } else if (rcVariant === 'kaart') { var rc = rcLijst[0], g = rcGegevens(rc); %>
+<aside class="<%= g.klasse %>" style="<%= g.stijl %>" aria-label="Advertentie: <%= rc.naam %>">
   <div class="reclame__kader">
-    <% if (rcFoto) { %>
-      <% if (rcLink) { %><a class="reclame__foto" href="<%= rcKlik %>" target="_blank" rel="noopener sponsored" tabindex="-1" aria-hidden="true"><img src="<%= rcFoto %>" alt="" loading="lazy"></a><% } else { %><div class="reclame__foto"><img src="<%= rcFoto %>" alt="" loading="lazy"></div><% } %>
+    <% if (g.foto) { %>
+      <% if (g.link) { %><a class="reclame__foto" href="<%= g.klik %>" target="_blank" rel="noopener sponsored" tabindex="-1" aria-hidden="true"><img src="<%= g.foto %>" alt="" loading="lazy"></a><% } else { %><div class="reclame__foto"><img src="<%= g.foto %>" alt="" loading="lazy"></div><% } %>
     <% } %>
     <div class="reclame__inhoud">
       <div class="reclame__kicker">Partner van het netwerk <span class="reclame__label">Advertentie</span></div>
-      <% if (rcLogo) { %><div class="reclame__logo"><img src="<%= rcLogo %>" alt="Logo <%= rc.naam %>" loading="lazy"></div><% } %>
+      <% if (g.logo) { %><div class="reclame__logo"><img src="<%= g.logo %>" alt="Logo <%= rc.naam %>" loading="lazy"></div><% } %>
       <div class="reclame__naam"><%= rc.naam %></div>
       <% if (rc.slogan) { %><div class="reclame__slogan"><%= rc.slogan %></div><% } %>
       <% if (rc.kop || rc.tekst) { %><p class="reclame__tekst"><%= rc.kop || h.kort(rc.tekst, 120) %></p><% } %>
-      <% if (rcDiensten.length) { %><div class="reclame__inline"><%= rcDiensten.slice(0, 5).join(' · ') %></div><% } %>
-      <% if (rcLink) { %><a class="btn reclame__cta btn--block" href="<%= rcKlik %>" target="_blank" rel="noopener sponsored"><%= rcCta %> ↗</a><% } %>
-      <% if (rcTel) { %><a class="reclame__tel" href="<%= rcTel %>">Bel <%= rc.telefoon %></a><% } else if (rcWa) { %><a class="reclame__tel" href="<%= rcWa %>" target="_blank" rel="noopener">Stuur een WhatsApp</a><% } %>
+      <% if (g.diensten.length) { %><div class="reclame__inline"><%= g.diensten.slice(0, 5).join(' · ') %></div><% } %>
+      <% if (g.link) { %><a class="btn reclame__cta btn--block" href="<%= g.klik %>" target="_blank" rel="noopener sponsored"><%= g.cta %> ↗</a><% } %>
+      <% if (g.tel) { %><a class="reclame__tel" href="<%= g.tel %>">Bel <%= rc.telefoon %></a><% } else if (g.wa) { %><a class="reclame__tel" href="<%= g.wa %>" target="_blank" rel="noopener">Stuur een WhatsApp</a><% } %>
     </div>
   </div>
 </aside>
 
 <% } else { %>
-<aside class="<%= rcKlasse %>" style="<%= rcStijl %>" aria-label="Advertentie: <%= rc.naam %>">
-  <div class="reclame__kader">
-    <% if (rcLogo) { %>
-      <% if (rcLink) { %><a class="reclame__logo" href="<%= rcKlik %>" target="_blank" rel="noopener sponsored"><img src="<%= rcLogo %>" alt="Logo <%= rc.naam %>" loading="lazy"></a><% } else { %><div class="reclame__logo"><img src="<%= rcLogo %>" alt="Logo <%= rc.naam %>" loading="lazy"></div><% } %>
-    <% } %>
-    <div class="reclame__midden">
-      <div class="reclame__kicker">Partner van het netwerk <span class="reclame__label">Advertentie</span></div>
-      <div class="reclame__naam"><%= rc.naam %><% if (rc.slogan) { %> <span class="reclame__slogan">· <%= rc.slogan %></span><% } %></div>
-      <% if (rc.kop || rc.tekst) { %><p class="reclame__tekst"><%= rc.kop || h.kort(rc.tekst, 150) %></p><% } %>
-      <% if (rcDiensten.length) { %><div class="reclame__inline"><%= rcDiensten.slice(0, 6).join(' · ') %><%= rcDiensten.length > 6 ? ' · en meer' : '' %></div><% } %>
-    </div>
-    <div class="reclame__acties">
-      <% if (rcLink) { %><a class="btn reclame__cta" href="<%= rcKlik %>" target="_blank" rel="noopener sponsored"><%= rcCta %> ↗</a><% } %>
-      <% if (rcTel) { %><a class="btn btn--ghost" href="<%= rcTel %>">Bel <%= rc.telefoon %></a><% } else if (rcWa) { %><a class="btn btn--ghost" href="<%= rcWa %>" target="_blank" rel="noopener">WhatsApp</a><% } %>
-    </div>
+<div class="reclame-slider reclame-slider--balk" data-reclame-slider data-interval="8000" aria-roledescription="diavoorstelling" aria-label="Partners van het netwerk">
+  <div class="reclame-slides">
+  <% rcLijst.forEach(function(rc, i){ var g = rcGegevens(rc); %>
+    <aside class="<%= g.klasse %> reclame-slide<%= i === 0 ? ' actief' : '' %>" style="<%= g.stijl %>" data-reclame-id="<%= rc.id %>" aria-label="Advertentie: <%= rc.naam %>" aria-hidden="<%= i === 0 ? 'false' : 'true' %>">
+      <div class="reclame__kader">
+        <% if (g.logo) { %>
+          <% if (g.link) { %><a class="reclame__logo" href="<%= g.klik %>" target="_blank" rel="noopener sponsored"><img src="<%= g.logo %>" alt="Logo <%= rc.naam %>" loading="lazy"></a><% } else { %><div class="reclame__logo"><img src="<%= g.logo %>" alt="Logo <%= rc.naam %>" loading="lazy"></div><% } %>
+        <% } %>
+        <div class="reclame__midden">
+          <div class="reclame__kicker">Partner van het netwerk <span class="reclame__label">Advertentie</span></div>
+          <div class="reclame__naam"><%= rc.naam %><% if (rc.slogan) { %> <span class="reclame__slogan">· <%= rc.slogan %></span><% } %></div>
+          <% if (rc.kop || rc.tekst) { %><p class="reclame__tekst"><%= rc.kop || h.kort(rc.tekst, 150) %></p><% } %>
+          <% if (g.diensten.length) { %><div class="reclame__inline"><%= g.diensten.slice(0, 6).join(' · ') %><%= g.diensten.length > 6 ? ' · en meer' : '' %></div><% } %>
+        </div>
+        <div class="reclame__acties">
+          <% if (g.link) { %><a class="btn reclame__cta" href="<%= g.klik %>" target="_blank" rel="noopener sponsored"><%= g.cta %> ↗</a><% } %>
+          <% if (g.tel) { %><a class="btn btn--ghost" href="<%= g.tel %>">Bel <%= rc.telefoon %></a><% } else if (g.wa) { %><a class="btn btn--ghost" href="<%= g.wa %>" target="_blank" rel="noopener">WhatsApp</a><% } %>
+        </div>
+      </div>
+    </aside>
+  <% }) %>
   </div>
-</aside>
+  <% if (rcMeerdere) { %>
+    <div class="reclame__onder">
+      <div class="reclame-slider__nav">
+        <button type="button" class="reclame-slider__pijl" data-slide-vorige aria-label="Vorige advertentie">&#8249;</button>
+        <div class="reclame-slider__stippen">
+          <% rcLijst.forEach(function(rc, i){ %><button type="button" class="reclame-slider__stip<%= i === 0 ? ' actief' : '' %>" data-slide-naar="<%= i %>" aria-label="Advertentie <%= i + 1 %> van <%= rcLijst.length %>: <%= rc.naam %>" aria-selected="<%= i === 0 ? 'true' : 'false' %>"></button><% }) %>
+        </div>
+        <button type="button" class="reclame-slider__pijl" data-slide-volgende aria-label="Volgende advertentie">&#8250;</button>
+      </div>
+    </div>
+  <% } %>
+</div>
 <% } %>
 <% } %>

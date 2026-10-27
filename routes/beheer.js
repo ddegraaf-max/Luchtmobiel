@@ -9,6 +9,7 @@ const versie = require('../lib/versie');
 const agendaImportLib = require('../lib/agenda-import');
 const sponsorImportLib = require('../lib/sponsor-import');
 const nieuwsImportLib = require('../lib/nieuws-import');
+const bezoekersLib = require('../lib/bezoekers');
 
 router.use(requireLogin, requireAdmin);
 idParams(router);
@@ -40,7 +41,8 @@ router.get('/', async (req, res) => {
       )).rows[0];
       reclames = { totaal: r.totaal, actief: r.actief, vertoningen: Number(r.vertoningen), kliks: Number(r.kliks) };
     } catch (e) { /* tabel bestaat pas na de eerste start met deze versie */ }
-    res.render('beheer/index', { title: 'Beheer', leden, stats, agendaImport, sponsor, nieuwsImport, reclames, mail: mailInstellingen() });
+    const bezoekers = await bezoekersLib.overzicht().catch((e) => { console.error('[beheer bezoekers]', e.message); return null; });
+    res.render('beheer/index', { title: 'Beheer', leden, stats, agendaImport, sponsor, nieuwsImport, reclames, bezoekers, mail: mailInstellingen() });
   } catch (err) {
     console.error('[beheer]', err.message);
     res.status(500).render('error', { title: 'Fout', bericht: 'Het beheerpaneel kon niet worden geladen.' });

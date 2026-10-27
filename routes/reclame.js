@@ -51,6 +51,7 @@ function leesFormulier(body) {
     tekst: tekst(body.tekst, 1200),
     diensten: tekst(body.diensten, 1000),
     kenmerken: tekst(body.kenmerken, 600),
+    diensten_label: tekst(body.diensten_label, 40),
     website: website ? netteUrl(website) || null : null,
     cta_url: ctaUrl ? netteUrl(ctaUrl) || null : null,
     cta_tekst: tekst(body.cta_tekst, 40),
@@ -167,11 +168,11 @@ beheer.post('/nieuw', uploads, async (req, res) => {
     const fotoId = await bewaarAfbeelding(bestand(req, 'foto'), uid);
     const { rows } = await pool.query(
       `INSERT INTO reclames (bedrijf_id, user_id, naam, slogan, kop, tekst, diensten, kenmerken, website, cta_url, cta_tekst,
-         telefoon, whatsapp, email, plaats, regio, logo_id, foto_id, thema, accent, logo_achtergrond, van, tot, gewicht, actief, notities, auteur_id)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27) RETURNING id`,
+         telefoon, whatsapp, email, plaats, regio, logo_id, foto_id, thema, accent, logo_achtergrond, van, tot, gewicht, actief, notities, auteur_id, diensten_label)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28) RETURNING id`,
       [bedrijf ? bedrijf.id : null, bedrijf ? bedrijf.user_id : null, d.naam, d.slogan, d.kop, d.tekst, d.diensten, d.kenmerken,
         d.website, d.cta_url, d.cta_tekst, d.telefoon, d.whatsapp, d.email, d.plaats, d.regio, logoId, fotoId, d.thema, d.accent,
-        d.logo_achtergrond, d.van, d.tot, d.gewicht, d.actief, d.notities, uid]
+        d.logo_achtergrond, d.van, d.tot, d.gewicht, d.actief, d.notities, uid, d.diensten_label]
     );
     reclame.ververs();
     req.session.flash = { type: 'succes', message: 'Reclameblok opgeslagen. Hieronder zie je hoe het op de site verschijnt.' };
@@ -233,11 +234,11 @@ beheer.post('/:id/bewerken', uploads, async (req, res) => {
       `UPDATE reclames SET bedrijf_id=$1, user_id=$2, naam=$3, slogan=$4, kop=$5, tekst=$6, diensten=$7, kenmerken=$8, website=$9,
          cta_url=$10, cta_tekst=$11, telefoon=$12, whatsapp=$13, email=$14, plaats=$15, regio=$16, logo_id=$17, logo_url=$18,
          foto_id=$19, foto_url=$20, thema=$21, accent=$22, logo_achtergrond=$23, van=$24, tot=$25, gewicht=$26, actief=$27,
-         notities=$28, bijgewerkt=now()
-       WHERE id=$29`,
+         notities=$28, diensten_label=$29, bijgewerkt=now()
+       WHERE id=$30`,
       [bedrijf ? bedrijf.id : null, bedrijf ? bedrijf.user_id : bestaand.user_id, d.naam, d.slogan, d.kop, d.tekst, d.diensten, d.kenmerken,
         d.website, d.cta_url, d.cta_tekst, d.telefoon, d.whatsapp, d.email, d.plaats, d.regio, logoId, logoUrl, fotoId, fotoUrl,
-        d.thema, d.accent, d.logo_achtergrond, d.van, d.tot, d.gewicht, d.actief, d.notities, bestaand.id]
+        d.thema, d.accent, d.logo_achtergrond, d.van, d.tot, d.gewicht, d.actief, d.notities, d.diensten_label, bestaand.id]
     );
     for (const id of opruimen) await verwijderMedia(id);
     reclame.ververs();
@@ -286,8 +287,15 @@ beheer.post('/:id/verwijderen', async (req, res) => {
 
 router.use('/beheer', beheer);
 
-// ---- Publiek: klik tellen en doorsturen naar de adverteerder ----------------------
+// ---- Publiek: vertoning van een volgende dia tellen (de eerste dia telt de server zelf) -------
 idParams(router);
+router.get('/:id/vertoning', (req, res) => {
+  reclame.telVertoning(Number(req.params.id));
+  res.set('Cache-Control', 'no-store');
+  res.status(204).end();
+});
+
+// ---- Publiek: klik tellen en doorsturen naar de adverteerder ----------------------
 router.get('/:id/klik', async (req, res) => {
   try {
     const doel = await reclame.registreerKlik(req.params.id);

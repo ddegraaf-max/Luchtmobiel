@@ -16,6 +16,7 @@ const helpers = require('./lib/helpers');
 const turnstile = require('./lib/turnstile');
 const versie = require('./lib/versie');
 const reclame = require('./lib/reclame');
+const bezoekers = require('./lib/bezoekers');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -46,6 +47,20 @@ const SOCIAL = {
   instagram: helpers.netteUrl(process.env.SOCIAL_INSTAGRAM || '')
 };
 
+// Omschrijving per openbare overzichtspagina (meta description en deelvoorvertoning).
+const BESCHRIJVINGEN = {
+  '/': 'Het ledenplatform van de Business Club Luchtmobiel: ondernemers, professionals en 11 Luchtmobiele Brigade — ledengids, vacatures, projecten, agenda, nieuws en veteranenzaken.',
+  '/over': 'Hoe het netwerk van de Business Club Luchtmobiel werkt: lid worden, je bedrijf presenteren, vacatures en projecten delen en bijdragen aan veteranenzaken.',
+  '/eenheden': '11 Luchtmobiele Brigade: de bataljons Garde Grenadiers en Jagers, Van Heutsz en Stoottroepen Prins Bernhard, de ondersteunende eenheden en hun geschiedenis.',
+  '/agenda': 'Agenda van de Business Club Luchtmobiel: netwerkbijeenkomsten, ceremonies, excursies en sponsoracties voor leden en de brigade.',
+  '/nieuws': 'Nieuws van het bestuur van de Business Club Luchtmobiel en berichten van 11 Luchtmobiele Brigade, overgenomen van bclmb.nl, LinkedIn en Facebook.',
+  '/partners': 'Partners en initiatieven van de Business Club Luchtmobiel: stichtingen, veteraneninitiatieven, sponsors en bedrijfspartners.',
+  '/sponsorverzoeken': 'Sponsorverzoeken voor militairen en veteranen in Nederland: acties, stichtingen en initiatieven die sponsors, donateurs of steun zoeken.',
+  '/veteranen': 'Veteranenzaken: hulpbronnen, contacten en passend werk voor veteranen, verzorgd door 11 Luchtmobiele Brigade en het bestuur van de Business Club.',
+  '/vacatures': 'Vacatures binnen het netwerk van de Business Club Luchtmobiel, waaronder functies die goed passen bij veteranen.',
+  '/projecten': 'Ondersteuningsprojecten van leden van de Business Club Luchtmobiel: initiatieven die financiële steun, vrijwilligers of expertise zoeken.'
+};
+
 // Views
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -55,6 +70,19 @@ app.set('layout', 'partials/layout');
 // In productie alleen via https (Railway zet X-Forwarded-Proto; zonder die header doen we niets,
 // zodat er nooit een redirect-lus kan ontstaan).
 if (isProd) app.use(httpsVerplicht);
+
+// Eén adres voor zoekmachines: www.<domein> en <domein> zijn hetzelfde platform. De variant die
+// niet in APP_URL staat wordt (alleen bij GET/HEAD en alleen www <-> zonder www) definitief doorverwezen,
+// zodat Google geen "dubbele pagina's" meer ziet. Andere hostnamen (bijv. de Railway-testdomein) blijven werken.
+const appOrigin = (() => { try { return new URL((process.env.APP_URL || '').trim()); } catch (e) { return null; } })();
+app.use((req, res, next) => {
+  if (!appOrigin || (req.method !== 'GET' && req.method !== 'HEAD')) return next();
+  const host = String(req.get('host') || '').toLowerCase();
+  const doel = appOrigin.host.toLowerCase();
+  if (!host || host === doel) return next();
+  if (host === 'www.' + doel || doel === 'www.' + host) return res.redirect(301, appOrigin.origin + req.originalUrl);
+  next();
+});
 
 // Beveiligingsheaders (CSP, HSTS, nosniff, ...)
 app.use(headers);
@@ -79,6 +107,9 @@ app.use((req, res, next) => {
   res.locals.basisUrl = basis;
   res.locals.paginaUrl = basis + req.originalUrl.split('?')[0];
   res.locals.meta = null;
+  // Zoekmachines: besloten en formulierpagina's niet indexeren; overzichtspagina's een eigen omschrijving.
+  res.locals.noindex = /^\/(inloggen|registreren|uitloggen|wachtwoord-vergeten|wachtwoord-herstellen|dashboard|profiel|beheer|leden|galerij\/beheer|sponsorverzoeken\/controle|reclame)(\/|$)/.test(req.path);
+  res.locals.standaardBeschrijving = BESCHRIJVINGEN[req.path] || null;
   res.locals.versie = versie;
   next();
 });
@@ -130,6 +161,9 @@ app.use((req, res, next) => {
 
 // Reclameblokken: per pagina één lopend blok klaarzetten (zie lib/reclame.js)
 app.use(reclame.middleware);
+
+// Bezoekersteller: unieke bezoekers tellen en het totaal voor het vizier in de voettekst klaarzetten
+app.use(bezoekers.middleware);
 
 // Routes
 app.use('/', require('./routes/sitemap'));

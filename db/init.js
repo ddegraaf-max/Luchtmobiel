@@ -364,36 +364,49 @@ async function init() {
     );
   `);
   await pool.query(`CREATE INDEX IF NOT EXISTS reclames_actief_idx ON reclames(actief);`);
+  await pool.query(`ALTER TABLE reclames ADD COLUMN IF NOT EXISTS diensten_label TEXT;`);
+
+  // Bezoekersteller: unieke bezoekers per dag (zie lib/bezoekers.js)
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS bezoeken (
+      dag     TEXT PRIMARY KEY,
+      aantal  INTEGER NOT NULL DEFAULT 0
+    );
+  `);
 
   await seedAdmin();
 
-  // Eerste reclameblok (De Graaf Bouwbedrijf): één keer plaatsen. Daarna bepaalt de beheerder
-  // wat ermee gebeurt; verwijderen is definitief (het komt niet terug bij een herstart).
+  // Startblokken (De Graaf Bouwbedrijf, Honor Residence Poland): elk één keer plaatsen (markering in
+  // instellingen). Daarna bepaalt de beheerder wat ermee gebeurt; verwijderen is definitief.
   try {
-    const gedaan = (await pool.query("SELECT 1 FROM instellingen WHERE sleutel = 'reclame_startblok_degraaf'")).rowCount;
-    if (!gedaan) {
-      const { STARTBLOK } = require('../lib/reclame');
-      const bestaat = (await pool.query('SELECT 1 FROM reclames WHERE sleutel = $1', [STARTBLOK.sleutel])).rowCount;
+    const { STARTBLOKKEN, STARTBLOK } = require('../lib/reclame');
+    const admin = (await pool.query("SELECT id FROM users WHERE rol = 'admin' ORDER BY id LIMIT 1")).rows[0];
+    for (const s of STARTBLOKKEN) {
+      const gedaan = (await pool.query('SELECT 1 FROM instellingen WHERE sleutel = $1', [s.marker])).rowCount;
+      if (gedaan) continue;
+      const bestaat = (await pool.query('SELECT 1 FROM reclames WHERE sleutel = $1', [s.sleutel])).rowCount;
       if (!bestaat) {
-        const admin = (await pool.query("SELECT id FROM users WHERE rol = 'admin' ORDER BY id LIMIT 1")).rows[0];
-        const bedrijf = (await pool.query(
-          "SELECT id, user_id FROM bedrijven WHERE lower(naam) LIKE '%graaf%' AND lower(naam) LIKE '%bouw%' ORDER BY id LIMIT 1"
-        )).rows[0];
-        const s = STARTBLOK;
+        const bedrijf = s.bedrijfPatronen
+          ? (await pool.query('SELECT id, user_id FROM bedrijven WHERE lower(naam) LIKE $1 AND lower(naam) LIKE $2 ORDER BY id LIMIT 1', s.bedrijfPatronen)).rows[0]
+          : null;
         await pool.query(
-          `INSERT INTO reclames (sleutel, bedrijf_id, user_id, naam, slogan, kop, tekst, diensten, kenmerken, website, cta_url, cta_tekst,
+          `INSERT INTO reclames (sleutel, bedrijf_id, user_id, naam, slogan, kop, tekst, diensten, diensten_label, kenmerken, website, cta_url, cta_tekst,
              telefoon, whatsapp, email, plaats, regio, logo_url, foto_url, thema, accent, logo_achtergrond, gewicht, actief, notities, auteur_id)
-           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26)`,
+           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27)`,
           [s.sleutel, bedrijf ? bedrijf.id : null, bedrijf ? bedrijf.user_id : (admin ? admin.id : null), s.naam, s.slogan, s.kop, s.tekst,
-            s.diensten, s.kenmerken, s.website, s.cta_url, s.cta_tekst, s.telefoon, s.whatsapp, s.email, s.plaats, s.regio, s.logo_url,
-            s.foto_url, s.thema, s.accent, s.logo_achtergrond, s.gewicht, s.actief, s.notities, admin ? admin.id : null]
+            s.diensten, s.diensten_label || null, s.kenmerken, s.website, s.cta_url, s.cta_tekst, s.telefoon, s.whatsapp, s.email, s.plaats, s.regio,
+            s.logo_url, s.foto_url, s.thema, s.accent, s.logo_achtergrond, s.gewicht, s.actief, s.notities, admin ? admin.id : null]
         );
-        console.log('[db] Reclameblok De Graaf Bouwbedrijf geplaatst.');
+        console.log('[db] Reclameblok geplaatst:', s.naam);
       }
-      await pool.query("INSERT INTO instellingen (sleutel, waarde) VALUES ('reclame_startblok_degraaf', $1) ON CONFLICT (sleutel) DO NOTHING", [new Date().toISOString()]);
+      await pool.query('INSERT INTO instellingen (sleutel, waarde) VALUES ($1, $2) ON CONFLICT (sleutel) DO NOTHING', [s.marker, new Date().toISOString()]);
     }
+    // Startblok De Graaf: scherpere foto en regio-tekst, alleen als ze nog op de oorspronkelijke waarde staan.
+    await pool.query("UPDATE reclames SET foto_url = $1 WHERE sleutel = 'degraaf-bouwbedrijf' AND foto_url = '/static/img/reclame/degraaf-bouwbedrijf-foto.jpg'", [STARTBLOK.foto_url]);
+    await pool.query("UPDATE reclames SET regio = $1 WHERE sleutel = 'degraaf-bouwbedrijf' AND regio = $2",
+      [STARTBLOK.regio, 'Den Haag, Zoetermeer, Delft, Leiden, Haarlem, Amstelveen, Aalsmeer, Hoofddorp, Alphen aan den Rijn en omgeving']);
   } catch (err) {
-    console.error('[db] Reclameblok plaatsen mislukt:', err.message);
+    console.error('[db] Reclameblokken plaatsen mislukt:', err.message);
   }
 
   // Voorbeeld-evenementen seeden (alleen als er nog geen agenda is).
