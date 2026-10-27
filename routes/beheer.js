@@ -32,7 +32,15 @@ router.get('/', async (req, res) => {
       geplaatst: (await pool.query("SELECT COUNT(*)::int AS n FROM sponsorverzoeken WHERE status = 'geplaatst'")).rows[0].n };
     const nieuwsImport = { ...nieuwsImportLib.status(), genegeerd: await nieuwsImportLib.aantalGenegeerd(),
       aantal: (await pool.query('SELECT COUNT(*)::int AS n FROM nieuws WHERE bron = $1', [nieuwsImportLib.BRON])).rows[0].n };
-    res.render('beheer/index', { title: 'Beheer', leden, stats, agendaImport, sponsor, nieuwsImport, mail: mailInstellingen() });
+    let reclames = { totaal: 0, actief: 0, vertoningen: 0, kliks: 0 };
+    try {
+      const r = (await pool.query(
+        `SELECT COUNT(*)::int AS totaal, COALESCE(SUM(CASE WHEN actief THEN 1 ELSE 0 END), 0)::int AS actief,
+                COALESCE(SUM(vertoningen), 0)::bigint AS vertoningen, COALESCE(SUM(kliks), 0)::bigint AS kliks FROM reclames`
+      )).rows[0];
+      reclames = { totaal: r.totaal, actief: r.actief, vertoningen: Number(r.vertoningen), kliks: Number(r.kliks) };
+    } catch (e) { /* tabel bestaat pas na de eerste start met deze versie */ }
+    res.render('beheer/index', { title: 'Beheer', leden, stats, agendaImport, sponsor, nieuwsImport, reclames, mail: mailInstellingen() });
   } catch (err) {
     console.error('[beheer]', err.message);
     res.status(500).render('error', { title: 'Fout', bericht: 'Het beheerpaneel kon niet worden geladen.' });

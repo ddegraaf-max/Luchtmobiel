@@ -3,6 +3,12 @@
 Het versienummer staat in de voettekst van elke pagina en in **Beheer** (met de code van de uitgerolde update).
 Bij elke update wordt het nummer in `package.json` opgehoogd en hier beschreven wat er is veranderd.
 
+## 1.7.0 — 27 oktober 2026
+- **Reclameblokken**: advertenties van bedrijven uit het netwerk op de openbare pagina's — een groot blok op de homepage, een balk onder nieuws, agenda, partners, sponsoring, vacatures, projecten, De Brigade en Veteranenzaken, en een kaart in de zijbalk van detailpagina's. Per bezoek wordt één lopend blok getoond (gewogen rotatie, met begin- en einddatum); vertoningen en kliks worden geteld.
+- Beheer → **Reclameblokken**: een blok maken vanuit een bedrijf in de ledengids (gegevens en logo worden overgenomen), logo en foto uploaden, kleurstelling en accentkleur kiezen, voorbeeld in drie maten, aan- en uitzetten, statistieken per blok.
+- Het eerste blok staat klaar: **De Graaf Bouwbedrijf** — kozijnen, dakkapellen, uitbouwen, schroefpalen en complete renovaties — met logo, foto, alle diensten, zekerheden en knoppen voor offerte, bellen, WhatsApp en e-mail.
+- Onder het grote blok staat een uitnodiging voor andere bedrijven om te adverteren (mail naar info@bclmb.nl; ander adres via `RECLAME_CONTACT`).
+
 ## 1.6.1 — 31 augustus 2026
 - Mobiel: de robot-controle (Cloudflare Turnstile) blijft op smalle telefoons binnen de inlogkaart; galerijbeheer en nieuwskaarten met afbeelding stapelen netjes op kleine schermen.
 

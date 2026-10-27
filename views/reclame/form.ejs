@@ -1,0 +1,177 @@
+<%
+  var logoSrc = item.logo_id ? '/media/' + item.logo_id
+    : (item.logo_url || ((item.bedrijf_logo_id && (item.logo_van_bedrijf === true || item.logo_van_bedrijf === 'on')) ? '/media/' + item.bedrijf_logo_id : ''));
+  var fotoSrc = item.foto_id ? '/media/' + item.foto_id : (item.foto_url || '');
+  var actiefAan = item.actief === true || item.actief === 'on';
+%>
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Beheer · Reclameblokken</span>
+      <h1><%= title %></h1>
+      <p>Vul in wat bezoekers moeten zien. Lege velden worden niet getoond; na het opslaan zie je direct een voorbeeld.</p>
+    </div>
+    <a href="/reclame/beheer" class="btn btn--ghost">← Alle reclameblokken</a>
+  </div>
+</div>
+
+<section class="section">
+  <div class="wrap" style="max-width:860px;">
+    <% if (fout) { %><div class="flash flash--fout"><%= fout %></div><% } %>
+
+    <form action="<%= actie %>?_csrf=<%= csrfToken %>" method="post" enctype="multipart/form-data" class="stack" style="gap:24px;">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <div class="form-card">
+        <span class="kicker">Bedrijf</span>
+        <h2 style="font-size:1.35rem;">Wie adverteert?</h2>
+        <div class="veld-rij">
+          <div class="veld"><label for="naam">Bedrijfsnaam *</label><input type="text" id="naam" name="naam" value="<%= item.naam || '' %>" required maxlength="150" autofocus></div>
+          <div class="veld"><label for="slogan">Slogan</label><input type="text" id="slogan" name="slogan" value="<%= item.slogan || '' %>" maxlength="120" placeholder="bijv. Kwaliteit in elk detail"></div>
+        </div>
+        <div class="veld">
+          <label for="bedrijf_id">Koppeling met de ledengids <span class="hint">(optioneel)</span></label>
+          <select id="bedrijf_id" name="bedrijf_id">
+            <option value="">— geen koppeling —</option>
+            <% bedrijven.forEach(function(b){ %>
+              <option value="<%= b.id %>" <%= String(item.bedrijf_id || '') === String(b.id) ? 'selected' : '' %>><%= b.naam %><%= b.plaats ? ' · ' + b.plaats : '' %> (<%= b.lid_naam %>)</option>
+            <% }) %>
+          </select>
+          <span class="hint">Zo zie je in het overzicht welk lid bij dit blok hoort. Het logo van het bedrijfsprofiel kun je hieronder overnemen.</span>
+        </div>
+        <div class="veld-rij">
+          <div class="veld"><label for="plaats">Plaats</label><input type="text" id="plaats" name="plaats" value="<%= item.plaats || '' %>" maxlength="120"></div>
+          <div class="veld"><label for="regio">Werkgebied</label><input type="text" id="regio" name="regio" value="<%= item.regio || '' %>" maxlength="300" placeholder="bijv. Arnhem, Ede en de Veluwe"></div>
+        </div>
+        <div class="veld-rij">
+          <div class="veld"><label for="telefoon">Telefoon</label><input type="tel" id="telefoon" name="telefoon" value="<%= item.telefoon || '' %>" maxlength="40" placeholder="06 12 34 56 78"></div>
+          <div class="veld"><label for="whatsapp">WhatsApp-nummer</label><input type="tel" id="whatsapp" name="whatsapp" value="<%= item.whatsapp || '' %>" maxlength="40"><span class="hint">Leeg = geen WhatsApp-knop.</span></div>
+        </div>
+        <div class="veld-rij">
+          <div class="veld"><label for="email">E-mail</label><input type="email" id="email" name="email" value="<%= item.email || '' %>" maxlength="200"></div>
+          <div class="veld"><label for="website">Website</label><input type="text" id="website" name="website" value="<%= item.website || '' %>" maxlength="300" placeholder="www.bedrijf.nl"></div>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <span class="kicker">Boodschap</span>
+        <h2 style="font-size:1.35rem;">Wat zien bezoekers?</h2>
+        <div class="veld">
+          <label for="kop">Kop</label>
+          <input type="text" id="kop" name="kop" value="<%= item.kop || '' %>" maxlength="160" placeholder="Eén krachtige zin, bijv. Van nieuw kozijn tot complete renovatie: alles uit één hand.">
+        </div>
+        <div class="veld">
+          <label for="tekst">Tekst</label>
+          <textarea id="tekst" name="tekst" maxlength="1200" style="min-height:110px;" placeholder="Twee of drie zinnen over het bedrijf en waarom leden er terechtkunnen."><%= item.tekst || '' %></textarea>
+        </div>
+        <div class="veld">
+          <label for="diensten">Diensten</label>
+          <textarea id="diensten" name="diensten" maxlength="1000" style="min-height:80px;" placeholder="Kozijnen, Dakkapellen, Uitbouwen, Renovaties, …"><%= item.diensten || '' %></textarea>
+          <span class="hint">Gescheiden door komma's; elke dienst wordt een label (maximaal 14). In de balk en de kaart staan de eerste vijf of zes.</span>
+        </div>
+        <div class="veld">
+          <label for="kenmerken">Kenmerken en zekerheden</label>
+          <input type="text" id="kenmerken" name="kenmerken" value="<%= item.kenmerken || '' %>" maxlength="600" placeholder="Eén aanspreekpunt, Heldere prijs vooraf, 5 jaar garantie">
+          <span class="hint">Gescheiden door komma's; verschijnen met een vinkje in het grote blok (maximaal 6).</span>
+        </div>
+        <div class="veld-rij">
+          <div class="veld"><label for="cta_tekst">Tekst op de knop</label><input type="text" id="cta_tekst" name="cta_tekst" value="<%= item.cta_tekst || '' %>" maxlength="40" placeholder="Bekijk website"></div>
+          <div class="veld"><label for="cta_url">Adres achter de knop</label><input type="text" id="cta_url" name="cta_url" value="<%= item.cta_url || '' %>" maxlength="500" placeholder="Leeg = de website"><span class="hint">Bijvoorbeeld een offerte- of contactpagina. Elke klik wordt geteld.</span></div>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <span class="kicker">Uiterlijk</span>
+        <h2 style="font-size:1.35rem;">Logo, foto en kleur</h2>
+
+        <div class="flex" style="gap:20px; margin-bottom:22px; align-items:flex-start;">
+          <div class="partner-logo" style="width:150px; height:90px; flex:none; background:<%= item.logo_achtergrond || '#ffffff' %>;">
+            <img id="logo-voorbeeld" src="<%= logoSrc %>" alt="" <%= logoSrc ? '' : 'hidden' %>>
+            <span class="initialen" id="logo-initialen" <%= logoSrc ? 'hidden' : '' %>><%= h.initialen(item.naam || '?') %></span>
+          </div>
+          <div class="veld" style="flex:1; margin:0;">
+            <label for="logo">Logo</label>
+            <input type="file" id="logo" name="logo" accept="image/png,image/jpeg,image/webp,image/gif" data-voorbeeld="#logo-voorbeeld" data-verberg="#logo-initialen" data-melding="#logo-melding">
+            <span class="hint">PNG, JPG, WebP of GIF, max 4 MB. Een liggend logo werkt het best.</span>
+            <div id="logo-melding" class="hint" style="display:none; color:var(--maroon); margin-top:6px;">Nieuw logo gekozen — nog niet opgeslagen.</div>
+            <% if (item.bedrijf_logo_id) { %>
+              <label class="check" style="margin-top:8px; font-weight:500; font-size:.86rem;"><input type="checkbox" name="logo_van_bedrijf" <%= (item.logo_van_bedrijf === true || item.logo_van_bedrijf === 'on') ? 'checked' : '' %>> Logo van het bedrijfsprofiel overnemen (als je hier geen eigen logo kiest)</label>
+            <% } %>
+            <% if (item.logo_id || item.logo_url) { %>
+              <label class="check" style="margin-top:8px; font-weight:500; font-size:.86rem;"><input type="checkbox" name="logo_verwijderen"> Huidig logo verwijderen</label>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="flex" style="gap:20px; margin-bottom:22px; align-items:flex-start;">
+          <div class="partner-logo" style="width:150px; height:90px; flex:none; padding:0; overflow:hidden;">
+            <img id="foto-voorbeeld" src="<%= fotoSrc %>" alt="" <%= fotoSrc ? '' : 'hidden' %> style="max-height:none; width:100%; height:100%; object-fit:cover;">
+            <span class="initialen" id="foto-initialen" <%= fotoSrc ? 'hidden' : '' %> style="font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft);">Geen foto</span>
+          </div>
+          <div class="veld" style="flex:1; margin:0;">
+            <label for="foto">Foto</label>
+            <input type="file" id="foto" name="foto" accept="image/png,image/jpeg,image/webp,image/gif" data-voorbeeld="#foto-voorbeeld" data-verberg="#foto-initialen" data-melding="#foto-melding">
+            <span class="hint">Staand of vierkant werkt het best (bijvoorbeeld 800 × 1000 px); de foto staat rechts in het grote blok en boven in de kaart. Max 4 MB.</span>
+            <div id="foto-melding" class="hint" style="display:none; color:var(--maroon); margin-top:6px;">Nieuwe foto gekozen — nog niet opgeslagen.</div>
+            <% if (item.foto_id || item.foto_url) { %>
+              <label class="check" style="margin-top:8px; font-weight:500; font-size:.86rem;"><input type="checkbox" name="foto_verwijderen"> Huidige foto verwijderen</label>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="veld-rij">
+          <div class="veld">
+            <label for="thema">Kleurstelling</label>
+            <select id="thema" name="thema">
+              <% Object.keys(themas).forEach(function(k){ %><option value="<%= k %>" <%= (item.thema || 'donker') === k ? 'selected' : '' %>><%= themas[k] %></option><% }) %>
+            </select>
+          </div>
+          <div class="veld">
+            <label for="accent">Accentkleur</label>
+            <input type="color" id="accent" name="accent" value="<%= item.accent || '#a98443' %>">
+            <span class="hint">Kleur van de knop en de details, bijvoorbeeld de huisstijlkleur van het bedrijf. De tekst op de knop kiest zelf zwart of wit.</span>
+          </div>
+        </div>
+        <div class="veld">
+          <label for="logo_achtergrond">Achtergrond achter het logo</label>
+          <input type="color" id="logo_achtergrond" name="logo_achtergrond" value="<%= item.logo_achtergrond || '#ffffff' %>">
+          <span class="hint">Wit voor de meeste logo's; donker als het logo witte letters heeft.</span>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <span class="kicker">Planning</span>
+        <h2 style="font-size:1.35rem;">Wanneer en hoe vaak?</h2>
+        <div class="veld-rij">
+          <div class="veld"><label for="van">Zichtbaar vanaf</label><input type="date" id="van" name="van" value="<%= item.van || '' %>"><span class="hint">Leeg = direct.</span></div>
+          <div class="veld"><label for="tot">Zichtbaar tot en met</label><input type="date" id="tot" name="tot" value="<%= item.tot || '' %>"><span class="hint">Leeg = onbepaald.</span></div>
+        </div>
+        <div class="veld-rij">
+          <div class="veld">
+            <label for="gewicht">Gewicht in de rotatie</label>
+            <select id="gewicht" name="gewicht">
+              <% [1, 2, 3, 4, 5].forEach(function(g){ %><option value="<%= g %>" <%= Number(item.gewicht || 1) === g ? 'selected' : '' %>><%= g %><%= g === 1 ? ' — normaal' : (g === 5 ? ' — het vaakst' : '') %></option><% }) %>
+            </select>
+            <span class="hint">Bij meerdere blokken bepaalt dit hoe vaak dit blok aan de beurt is.</span>
+          </div>
+          <div class="veld">
+            <label>Zichtbaar</label>
+            <label class="check" style="cursor:pointer; margin-top:10px;"><input type="checkbox" name="actief" <%= actiefAan ? 'checked' : '' %>> Actief — tonen op de site</label>
+          </div>
+        </div>
+        <div class="veld">
+          <label for="notities">Notities (alleen voor beheer)</label>
+          <textarea id="notities" name="notities" maxlength="2000" style="min-height:70px;" placeholder="Afspraken, prijs, contactpersoon…"><%= item.notities || '' %></textarea>
+        </div>
+        <% if (item.id) { %>
+          <p class="meta mb-0">Tot nu toe <strong><%= Number(item.vertoningen || 0).toLocaleString('nl-NL') %></strong> vertoningen en <strong><%= Number(item.kliks || 0).toLocaleString('nl-NL') %></strong> kliks.</p>
+        <% } %>
+      </div>
+
+      <div class="flex">
+        <button type="submit" class="btn btn--primary">Opslaan en bekijken</button>
+        <% if (item.id) { %><a href="/reclame/beheer/<%= item.id %>/voorbeeld" class="btn btn--ghost">Voorbeeld zonder wijzigingen</a><% } %>
+      </div>
+    </form>
+  </div>
+</section>

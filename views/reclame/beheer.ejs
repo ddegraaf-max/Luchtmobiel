@@ -1,0 +1,111 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Beheer</span>
+      <h1>Reclameblokken</h1>
+      <p>Advertenties van bedrijven uit het netwerk op de openbare pagina's. Per bezoek wordt één lopend blok getoond; vertoningen en kliks worden geteld.</p>
+    </div>
+    <div class="flex">
+      <a href="/beheer" class="btn btn--ghost">← Beheer</a>
+      <a href="/reclame/beheer/nieuw" class="btn btn--primary">+ Reclameblok</a>
+    </div>
+  </div>
+</div>
+
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="statbar statbar--4" style="margin-top:0; margin-bottom:32px;">
+      <div class="stat"><div class="getal"><%= totalen.actief %></div><div class="label">Lopend</div></div>
+      <div class="stat"><div class="getal"><%= reclames.length %></div><div class="label">Blokken</div></div>
+      <div class="stat"><div class="getal"><%= totalen.vertoningen.toLocaleString('nl-NL') %></div><div class="label">Vertoningen</div></div>
+      <div class="stat"><div class="getal"><%= totalen.kliks.toLocaleString('nl-NL') %></div><div class="label">Kliks</div></div>
+    </div>
+
+    <% if (!reclames.length) { %>
+      <div class="lege-staat">
+        <p>Er zijn nog geen reclameblokken.</p>
+        <a href="/reclame/beheer/nieuw" class="btn btn--primary">Maak het eerste blok</a>
+      </div>
+    <% } else { %>
+      <div style="overflow-x:auto;">
+        <table class="tabel">
+          <thead>
+            <tr><th>Bedrijf</th><th>Status</th><th>Periode</th><th>Gewicht</th><th>Vertoningen</th><th>Kliks</th><th>Acties</th></tr>
+          </thead>
+          <tbody>
+            <% reclames.forEach(function(r){
+                 var logo = reclameLib.logoSrc(r);
+                 var vert = Number(r.vertoningen || 0), kliks = Number(r.kliks || 0);
+                 var statusKlasse = { actief: 'badge--olive', gepland: 'badge--maroon', verlopen: '', uit: '' }[r.status] || '';
+                 var statusTekst = { actief: 'Actief', gepland: 'Gepland', verlopen: 'Verlopen', uit: 'Uit' }[r.status] || r.status;
+            %>
+              <tr>
+                <td>
+                  <div class="flex" style="gap:12px; flex-wrap:nowrap; align-items:center;">
+                    <div class="partner-logo" style="width:84px; height:52px; flex:none; padding:6px; background:<%= reclameLib.netteHex(r.logo_achtergrond) || '#ffffff' %>;">
+                      <% if (logo) { %><img src="<%= logo %>" alt=""><% } else { %><span class="initialen" style="font-size:1rem;"><%= h.initialen(r.naam) %></span><% } %>
+                    </div>
+                    <div>
+                      <strong><%= r.naam %></strong>
+                      <% if (r.slogan) { %><div class="meta"><%= r.slogan %></div><% } %>
+                      <% if (r.lid_naam) { %><div class="meta">Lid: <%= r.lid_naam %><%= r.bedrijf_naam ? ' · ' + r.bedrijf_naam : '' %></div><% } %>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="badge <%= statusKlasse %>"><%= statusTekst %></span></td>
+                <td class="muted" style="white-space:nowrap;"><%= r.van ? h.formatDatumDag(r.van) : 'direct' %> – <%= r.tot ? h.formatDatumDag(r.tot) : 'onbepaald' %></td>
+                <td><%= r.gewicht %></td>
+                <td><%= vert.toLocaleString('nl-NL') %></td>
+                <td><%= kliks.toLocaleString('nl-NL') %><% if (vert > 0) { %> <span class="meta">(<%= (100 * kliks / vert).toFixed(1).replace('.', ',') %>%)</span><% } %></td>
+                <td>
+                  <div class="flex" style="gap:6px; flex-wrap:nowrap;">
+                    <a href="/reclame/beheer/<%= r.id %>/voorbeeld" class="btn btn--ghost btn--sm">Voorbeeld</a>
+                    <a href="/reclame/beheer/<%= r.id %>/bewerken" class="btn btn--ghost btn--sm">Bewerken</a>
+                    <form action="/reclame/beheer/<%= r.id %>/actief" method="post" class="inline-form">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                      <button class="btn btn--ghost btn--sm" type="submit"><%= r.actief ? 'Uitzetten' : 'Aanzetten' %></button>
+                    </form>
+                    <form action="/reclame/beheer/<%= r.id %>/verwijderen" method="post" class="inline-form" data-bevestig="Het reclameblok van <%= r.naam %> definitief verwijderen? De tellingen gaan dan ook verloren.">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                      <button class="btn btn--danger btn--sm" type="submit" aria-label="Verwijderen">×</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+
+    <% if (zonder.length) { %>
+      <h2 style="margin-top:44px; font-size:1.35rem;">Bedrijven uit de ledengids zonder reclameblok</h2>
+      <p class="muted">Met één klik maak je een blok met de gegevens van het bedrijfsprofiel; daarna vul je het aan en zet je het aan.</p>
+      <div class="grid grid--auto">
+        <% zonder.forEach(function(b){ %>
+          <div class="card" style="padding:14px 16px; flex-direction:row; align-items:center; gap:14px;">
+            <div class="partner-logo" style="width:72px; height:52px; flex:none; padding:6px;">
+              <% if (b.logo_id) { %><img src="/media/<%= b.logo_id %>" alt=""><% } else { %><span class="initialen" style="font-size:1rem;"><%= h.initialen(b.naam) %></span><% } %>
+            </div>
+            <div style="flex:1; min-width:0;">
+              <strong><%= b.naam %></strong>
+              <div class="meta"><%= [b.branche, b.plaats, b.lid_naam].filter(Boolean).join(' · ') %></div>
+            </div>
+            <a href="/reclame/beheer/nieuw?bedrijf=<%= b.id %>" class="btn btn--primary btn--sm" style="flex:none;">Maak blok</a>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+
+    <div class="card" style="margin-top:36px;">
+      <h3 style="margin-top:0;">Zo werkt het</h3>
+      <ul class="muted" style="margin:0; padding-left:1.2em; font-size:.92rem; line-height:1.7;">
+        <li><strong>Waar:</strong> een groot blok op de homepage; een balk onder het nieuws, de agenda, partners, sponsoring, vacatures, projecten, De Brigade en Veteranenzaken; een kaart in de zijbalk van detailpagina's.</li>
+        <li><strong>Rotatie:</strong> per bezochte pagina kiest de site één lopend blok. Het <em>gewicht</em> (1–5) bepaalt hoe vaak een blok aan de beurt is als er meerdere zijn.</li>
+        <li><strong>Periode:</strong> met <em>zichtbaar vanaf</em> en <em>tot en met</em> plan je een campagne; daarbuiten wordt het blok automatisch niet getoond. Met <em>Uitzetten</em> haal je het direct van de site zonder het te verwijderen.</li>
+        <li><strong>Tellen:</strong> elke vertoning en elke klik op knop, logo of foto wordt geteld; de klik loopt via <code>/reclame/nummer/klik</code> en stuurt door naar de adverteerder.</li>
+        <li><strong>Adverteren:</strong> onder het grote blok staat een uitnodiging voor andere bedrijven; die mailen naar <%= contact %><% if (contact === 'info@bclmb.nl') { %> (ander adres: variabele <code>RECLAME_CONTACT</code> op Railway)<% } %>.</li>
+      </ul>
+    </div>
+  </div>
+</section>

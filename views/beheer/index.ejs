@@ -118,6 +118,26 @@
       </div>
     </div>
 
+    <div class="card" style="margin-bottom:32px;">
+      <div class="flex between" style="align-items:flex-start;">
+        <div>
+          <h3 style="margin:0 0 4px;">Reclameblokken</h3>
+          <p class="muted mb-0" style="font-size:.9rem;">
+            <% if (!reclames.totaal) { %>
+              Nog geen reclameblokken. Maak een blok voor een bedrijf uit de ledengids; het verschijnt op de homepage en onder de openbare pagina's.
+            <% } else { %>
+              <%= reclames.actief %> van <%= reclames.totaal %> <%= reclames.totaal === 1 ? 'blok' : 'blokken' %> actief ·
+              <%= reclames.vertoningen.toLocaleString('nl-NL') %> vertoningen · <%= reclames.kliks.toLocaleString('nl-NL') %> kliks.
+            <% } %>
+          </p>
+        </div>
+        <div class="flex" style="gap:8px;">
+          <a href="/reclame/beheer" class="btn btn--primary btn--sm">Beheren</a>
+          <a href="/reclame/beheer/nieuw" class="btn btn--ghost btn--sm">+ Blok</a>
+        </div>
+      </div>
+    </div>
+
     <div style="overflow-x:auto;">
       <table class="tabel">
         <thead>

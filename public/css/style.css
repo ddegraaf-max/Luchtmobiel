@@ -689,3 +689,134 @@ h1, h2, h3, .hero h1, .paginakop h1, .beeldband h2 { overflow-wrap: break-word; 
 .bestand-kiezer.heeft-bestand .bestand-naam { color: var(--ink); font-weight: 600; }
 .bestand-kiezer .bestand-wissen { display: none; background: none; border: none; color: var(--maroon); font: inherit; font-size: .82rem; font-weight: 700; cursor: pointer; padding: 0; text-decoration: underline; }
 .bestand-kiezer.heeft-bestand .bestand-wissen { display: inline; }
+
+/* Datum-, getal- en kleurvelden in dezelfde stijl als tekstvelden */
+input[type=date], input[type=number] {
+  width: 100%; padding: 11px 13px; font-family: var(--font-body); font-size: .95rem; color: var(--ink);
+  background: var(--bone); border: 1px solid var(--line-strong); border-radius: var(--radius);
+}
+input[type=color] { width: 64px; height: 42px; padding: 3px; background: var(--bone); border: 1px solid var(--line-strong); border-radius: var(--radius); cursor: pointer; display: block; }
+
+/* ============================================================
+   Reclameblokken — advertenties van bedrijven uit het netwerk
+   (views/partials/reclame.ejs; drie maten: groot, balk, kaart;
+   drie kleurstellingen: donker, baret, licht; accentkleur per blok)
+   ============================================================ */
+.reclame {
+  --rc-accent: var(--brass);
+  --rc-accent-tekst: #2a1116;
+  --rc-logo-bg: #ffffff;
+  --rc-bg: var(--ink);
+  --rc-tekst: var(--bone);
+  --rc-tekst-zacht: rgba(244,239,229,.78);
+  --rc-lijn: rgba(244,239,229,.18);
+  --rc-chip: rgba(244,239,229,.08);
+  --rc-schaduw: rgba(28,23,20,.6);
+  color: var(--rc-tekst);
+}
+.reclame--baret { --rc-bg: linear-gradient(160deg, var(--maroon-deep) 0%, var(--maroon) 70%, #5a1c28 100%); --rc-schaduw: rgba(74,20,29,.6); }
+.reclame--licht { --rc-bg: var(--white); --rc-tekst: var(--ink); --rc-tekst-zacht: var(--ink-soft); --rc-lijn: var(--line-strong); --rc-chip: var(--bone-2); --rc-schaduw: rgba(251,249,244,.4); }
+.reclame a { color: inherit; }
+.reclame a:hover { text-decoration: none; }
+.reclame__kader {
+  position: relative; background: var(--rc-bg); color: var(--rc-tekst);
+  border: 1px solid var(--rc-lijn); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+}
+.reclame__kader::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: var(--rc-accent); z-index: 2; }
+.reclame--donker .reclame__kader::after, .reclame--baret .reclame__kader::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .5;
+  background-image: repeating-linear-gradient(135deg, rgba(255,255,255,.035) 0 1px, transparent 1px 22px);
+}
+.reclame__inhoud { position: relative; z-index: 1; }
+
+/* kop: logo + naam + label */
+.reclame__kop { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+.reclame__titels { min-width: 0; flex: 1 1 200px; }
+.reclame__logo {
+  display: flex; align-items: center; justify-content: center; flex: none;
+  width: 150px; height: 84px; padding: 10px 14px; background: var(--rc-logo-bg);
+  border: 1px solid var(--rc-lijn); border-radius: var(--radius); overflow: hidden;
+}
+.reclame__logo img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+.reclame__kicker { display: block; text-transform: uppercase; letter-spacing: .2em; font-size: .68rem; font-weight: 700; color: var(--rc-accent); }
+.reclame__naam { font-family: var(--font-display); font-weight: 800; font-size: 1.5rem; line-height: 1.1; letter-spacing: -.01em; margin: 2px 0 0; color: inherit; }
+.reclame__slogan { color: var(--rc-tekst-zacht); font-weight: 600; font-size: .95rem; margin-top: 2px; }
+.reclame__label {
+  margin-left: auto; align-self: flex-start; font-size: .6rem; font-weight: 700; text-transform: uppercase; letter-spacing: .14em;
+  border: 1px solid var(--rc-lijn); color: var(--rc-tekst-zacht); padding: 3px 8px; border-radius: 2px; white-space: nowrap;
+}
+.reclame__kicker .reclame__label { margin-left: 8px; align-self: auto; vertical-align: middle; letter-spacing: .1em; }
+
+/* boodschap */
+.reclame__titel { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.35rem, 2.4vw, 1.9rem); line-height: 1.15; letter-spacing: -.015em; margin: 26px 0 10px; }
+.reclame__tekst { color: var(--rc-tekst-zacht); margin: 0 0 18px; max-width: 62ch; }
+.reclame__kopje { text-transform: uppercase; letter-spacing: .16em; font-size: .66rem; font-weight: 700; color: var(--rc-tekst-zacht); margin-bottom: 8px; }
+.reclame__diensten { list-style: none; padding: 0; margin: 0 0 20px; display: flex; flex-wrap: wrap; gap: 6px; }
+.reclame__diensten li {
+  display: inline-flex; align-items: center; gap: .45em; background: var(--rc-chip); border: 1px solid var(--rc-lijn);
+  border-radius: 100px; padding: 5px 11px 5px 9px; font-size: .8rem; font-weight: 600; line-height: 1.3;
+}
+.reclame__diensten li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--rc-accent); flex: none; }
+.reclame__kenmerken { list-style: none; padding: 0; margin: 0 0 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 6px 18px; font-size: .88rem; font-weight: 600; }
+.reclame__kenmerken li::before { content: "✓"; color: var(--rc-accent); font-weight: 800; margin-right: .5em; }
+.reclame__inline { font-size: .8rem; color: var(--rc-tekst-zacht); font-weight: 600; line-height: 1.5; }
+
+/* knoppen */
+.reclame__acties { display: flex; flex-wrap: wrap; gap: 10px; }
+.reclame__cta { background: var(--rc-accent); color: var(--rc-accent-tekst); border-color: var(--rc-accent); box-shadow: 0 8px 20px -10px var(--rc-accent); }
+.reclame__cta:hover { color: var(--rc-accent-tekst); filter: brightness(1.08); }
+.reclame .btn--ghost { color: inherit; border-color: var(--rc-lijn); }
+.reclame .btn--ghost:hover { border-color: currentColor; background: rgba(127,127,127,.14); color: inherit; }
+.reclame__voet { margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--rc-lijn); display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: .8rem; color: var(--rc-tekst-zacht); }
+.reclame__adverteren { margin: 10px 0 0; font-size: .78rem; color: var(--ink-soft); text-align: right; }
+.reclame__adverteren a { color: var(--maroon); text-decoration: underline; }
+
+/* foto */
+.reclame__foto { position: relative; display: block; min-height: 320px; background: var(--maroon-deep); }
+.reclame__foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+/* groot (homepage) */
+.reclame-sectie { padding-top: 0; }
+.reclame--groot .reclame__kader { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(280px, 1fr); }
+.reclame--groot .reclame__inhoud { padding: clamp(26px, 4vw, 46px); }
+.reclame--groot .reclame__foto::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, var(--rc-schaduw), transparent 42%); }
+.reclame--licht.reclame--groot .reclame__foto::after { display: none; }
+
+/* balk (onder lijsten en berichten) */
+.reclame--balk { margin-top: 36px; }
+.reclame--balk .reclame__kader { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 22px; align-items: center; padding: 20px 24px; }
+.reclame--balk .reclame__logo { width: 132px; height: 76px; }
+.reclame--balk .reclame__midden { min-width: 0; position: relative; z-index: 1; }
+.reclame--balk .reclame__naam { font-size: 1.2rem; margin-top: 4px; }
+.reclame--balk .reclame__slogan { font-size: .9rem; display: inline; }
+.reclame--balk .reclame__tekst { margin: 6px 0 6px; font-size: .94rem; }
+.reclame--balk .reclame__acties { flex-direction: column; align-items: stretch; position: relative; z-index: 1; }
+
+/* kaart (zijbalk) */
+.reclame--kaart { margin-top: 18px; }
+.reclame--kaart .reclame__kader { display: block; }
+.reclame--kaart .reclame__foto { height: 150px; min-height: 0; }
+.reclame--kaart .reclame__inhoud { padding: 18px 20px 20px; }
+.reclame--kaart .reclame__kicker { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.reclame--kaart .reclame__kicker .reclame__label { margin-left: auto; }
+.reclame--kaart .reclame__logo { width: 100%; height: 72px; margin: 12px 0 12px; }
+.reclame--kaart .reclame__naam { font-size: 1.15rem; }
+.reclame--kaart .reclame__tekst { font-size: .9rem; margin: 8px 0 10px; }
+.reclame--kaart .reclame__cta { margin-top: 14px; width: 100%; }
+.reclame__tel { display: block; text-align: center; margin-top: 10px; font-weight: 600; font-size: .88rem; color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+
+@media (max-width: 860px) {
+  .reclame--groot .reclame__kader { grid-template-columns: 1fr; }
+  .reclame--groot .reclame__foto { min-height: 220px; order: -1; }
+  .reclame--groot .reclame__foto::after { display: none; }
+  .reclame--groot .reclame__kader::before { z-index: 3; }
+  .reclame--balk .reclame__kader { grid-template-columns: 1fr; gap: 14px; }
+  .reclame--balk .reclame__acties { flex-direction: row; }
+  .reclame__label { margin-left: 0; }
+}
+@media (max-width: 520px) {
+  .reclame--groot .reclame__inhoud { padding: 22px 18px 24px; }
+  .reclame__logo { width: 130px; height: 74px; }
+  .reclame__titel { font-size: 1.3rem; }
+  .reclame__acties .btn { flex: 1 1 auto; }
+}

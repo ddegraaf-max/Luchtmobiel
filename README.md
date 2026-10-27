@@ -13,6 +13,7 @@ Een besloten netwerk waar leden (en de brigade) **zelf** alles beheren: hun prof
 - **Partners & initiatieven** — publieke pagina met organisaties, stichtingen, sponsors en initiatieven (logo, omschrijving, website), gefilterd op categorie; uitgelichte partners staan ook op de homepage. Leden kunnen zelf een initiatief aandragen; dat komt als concept bij het bestuur/de brigade terecht om aan te vullen en te publiceren.
 - **Nieuws** — berichten van het bestuur plus het nieuws en de blogs van bclmb.nl, automatisch overgenomen met afbeelding en link naar het origineel.
 - **Sponsorverzoeken** — een assistent zoekt elke ochtend het Nederlandse web af naar sponsor-, donatie- en steunverzoeken voor militairen en veteranen. Alles komt eerst in een controlewachtrij; wat jij plaatst verschijnt op de publieke pagina *Sponsoring*. Zie [Sponsorverzoeken](#sponsorverzoeken-dagelijks-gezocht-door-de-assistent).
+- **Reclameblokken** — advertenties van bedrijven uit het netwerk op de openbare pagina's (homepage, nieuws, agenda, partners, sponsoring, vacatures, projecten, brigade), met rotatie, planning en telling van vertoningen en kliks. Jij maakt ze via **Beheer → Reclameblokken**; zie [Reclameblokken](#reclameblokken-advertenties-van-bedrijven).
 - **Galerij met foto's en video's** — de brigade/het bestuur beheert per pagina (homepage, De Brigade, Veteranenzaken) een galerij met foto's en YouTube-video's; video's spelen op de pagina zelf af via de cookieloze YouTube-speler.
 - **Zelfservice** — leden registreren met een toegangscode en beheren daarna alles zelf. Jij hoeft niets goed te keuren.
 - **Beheer** — jij bepaalt rollen (lid / brigade / admin) en kunt leden activeren of verwijderen.
@@ -63,6 +64,7 @@ Ga naar je app-service → tabblad **Variables** en voeg toe:
 | `SOCIAL_INSTAGRAM` | (optioneel) link naar het Instagram-account |
 | `TURNSTILE_SITE_KEY` | (optioneel) site-sleutel van je Cloudflare Turnstile-widget (robot-controle), zie hieronder |
 | `TURNSTILE_SECRET_KEY` | (optioneel) geheime sleutel van dezelfde Turnstile-widget |
+| `RECLAME_CONTACT` | (optioneel) e-mailadres voor bedrijven die willen adverteren (de regel onder het grote reclameblok); standaard `info@bclmb.nl` |
 
 > `DATABASE_URL` staat er al door stap 3 — die laat je met rust.
 >
@@ -136,6 +138,18 @@ Op de publieke pagina **Sponsoring** (`/sponsorverzoeken`) staan sponsor-, donat
 **Links delen via WhatsApp, LinkedIn of e-mail:** elke pagina bevat deelgegevens (Open Graph), zodat een gedeelde link een kaartje toont met het clubembleem, de titel en een korte omschrijving — bij een sponsorverzoek de titel en samenvatting van dat verzoek, bij een evenement datum en locatie (met de afbeelding), bij een partner het logo. Stel hiervoor `APP_URL` in op het echte adres van de site; zonder die variabele wordt het adres uit het verzoek afgeleid. (WhatsApp onthoudt een voorvertoning een tijdje; een wijziging zie je dus niet altijd direct.)
 
 De routine beheer je op [claude.ai/code/routines](https://claude.ai/code/routines) (aan/uit zetten, tijdstip wijzigen, direct laten draaien, logboek bekijken). Draait de routine niet, dan blijft de site gewoon werken; er komen alleen geen nieuwe verzoeken binnen. Met **Nu ophalen** haal je de lijst direct op zonder op het volgende interval te wachten.
+
+## Reclameblokken (advertenties van bedrijven)
+Bedrijven uit het netwerk kunnen een **reclameblok** krijgen op de openbare pagina's. Zo werkt het:
+
+- **Waar het verschijnt.** Een groot blok op de homepage (onder de vier modules), een balk onder het nieuws, de agenda, partners, sponsoring, vacatures, projecten, De Brigade en Veteranenzaken, en een kaart in de zijbalk van detailpagina's (agenda, partner, sponsorverzoek). Per bezochte pagina wordt één lopend blok getoond.
+- **Maken.** Ga naar **Beheer → Reclameblokken**. Onderaan staan de bedrijven uit de ledengids die nog geen blok hebben: met **Maak blok** worden naam, omschrijving, website, contactgegevens en logo van het bedrijfsprofiel overgenomen (het logo als openbare kopie; het profiel zelf blijft besloten). Vul kop, tekst, diensten (gescheiden door komma's), kenmerken, knoptekst en eventueel een foto aan en kies een kleurstelling (donker, baret of licht) en een accentkleur, bijvoorbeeld de huisstijlkleur van het bedrijf. Na het opslaan zie je direct een voorbeeld in de drie maten.
+- **Rotatie en planning.** Zijn er meerdere blokken, dan bepaalt het *gewicht* (1–5) hoe vaak een blok aan de beurt is. Met *zichtbaar vanaf* en *tot en met* plan je een campagne; daarbuiten wordt het blok niet getoond. Met **Uitzetten** haal je een blok direct van de site zonder het te verwijderen.
+- **Resultaat.** Vertoningen en kliks (op knop, logo of foto) worden per blok geteld en staan in het overzicht, zodat je een adverteerder kunt laten zien wat het oplevert.
+- **Eerste blok.** Bij de eerste start met versie 1.7.0 wordt het blok van **De Graaf Bouwbedrijf** geplaatst (teksten en beeld van degraaf-bouwbedrijf.nl). Pas het aan via *Bewerken*; verwijder je het, dan komt het niet terug.
+- **Adverteren.** Onder het grote blok staat een uitnodiging voor andere bedrijven om te adverteren; die mailt naar `info@bclmb.nl` (ander adres: variabele `RECLAME_CONTACT`).
+
+Elk blok is herkenbaar gemarkeerd als *Advertentie* en linkt via `/reclame/<nummer>/klik` door naar de adverteerder; zoekmachines slaan die links en het beheer over (robots.txt).
 
 ## Beveiliging: wachtwoord vergeten & tweestapsverificatie
 

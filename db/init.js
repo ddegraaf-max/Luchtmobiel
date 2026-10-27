@@ -316,7 +316,85 @@ async function init() {
   `);
   await pool.query(`CREATE INDEX IF NOT EXISTS wachtwoord_resets_user_idx ON wachtwoord_resets(user_id);`);
 
+  // Reclameblokken: advertenties van bedrijven uit het netwerk (Beheer → Reclameblokken)
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS instellingen (
+      sleutel     TEXT PRIMARY KEY,
+      waarde      TEXT,
+      bijgewerkt  TIMESTAMPTZ DEFAULT now()
+    );
+  `);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS reclames (
+      id                SERIAL PRIMARY KEY,
+      sleutel           TEXT UNIQUE,
+      bedrijf_id        INTEGER REFERENCES bedrijven(id) ON DELETE SET NULL,
+      user_id           INTEGER REFERENCES users(id) ON DELETE SET NULL,
+      naam              TEXT NOT NULL,
+      slogan            TEXT,
+      kop               TEXT,
+      tekst             TEXT,
+      diensten          TEXT,
+      kenmerken         TEXT,
+      website           TEXT,
+      cta_url           TEXT,
+      cta_tekst         TEXT,
+      telefoon          TEXT,
+      whatsapp          TEXT,
+      email             TEXT,
+      plaats            TEXT,
+      regio             TEXT,
+      logo_id           INTEGER REFERENCES media(id) ON DELETE SET NULL,
+      logo_url          TEXT,
+      foto_id           INTEGER REFERENCES media(id) ON DELETE SET NULL,
+      foto_url          TEXT,
+      thema             TEXT NOT NULL DEFAULT 'donker',
+      accent            TEXT,
+      logo_achtergrond  TEXT,
+      van               TEXT,
+      tot               TEXT,
+      gewicht           INTEGER NOT NULL DEFAULT 1,
+      actief            BOOLEAN NOT NULL DEFAULT true,
+      vertoningen       BIGINT NOT NULL DEFAULT 0,
+      kliks             BIGINT NOT NULL DEFAULT 0,
+      notities          TEXT,
+      auteur_id         INTEGER REFERENCES users(id) ON DELETE SET NULL,
+      aangemaakt        TIMESTAMPTZ DEFAULT now(),
+      bijgewerkt        TIMESTAMPTZ DEFAULT now()
+    );
+  `);
+  await pool.query(`CREATE INDEX IF NOT EXISTS reclames_actief_idx ON reclames(actief);`);
+
   await seedAdmin();
+
+  // Eerste reclameblok (De Graaf Bouwbedrijf): één keer plaatsen. Daarna bepaalt de beheerder
+  // wat ermee gebeurt; verwijderen is definitief (het komt niet terug bij een herstart).
+  try {
+    const gedaan = (await pool.query("SELECT 1 FROM instellingen WHERE sleutel = 'reclame_startblok_degraaf'")).rowCount;
+    if (!gedaan) {
+      const { STARTBLOK } = require('../lib/reclame');
+      const bestaat = (await pool.query('SELECT 1 FROM reclames WHERE sleutel = $1', [STARTBLOK.sleutel])).rowCount;
+      if (!bestaat) {
+        const admin = (await pool.query("SELECT id FROM users WHERE rol = 'admin' ORDER BY id LIMIT 1")).rows[0];
+        const bedrijf = (await pool.query(
+          "SELECT id, user_id FROM bedrijven WHERE lower(naam) LIKE '%graaf%' AND lower(naam) LIKE '%bouw%' ORDER BY id LIMIT 1"
+        )).rows[0];
+        const s = STARTBLOK;
+        await pool.query(
+          `INSERT INTO reclames (sleutel, bedrijf_id, user_id, naam, slogan, kop, tekst, diensten, kenmerken, website, cta_url, cta_tekst,
+             telefoon, whatsapp, email, plaats, regio, logo_url, foto_url, thema, accent, logo_achtergrond, gewicht, actief, notities, auteur_id)
+           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26)`,
+          [s.sleutel, bedrijf ? bedrijf.id : null, bedrijf ? bedrijf.user_id : (admin ? admin.id : null), s.naam, s.slogan, s.kop, s.tekst,
+            s.diensten, s.kenmerken, s.website, s.cta_url, s.cta_tekst, s.telefoon, s.whatsapp, s.email, s.plaats, s.regio, s.logo_url,
+            s.foto_url, s.thema, s.accent, s.logo_achtergrond, s.gewicht, s.actief, s.notities, admin ? admin.id : null]
+        );
+        console.log('[db] Reclameblok De Graaf Bouwbedrijf geplaatst.');
+      }
+      await pool.query("INSERT INTO instellingen (sleutel, waarde) VALUES ('reclame_startblok_degraaf', $1) ON CONFLICT (sleutel) DO NOTHING", [new Date().toISOString()]);
+    }
+  } catch (err) {
+    console.error('[db] Reclameblok plaatsen mislukt:', err.message);
+  }
 
   // Voorbeeld-evenementen seeden (alleen als er nog geen agenda is).
   try {

@@ -1,0 +1,40 @@
+<div class="paginakop">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Beheer · Reclameblokken</span>
+      <h1>Voorbeeld: <%= item.naam %></h1>
+      <p>Zo ziet het blok eruit op de site, in de drie maten. Status: <%= statusLabel %>. Vertoningen op deze pagina tellen niet mee.</p>
+    </div>
+    <div class="flex">
+      <a href="/reclame/beheer/<%= item.id %>/bewerken" class="btn btn--primary">Bewerken</a>
+      <a href="/reclame/beheer" class="btn btn--ghost">← Alle blokken</a>
+    </div>
+  </div>
+</div>
+
+<section class="section section--tight">
+  <div class="wrap">
+    <span class="kicker">Groot</span>
+    <h2 style="font-size:1.2rem; margin-bottom:14px;">Op de homepage, onder de vier modules</h2>
+    <%- include('../partials/reclame', { variant: 'groot', item: item, tel: false, kaal: true }) %>
+  </div>
+</section>
+
+<section class="section section--tight" style="background:var(--bone-2); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+  <div class="wrap">
+    <span class="kicker">Balk</span>
+    <h2 style="font-size:1.2rem; margin-bottom:0;">Onder lijsten en berichten (nieuws, agenda, partners, sponsoring, vacatures, projecten, brigade)</h2>
+    <%- include('../partials/reclame', { variant: 'balk', item: item, tel: false }) %>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="wrap">
+    <span class="kicker">Kaart</span>
+    <h2 style="font-size:1.2rem; margin-bottom:14px;">In de zijbalk van detailpagina's</h2>
+    <div class="zijbalk" style="position:static; max-width:320px;">
+      <dl style="margin:0;"><dt>Voorbeeldzijbalk</dt><dd>Gegevens van de pagina</dd></dl>
+      <%- include('../partials/reclame', { variant: 'kaart', item: item, tel: false }) %>
+    </div>
+  </div>
+</section>

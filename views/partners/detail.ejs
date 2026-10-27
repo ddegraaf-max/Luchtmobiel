@@ -54,6 +54,7 @@
         <% if (partner.contact_email) { %>
           <a href="mailto:<%= partner.contact_email %>" class="btn btn--ghost btn--block" style="margin-top:10px;">Neem contact op</a>
         <% } %>
+        <%- include('../partials/reclame', { variant: 'kaart' }) %>
       </aside>
     </div>
   </div>

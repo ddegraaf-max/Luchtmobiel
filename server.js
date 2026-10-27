@@ -15,6 +15,7 @@ const { headers, csrf, geenCacheVoorIngelogd, httpsVerplicht, platteInvoer } = r
 const helpers = require('./lib/helpers');
 const turnstile = require('./lib/turnstile');
 const versie = require('./lib/versie');
+const reclame = require('./lib/reclame');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -127,6 +128,9 @@ app.use((req, res, next) => {
   next();
 });
 
+// Reclameblokken: per pagina één lopend blok klaarzetten (zie lib/reclame.js)
+app.use(reclame.middleware);
+
 // Routes
 app.use('/', require('./routes/sitemap'));
 app.use('/', require('./routes/pages'));
@@ -144,6 +148,7 @@ app.use('/veteranen', require('./routes/veteranen'));
 app.use('/media', require('./routes/media'));
 app.use('/beheer', require('./routes/beheer'));
 app.use('/galerij', require('./routes/galerij'));
+app.use('/reclame', require('./routes/reclame'));
 
 // 404
 app.use((req, res) => {

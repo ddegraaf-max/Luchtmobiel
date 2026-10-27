@@ -140,6 +140,7 @@
           <p class="meta" style="margin:12px 0 0; text-align:center;">Overgenomen van <a href="<%= evenement.bron_url %>" target="_blank" rel="noopener">bclmb.nl</a><% if (evenement.bron_bijgewerkt) { %> · bijgewerkt <%= h.formatDatum(evenement.bron_bijgewerkt) %><% } %></p>
         <% } %>
       <% } %>
+      <%- include('../partials/reclame', { variant: 'kaart' }) %>
     </aside>
   </div>
 </section>

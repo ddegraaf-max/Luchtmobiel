@@ -47,6 +47,7 @@ router.get('/robots.txt', (req, res) => {
   res.send([
     'User-agent: *',
     'Disallow: /beheer',
+    'Disallow: /reclame',
     'Disallow: /profiel',
     'Disallow: /dashboard',
     'Disallow: /leden',
