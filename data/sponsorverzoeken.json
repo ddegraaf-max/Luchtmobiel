@@ -1,6 +1,38 @@
 {
-  "bijgewerkt": "2026-10-28T05:11:50Z",
+  "bijgewerkt": "2026-10-29T06:11:21Z",
   "items": [
+    {
+      "id": "hulpvoorhelden-veteranenhond-fonds",
+      "titel": "Fonds Veteranenhond: steun een hulphond voor een veteraan met oorlogstrauma",
+      "organisatie": "Stichting Hulp voor Helden",
+      "doelgroep": "Veteranen",
+      "samenvatting": "Hulp voor Helden vraagt donaties voor het fonds Veteranenhond, dat getrainde hulphonden en dierondersteunde therapie voor veteranen met een oorlogstrauma mogelijk maakt; projectkosten € 50.000.",
+      "omschrijving": "De pagina \"Veteranenhond\" van Stichting Hulp voor Helden gaat over een fonds waarmee hulphonden en dierondersteunde therapie worden gefinancierd voor veteranen met een oorlogstrauma. De pagina stelt: \"Een gift voor het fonds Veteranenhond komt dus volledig ten goede aan veteranen met een oorlogstrauma!\" Projectkosten worden vermeld als € 50.000. Doneren kan via de donatieknop of door het project te \"omarmen\" via het contactformulier.",
+      "url": "https://www.hulpvoorhelden.nl/veteranenhond",
+      "bron_naam": "hulpvoorhelden.nl",
+      "plaats": null,
+      "doelbedrag": "€ 50.000",
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-10-29",
+      "zoekterm": "hulpvoorhelden.nl/projecten (vaste bron, projectenoverzicht)"
+    },
+    {
+      "id": "hulpvoorhelden-veva-marcheert",
+      "titel": "VeVa Marcheert: scholieren eren veteranen, bedrijven kunnen het project sponsoren",
+      "organisatie": "Stichting Hulp voor Helden, met MBO-opleiding Veiligheid en Vakmanschap (VeVa)",
+      "doelgroep": "Veteranen",
+      "samenvatting": "In de week voor Veteranendag lopen zo'n 2.800 VeVa-scholieren een mars langs monumenten waar veteranen hun verhaal vertellen; bedrijven kunnen dit Hulp voor Helden-project sponsoren vanaf € 500.",
+      "omschrijving": "VeVa Marcheert is een initiatief van Stichting Hulp voor Helden om waardering voor veteranen onder jongeren te vergroten. In de week voor Veteranendag lopen ongeveer 2.800 MBO-studenten van de opleiding Veiligheid en Vakmanschap (VeVa) een mars rond hun school, met stops bij monumenten waar veteranen hun ervaringen vertellen; elke mars eindigt met een defilé en toespraken. De pagina noemt \"Sponsoring: v.a. € 500,-\" met een knop \"Sponsor dit project\" voor bedrijven. Geen doelbedrag voor de gehele actie vermeld.",
+      "url": "https://www.hulpvoorhelden.nl/veva-marcheert",
+      "bron_naam": "hulpvoorhelden.nl",
+      "plaats": null,
+      "doelbedrag": "Sponsoring vanaf € 500",
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-10-29",
+      "zoekterm": "hulpvoorhelden.nl/projecten (vaste bron, projectenoverzicht)"
+    },
     {
       "id": "hulpvoorhelden-missionkit",
       "titel": "MissionKit: steun het pakket voor uitgezonden militairen en hun thuisfront",
