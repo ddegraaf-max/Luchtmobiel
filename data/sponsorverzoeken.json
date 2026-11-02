@@ -1,6 +1,38 @@
 {
-  "bijgewerkt": "2026-11-01T00:00:00Z",
+  "bijgewerkt": "2026-11-02T06:20:00Z",
   "items": [
+    {
+      "id": "hulpvoorhelden-samen-voor-helden-jorn-robert",
+      "titel": "Samen voor helden: Cios-studenten lopen van kazerne naar politiecentrum voor Hulp voor Helden",
+      "organisatie": "Jorn en Robert (Cios Goes), voor Stichting Hulp voor Helden",
+      "doelgroep": "Militairen & veteranen",
+      "samenvatting": "Twee derdejaars Cios-studenten lopen van de KMAR-kazerne in Hoogerheide naar het IBT-centrum van de politie in Nieuwdorp om geld in te zamelen voor Stichting Hulp voor Helden; doelbedrag € 1.000.",
+      "omschrijving": "Jorn en Robert, derdejaars studenten in het profiel Sport Coördinator Uniformele Beroepen (SCUB) aan Cios in Goes, willen zelf in een uniformberoep gaan werken. Als schoolopdracht met maatschappelijke impact organiseren zij een wandeltocht van de KMAR-kazerne in Hoogerheide naar het IBT-centrum van de politie in Nieuwdorp, om geld in te zamelen voor de \"helden van vandaag en vroeger\" via Stichting Hulp voor Helden.",
+      "url": "https://www.hulpvoorhelden.nl/actie-details-individu/6f443a36-faf6-4178-8ee9-a0c1c0462252",
+      "bron_naam": "hulpvoorhelden.nl",
+      "plaats": "Hoogerheide – Nieuwdorp",
+      "doelbedrag": "€ 1.000",
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-11-02",
+      "zoekterm": "hulpvoorhelden.nl/online-collecteren (vaste bron, individuele acties)"
+    },
+    {
+      "id": "hulpvoorhelden-12-halve-marathons-lankhorst",
+      "titel": "12 halve marathons voor Hulp voor Helden",
+      "organisatie": "Maarten Lankhorst, voor Stichting Hulp voor Helden",
+      "doelgroep": "Militairen & veteranen",
+      "samenvatting": "Maarten Lankhorst loopt twaalf halve marathons en vraagt donaties voor Stichting Hulp voor Helden, dat militairen, veteranen en hun gezinnen steunt; doelbedrag € 2.500.",
+      "omschrijving": null,
+      "url": "https://www.hulpvoorhelden.nl/actie-details-individu/621ec894-78ac-4b38-8c61-ce37cbad63e1",
+      "bron_naam": "hulpvoorhelden.nl",
+      "plaats": null,
+      "doelbedrag": "€ 2.500",
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-11-02",
+      "zoekterm": "hulpvoorhelden.nl/online-collecteren (vaste bron, individuele acties)"
+    },
     {
       "id": "hulpvoorhelden-veteranenhond-fonds",
       "titel": "Fonds Veteranenhond: steun een hulphond voor een veteraan met oorlogstrauma",
