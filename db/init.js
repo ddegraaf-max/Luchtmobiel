@@ -167,6 +167,8 @@ async function init() {
   await pool.query(`ALTER TABLE evenementen ADD COLUMN IF NOT EXISTS bron_afbeelding_url TEXT;`);
   await pool.query(`ALTER TABLE evenementen ADD COLUMN IF NOT EXISTS bron_bijgewerkt TIMESTAMPTZ;`);
   await pool.query(`CREATE INDEX IF NOT EXISTS evenementen_bron_idx ON evenementen(bron, bron_uid);`);
+  // Agenda: website of aanmeldlink van de organisatie (bijv. een reünie met eigen site)
+  await pool.query(`ALTER TABLE evenementen ADD COLUMN IF NOT EXISTS link TEXT;`);
   await pool.query(`
     CREATE TABLE IF NOT EXISTS agenda_import_negeer (
       id          SERIAL PRIMARY KEY,

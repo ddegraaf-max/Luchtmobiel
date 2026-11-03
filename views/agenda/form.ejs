@@ -50,6 +50,12 @@
         <textarea id="omschrijving" name="omschrijving" rows="6" placeholder="Wat kunnen leden verwachten?"><%= evenement.omschrijving || '' %></textarea>
       </div>
 
+      <div class="veld">
+        <label for="link">Website of aanmeldlink (optioneel)</label>
+        <input type="text" id="link" name="link" inputmode="url" value="<%= evenement.link || '' %>" placeholder="bijv. www.reunie11lmb.nl">
+        <span class="hint">Staat "Aanmelden mogelijk maken" uit, dan verwijst de knop Aanmelden naar deze site; anders komt er een knop "Meer informatie" bij.</span>
+      </div>
+
       <div class="veld-rij">
         <div class="veld">
           <label for="max_plaatsen">Max. aantal plaatsen (optioneel)</label>

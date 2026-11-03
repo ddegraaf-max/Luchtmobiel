@@ -116,6 +116,8 @@ De activiteiten op de hoofdsite van de Business Club ([bclmb.nl/evenementen](htt
 - Geïmporteerde evenementen verwijzen voor het aanmelden naar bclmb.nl (knop *Aanmelden op bclmb.nl*), zodat er één deelnemerslijst is. Wil je toch aanmelden via het platform? Zet dan in het evenement *Aanmelden mogelijk maken* aan; die instelling (en de categorie en het maximum aantal plaatsen) wordt niet overschreven.
 - Verwijder je een geïmporteerd evenement in het platform, dan wordt het niet opnieuw geïmporteerd (terug te draaien in Beheer). Verdwijnt een toekomstig evenement van de hoofdsite, dan verdwijnt het hier ook, tenzij er al aanmeldingen zijn.
 - Evenementen zonder tijd worden als "hele dag" getoond; dat kun je ook voor handmatige evenementen aanvinken.
+- Een (handmatig) evenement kan een **website of aanmeldlink** krijgen, bijvoorbeeld een reünie met een eigen site. Staat *Aanmelden mogelijk maken* uit, dan verwijst de knop Aanmelden naar die site; anders komt er een knop *Meer informatie* bij. De link staat ook in het overzicht en in het .ics-bestand.
+- De **reünie van 11 Luchtmobiele Brigade** (8 juli 2027, Oranjekazerne Schaarsbergen, categorie *Reünie*) staat als startitem in de agenda, met de poster uit de VRB-nieuwsbrief en aanmelden via www.reunie11lmb.nl; wordt één keer geplaatst (`lib/startinhoud.js`).
 
 > Bij de eerste import komen de echte activiteiten naast eventuele oude voorbeeld-evenementen te staan. Verwijder de voorbeelden (of dubbele handmatige versies) één keer via de agenda.
 

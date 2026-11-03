@@ -101,6 +101,9 @@
           <% } else { %>
             <a href="<%= evenement.bron_url %>" target="_blank" rel="noopener" class="btn btn--primary btn--block">Aanmelden op bclmb.nl</a>
           <% } %>
+        <% } else if (!evenement.aanmelden && evenement.link) { %>
+          <p class="muted">Aanmelden en de laatste informatie vind je op de site van de organisatie.</p>
+          <a href="<%= evenement.link %>" target="_blank" rel="noopener" class="btn btn--primary btn--block">Aanmelden op <%= h.toonUrl(evenement.link).split('/')[0] %> ↗</a>
         <% } else if (!evenement.aanmelden) { %>
           <p class="muted">Voor dit evenement is aanmelden niet nodig — iedereen is welkom.</p>
         <% } else if (!isToekomst) { %>
@@ -133,6 +136,9 @@
         <% } %>
       </div>
       <a href="/agenda/<%= evenement.id %>/ical" class="btn btn--ghost btn--block" style="margin-top:14px;">📅 Zet in mijn agenda</a>
+      <% if (evenement.link && (evenement.aanmelden || evenement.bron_url)) { %>
+        <a href="<%= evenement.link %>" target="_blank" rel="noopener" class="btn btn--ghost btn--block" style="margin-top:10px;">Meer informatie op <%= h.toonUrl(evenement.link).split('/')[0] %> ↗</a>
+      <% } %>
       <% if (evenement.bron_url) { %>
         <% if (evenement.bron === 'sponsorverzoek') { %>
           <p class="meta" style="margin:12px 0 0; text-align:center;">Sponsoractie van een derde partij — zie het <a href="/sponsorverzoeken/<%= evenement.bron_uid %>">sponsorverzoek</a>.</p>

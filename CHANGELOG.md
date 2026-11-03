@@ -3,6 +3,10 @@
 Het versienummer staat in de voettekst van elke pagina en in **Beheer** (met de code van de uitgerolde update).
 Bij elke update wordt het nummer in `package.json` opgehoogd en hier beschreven wat er is veranderd.
 
+## 1.10.0 — 3 november 2026
+- **Reünie 11 Luchtmobiele Brigade** (8 juli 2027, Oranjekazerne Schaarsbergen, 7e lustrum) staat in de agenda, met de poster uit de VRB-nieuwsbrief en een knop om aan te melden op www.reunie11lmb.nl.
+- Agenda: een evenement kan een **website of aanmeldlink** krijgen. Staat "Aanmelden mogelijk maken" uit, dan verwijst de knop Aanmelden naar die site; anders komt er een knop "Meer informatie" bij. De link staat ook in het agenda-overzicht en gaat mee in het .ics-bestand. Nieuwe categorie *Reünie*.
+
 ## 1.9.0 — 3 november 2026
 - **VRB-Nieuwsbrief 2026-4** staat bij het nieuws (label *Nieuwsbrief · VRB*): de hoofdpunten — Van de voorzitter, de Witte Kapel, de Henry & Kevin Memorial Tour, de Draagploeg Veteranen Luchtmobiel, Recovery on the Battlefield, herdenking en ondersteuning Market Garden 2026 en de reünie van 8 juli 2027 — met de Chinook-foto van de Ginkelse heide en de volledige nieuwsbrief als PDF (openen in de browser of downloaden).
 - **Sponsorverzoek Anjerperkje Witte Kapel**, uitgelicht op de pagina Sponsoring: de inzamelactie van het Veteranenbureau 11 LMB voor een Witte Anjerperkje bij de Witte Kapel op Oud Vrijland, met IBAN, tenaamstelling en de knop naar het ING-betaalverzoek achter de QR-code uit de nieuwsbrief.

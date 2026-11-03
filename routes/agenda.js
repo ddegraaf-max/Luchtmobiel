@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db/pool');
 const { requireLogin, requireRedactie, idParams } = require('../middleware/auth');
-const { isoLokaal, formatDatumLang, formatTijd } = require('../lib/helpers');
+const { isoLokaal, formatDatumLang, formatTijd, netteUrl } = require('../lib/helpers');
 const { sendMail, mailLayout, escHtml } = require('../lib/mail');
 const { afbeelding, bewaarAfbeelding } = require('../lib/upload');
 const agendaImport = require('../lib/agenda-import');
 
-const CATEGORIEEN = ['Ceremonieel', 'Sportief', 'Excursie', 'Netwerk', 'Sponsoractie', 'Overig'];
+const CATEGORIEEN = ['Ceremonieel', 'Sportief', 'Excursie', 'Netwerk', 'Reünie', 'Sponsoractie', 'Overig'];
 
 idParams(router, ['id', 'fotoId']);
 const uploadAfbeelding = afbeelding('afbeelding', { maxMb: 2 });
@@ -18,6 +18,7 @@ function leesFormulier(body) {
   const maxp = parseInt(body.max_plaatsen, 10);
   const start = typeof body.start_op === 'string' ? body.start_op.trim() : '';
   const eind = (typeof body.eind_op === 'string' ? body.eind_op.trim() : '') || null;
+  const linkRuw = typeof body.link === 'string' ? body.link.trim().slice(0, 500) : '';
   const d = {
     titel: typeof body.titel === 'string' ? body.titel.trim().slice(0, 200) : '',
     categorie: CATEGORIEEN.includes(body.categorie) ? body.categorie : null,
@@ -27,7 +28,9 @@ function leesFormulier(body) {
     eind_op: eind && DATUMTIJD.test(eind) ? eind : null,
     aanmelden: body.aanmelden === 'on' || body.aanmelden === 'true' || body.aanmelden === '1',
     hele_dag: body.hele_dag === 'on',
-    max_plaatsen: Number.isFinite(maxp) && maxp > 0 ? maxp : null
+    max_plaatsen: Number.isFinite(maxp) && maxp > 0 ? maxp : null,
+    // Website of aanmeldlink van de organisatie (optioneel)
+    link: linkRuw ? netteUrl(linkRuw) || null : null
   };
   if (d.hele_dag && d.start_op) {
     d.start_op = d.start_op.slice(0, 10) + 'T00:00';
@@ -36,6 +39,7 @@ function leesFormulier(body) {
   if (!d.titel || !d.start_op) d.fout = 'Vul minimaal een titel en een geldige startdatum/tijd in.';
   else if (eind && !d.eind_op) d.fout = 'De einddatum/tijd is ongeldig.';
   else if (d.eind_op && d.eind_op < d.start_op) d.fout = 'Het einde ligt vóór het begin.';
+  else if (linkRuw && !d.link) d.fout = 'De website of aanmeldlink is geen geldig webadres.';
   else d.fout = null;
   return d;
 }
@@ -84,9 +88,9 @@ router.post('/nieuw', requireRedactie, uploadAfbeelding, async (req, res) => {
   try {
     const afbId = await bewaarAfbeelding(req.file, req.session.user.id);
     const { rows } = await pool.query(
-      `INSERT INTO evenementen (titel, categorie, omschrijving, locatie, start_op, eind_op, aanmelden, max_plaatsen, afbeelding_id, auteur_id, hele_dag)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING id`,
-      [d.titel, d.categorie, d.omschrijving, d.locatie, d.start_op, d.eind_op, d.aanmelden, d.max_plaatsen, afbId, req.session.user.id, d.hele_dag]
+      `INSERT INTO evenementen (titel, categorie, omschrijving, locatie, start_op, eind_op, aanmelden, max_plaatsen, afbeelding_id, auteur_id, hele_dag, link)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING id`,
+      [d.titel, d.categorie, d.omschrijving, d.locatie, d.start_op, d.eind_op, d.aanmelden, d.max_plaatsen, afbId, req.session.user.id, d.hele_dag, d.link]
     );
     req.session.flash = { type: 'succes', message: 'Evenement toegevoegd aan de agenda.' };
     res.redirect('/agenda/' + rows[0].id);
@@ -253,8 +257,8 @@ router.post('/:id/bewerken', requireRedactie, uploadAfbeelding, async (req, res)
     const afbId = (await bewaarAfbeelding(req.file, req.session.user.id)) || bestaand.afbeelding_id;
     await pool.query(
       `UPDATE evenementen SET titel=$1, categorie=$2, omschrijving=$3, locatie=$4, start_op=$5, eind_op=$6,
-       aanmelden=$7, max_plaatsen=$8, afbeelding_id=$9, hele_dag=$10 WHERE id=$11`,
-      [d.titel, d.categorie, d.omschrijving, d.locatie, d.start_op, d.eind_op, d.aanmelden, d.max_plaatsen, afbId, d.hele_dag, bestaand.id]
+       aanmelden=$7, max_plaatsen=$8, afbeelding_id=$9, hele_dag=$10, link=$11 WHERE id=$12`,
+      [d.titel, d.categorie, d.omschrijving, d.locatie, d.start_op, d.eind_op, d.aanmelden, d.max_plaatsen, afbId, d.hele_dag, d.link, bestaand.id]
     );
     req.session.flash = { type: 'succes', message: 'Evenement bijgewerkt.' };
     res.redirect('/agenda/' + bestaand.id);
@@ -321,6 +325,7 @@ router.get('/:id/ical', async (req, res) => {
       `SUMMARY:${esc(ev.titel)}`,
       ev.locatie ? `LOCATION:${esc(ev.locatie)}` : '',
       ev.omschrijving ? `DESCRIPTION:${esc(ev.omschrijving)}` : '',
+      ev.link ? `URL:${ev.link}` : '',
       'END:VEVENT', 'END:VCALENDAR'
     ].filter(Boolean).join('\r\n');
     res.setHeader('Content-Type', 'text/calendar; charset=utf-8');
@@ -368,3 +373,4 @@ router.post('/:id/foto/:fotoId/verwijderen', requireRedactie, async (req, res) =
 });
 
 module.exports = router;
+module.exports.CATEGORIEEN = CATEGORIEEN; // voor tests en de startinhoud

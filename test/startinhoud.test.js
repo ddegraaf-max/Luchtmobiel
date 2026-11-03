@@ -48,6 +48,29 @@ test('de VRB-nieuwsbrief bevat de kernpunten en het donatieadres', () => {
   assert.equal(b.afbeelding, 'vrb-nieuwsbrief-2026-4.jpg');
 });
 
+test('agenda-items van de startinhoud passen in het agendaformulier', () => {
+  const { CATEGORIEEN } = require('../routes/agenda');
+  const { netteUrl } = require('../lib/helpers');
+  assert.ok(start.EVENEMENTEN.length >= 1);
+  for (const e of start.EVENEMENTEN) {
+    assert.match(e.marker, /^agenda_[a-z0-9_]+$/);
+    assert.ok(e.titel && e.titel.length <= 200, 'titel');
+    assert.ok(CATEGORIEEN.includes(e.categorie), 'categorie ' + e.categorie);
+    assert.match(e.start_op, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/);
+    assert.ok(!e.eind_op || e.eind_op >= e.start_op, 'einde na begin');
+    assert.ok(!e.omschrijving || e.omschrijving.length <= 10000, 'omschrijving');
+    assert.equal(netteUrl(e.link), e.link, 'link is al netjes');
+    if (e.afbeelding) assert.ok(detecteerAfbeelding(fs.readFileSync(path.join(start.MAP, e.afbeelding))), e.afbeelding);
+  }
+  const reunie = start.EVENEMENTEN.find((x) => x.marker === 'agenda_reunie_11lmb_2027');
+  assert.ok(reunie);
+  assert.equal(reunie.start_op, '2027-07-08T00:00');
+  assert.equal(reunie.hele_dag, true);
+  assert.equal(reunie.aanmelden, false); // aanmelden gaat via reunie11lmb.nl
+  assert.equal(reunie.link, 'https://www.reunie11lmb.nl');
+  assert.match(reunie.locatie, /Oranjekazerne/);
+});
+
 test('sponsorverzoeken van de startinhoud passen in het formulier en de controle', () => {
   assert.ok(start.SPONSORVERZOEKEN.length >= 1);
   for (const s of start.SPONSORVERZOEKEN) {
