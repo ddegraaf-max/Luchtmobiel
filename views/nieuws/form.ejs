@@ -1,7 +1,7 @@
 <div class="paginakop">
   <div class="wrap">
     <div><span class="kicker">Van het bestuur</span><h1><%= title %></h1></div>
-    <a href="/nieuws" class="btn btn--ghost">← Nieuws</a>
+    <a href="<%= bericht.id ? '/nieuws/' + bericht.id : '/nieuws' %>" class="btn btn--ghost">← <%= bericht.id ? 'Naar het bericht' : 'Nieuws' %></a>
   </div>
 </div>
 
@@ -11,14 +11,47 @@
     <% if (bericht.bron_url) { %>
       <div class="flash flash--info">Dit bericht is overgenomen van <a href="<%= bericht.bron_url %>" target="_blank" rel="noopener">bclmb.nl</a>. Titel en tekst worden overschreven zodra de bron wijzigt; pas het bericht liever daar aan.</div>
     <% } %>
-    <form action="<%= actie %>" method="post" class="form-card stack"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <form action="<%= actie %>?_csrf=<%= csrfToken %>" method="post" enctype="multipart/form-data" class="form-card stack"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <div class="veld">
         <label for="titel">Titel *</label>
-        <input type="text" id="titel" name="titel" value="<%= bericht.titel || '' %>" required autofocus>
+        <input type="text" id="titel" name="titel" value="<%= bericht.titel || '' %>" required autofocus maxlength="200">
+      </div>
+      <div class="veld">
+        <label for="categorie">Label boven het bericht</label>
+        <input type="text" id="categorie" name="categorie" value="<%= bericht.categorie || '' %>" maxlength="60" placeholder="bijv. Nieuwsbrief · VRB">
+        <span class="hint">Optioneel. Leeg = "Van het bestuur". Staat ook als badge in het overzicht.</span>
       </div>
       <div class="veld">
         <label for="inhoud">Bericht</label>
-        <textarea id="inhoud" name="inhoud" rows="10" placeholder="Schrijf hier het nieuwsbericht. Laat een lege regel tussen alinea's."><%= bericht.inhoud || '' %></textarea>
+        <textarea id="inhoud" name="inhoud" rows="14" placeholder="Schrijf hier het nieuwsbericht. Laat een lege regel tussen alinea's."><%= bericht.inhoud || '' %></textarea>
+        <span class="hint">Laat een lege regel tussen alinea's. Een regel die begint met <code>##</code> en een spatie wordt een tussenkop.</span>
+      </div>
+      <div class="veld">
+        <label for="afbeelding">Afbeelding</label>
+        <% if (bericht.afbeelding_id) { %>
+          <img src="/media/<%= bericht.afbeelding_id %>" alt="" style="max-width:240px; max-height:140px; border-radius:var(--radius); display:block; margin-bottom:8px;">
+        <% } %>
+        <input type="file" id="afbeelding" name="afbeelding" accept="image/*">
+        <span class="hint">Optioneel. JPG, PNG, WebP of GIF, max <%= maxAfbeeldingMb %> MB. Leeg laten = ongewijzigd.</span>
+        <% if (bericht.afbeelding_id) { %>
+          <label style="display:flex; align-items:center; gap:8px; margin-top:8px; font-weight:500; cursor:pointer;"><input type="checkbox" name="afbeelding_verwijderen" style="width:auto;"> Huidige afbeelding verwijderen</label>
+        <% } %>
+      </div>
+      <div class="veld">
+        <label for="bijlage">PDF-bijlage (bijvoorbeeld een nieuwsbrief)</label>
+        <% if (bericht.bijlage_id) { %>
+          <p class="hint" style="margin:0 0 8px;">Huidige bijlage: <a href="/nieuws/<%= bericht.id %>/bijlage" target="_blank" rel="noopener"><%= bericht.bijlage_naam || 'PDF' %></a></p>
+        <% } %>
+        <input type="file" id="bijlage" name="bijlage" accept="application/pdf,.pdf" data-knoptekst="Kies PDF">
+        <span class="hint">Optioneel. Alleen PDF, max <%= maxBijlageMb %> MB. Bezoekers kunnen de bijlage bij het bericht openen en downloaden. Leeg laten = ongewijzigd.</span>
+        <% if (bericht.bijlage_id) { %>
+          <label style="display:flex; align-items:center; gap:8px; margin-top:8px; font-weight:500; cursor:pointer;"><input type="checkbox" name="bijlage_verwijderen" style="width:auto;"> Huidige bijlage verwijderen</label>
+        <% } %>
+      </div>
+      <div class="veld">
+        <label for="bijlage_naam">Naam van de bijlage</label>
+        <input type="text" id="bijlage_naam" name="bijlage_naam" value="<%= bericht.bijlage_naam || '' %>" maxlength="120" placeholder="bijv. Nieuwsbrief 2026-4">
+        <span class="hint">Zoals getoond bij het bericht. Leeg = de bestandsnaam.</span>
       </div>
       <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
         <input type="checkbox" name="gepubliceerd" style="width:auto;" <%= (bericht.gepubliceerd === undefined || bericht.gepubliceerd) ? 'checked' : '' %>>

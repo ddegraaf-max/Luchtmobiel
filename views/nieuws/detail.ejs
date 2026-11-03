@@ -14,8 +14,21 @@
     <% if (bericht.afbeelding_id) { %>
       <img src="/media/<%= bericht.afbeelding_id %>" alt="<%= bericht.titel %>" style="width:100%; max-height:420px; object-fit:cover; border-radius:var(--radius); margin-bottom:26px;">
     <% } %>
+    <% if (bericht.bijlage_id) { %>
+      <div class="card bijlage-kaart">
+        <div class="bijlage-icoon" aria-hidden="true">PDF</div>
+        <div style="flex:1; min-width:180px;">
+          <div style="font-weight:700; color:var(--ink);"><%= bericht.bijlage_naam || 'Bijlage' %></div>
+          <div class="meta">PDF-bestand<%= bericht.bijlage_grootte ? ' · ' + h.bestandsgrootte(bericht.bijlage_grootte) : '' %></div>
+        </div>
+        <div class="flex" style="gap:8px; flex-wrap:wrap;">
+          <a href="/nieuws/<%= bericht.id %>/bijlage" target="_blank" rel="noopener" class="btn btn--primary btn--sm">Openen</a>
+          <a href="/nieuws/<%= bericht.id %>/bijlage?download=1" class="btn btn--ghost btn--sm">Downloaden</a>
+        </div>
+      </div>
+    <% } %>
     <% if (bericht.inhoud) { %>
-      <div class="prose"><% bericht.inhoud.split(/\n\n+/).forEach(function(par){ %><p><%= par %></p><% }) %></div>
+      <div class="prose"><% h.blokken(bericht.inhoud).forEach(function(b){ if (b.type === 'kop') { %><h3><%= b.tekst %></h3><% } else { %><p><%= b.tekst %></p><% } }) %></div>
     <% } %>
     <% if (bericht.bron === 'linkedin' || bericht.bron === 'facebook') { %>
       <% var platformNaam = bericht.bron === 'facebook' ? 'Facebook' : 'LinkedIn'; %>

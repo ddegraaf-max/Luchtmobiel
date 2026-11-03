@@ -246,6 +246,12 @@ input[type=file] { font-size: .88rem; }
 .zijbalk dt:first-child { margin-top: 0; }
 .prose p { color: var(--ink-soft); }
 .prose { white-space: pre-line; }
+.prose h3 { margin: 28px 0 6px; font-size: 1.15rem; }
+.prose h3:first-child { margin-top: 0; }
+
+/* PDF-bijlage bij een nieuwsbericht (nieuwsbrief) */
+.bijlage-kaart, .bijlage-kaart:hover { flex-direction: row; align-items: center; gap: 16px; flex-wrap: wrap; padding: 16px 20px; margin-bottom: 26px; transform: none; box-shadow: none; border-color: var(--line); }
+.bijlage-icoon { flex: none; width: 46px; height: 56px; border-radius: 7px; background: var(--maroon); color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 800; font-size: .74rem; letter-spacing: .08em; }
 
 /* ---------- tabel (beheer) ---------- */
 .tabel { width: 100%; border-collapse: collapse; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; font-size: .9rem; }

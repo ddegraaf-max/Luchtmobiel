@@ -3,6 +3,11 @@
 Het versienummer staat in de voettekst van elke pagina en in **Beheer** (met de code van de uitgerolde update).
 Bij elke update wordt het nummer in `package.json` opgehoogd en hier beschreven wat er is veranderd.
 
+## 1.9.0 — 3 november 2026
+- **VRB-Nieuwsbrief 2026-4** staat bij het nieuws (label *Nieuwsbrief · VRB*): de hoofdpunten — Van de voorzitter, de Witte Kapel, de Henry & Kevin Memorial Tour, de Draagploeg Veteranen Luchtmobiel, Recovery on the Battlefield, herdenking en ondersteuning Market Garden 2026 en de reünie van 8 juli 2027 — met de Chinook-foto van de Ginkelse heide en de volledige nieuwsbrief als PDF (openen in de browser of downloaden).
+- **Sponsorverzoek Anjerperkje Witte Kapel**, uitgelicht op de pagina Sponsoring: de inzamelactie van het Veteranenbureau 11 LMB voor een Witte Anjerperkje bij de Witte Kapel op Oud Vrijland, met IBAN, tenaamstelling en de knop naar het ING-betaalverzoek achter de QR-code uit de nieuwsbrief.
+- Nieuwsberichten kunnen nu zelf een **afbeelding en een PDF-bijlage** krijgen (bijv. een nieuwsbrief, max 10 MB) en een eigen label boven de titel; in de tekst wordt een regel die begint met `## ` een tussenkop. Het overzicht toont een PDF-badge bij berichten met bijlage.
+
 ## 1.8.0 — 27 oktober 2026
 - **Diavoorstelling**: staan er meerdere reclameblokken aan, dan wisselen ze op dezelfde plek om de beurt (elke 8 à 9 seconden, met stippen en pijltjes; pauzeert bij aanwijzen en bij "minder beweging"). Elke getoonde dia telt als vertoning.
 - Tweede blok: **Honor Residence Poland**, het privé vakantiehuis voor veteranen, militairen en hun gezin in Mazovië (baret-kleurstelling met goud, zegel-logo, huisfoto, voorzieningen, prijzen en reserveerknop).

@@ -138,6 +138,9 @@ async function init() {
   await pool.query(`ALTER TABLE nieuws ADD COLUMN IF NOT EXISTS bron_afbeelding_url TEXT;`);
   await pool.query(`ALTER TABLE nieuws ADD COLUMN IF NOT EXISTS bron_bijgewerkt TIMESTAMPTZ;`);
   await pool.query(`CREATE INDEX IF NOT EXISTS nieuws_bron_idx ON nieuws(bron, bron_uid);`);
+  // Nieuws: PDF-bijlage bij een bericht (bijv. een nieuwsbrief), met de naam zoals getoond
+  await pool.query(`ALTER TABLE nieuws ADD COLUMN IF NOT EXISTS bijlage_id INTEGER REFERENCES media(id) ON DELETE SET NULL;`);
+  await pool.query(`ALTER TABLE nieuws ADD COLUMN IF NOT EXISTS bijlage_naam TEXT;`);
 
   // Besloten media: profielfoto's en bedrijfslogo's alleen voor ingelogde leden
   await pool.query(`ALTER TABLE media ADD COLUMN IF NOT EXISTS besloten BOOLEAN NOT NULL DEFAULT false;`);
@@ -462,6 +465,12 @@ async function init() {
       console.log('[db] Voorbeeld-nieuwsbericht geseed.');
     }
   } catch (err) { console.error('[db] Seeden nieuws mislukt:', err.message); }
+
+  // Startinhoud (VRB-nieuwsbrief met PDF, sponsorverzoek Anjerperkje Witte Kapel): elk één keer
+  // plaatsen, markering in instellingen; zie lib/startinhoud.js.
+  try {
+    await require('../lib/startinhoud').plaatsStartinhoud();
+  } catch (err) { console.error('[db] Startinhoud plaatsen mislukt:', err.message); }
 
   console.log('[db] Initialisatie voltooid.');
 }
