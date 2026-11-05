@@ -171,7 +171,17 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-// Mobiel menu togglen, afdrukken, bedrijfsblokken toevoegen/verwijderen
+function sluitAccountmenus(behalve) {
+  document.querySelectorAll('.nav-account.open').forEach(function (menu) {
+    if (menu === behalve) return;
+    menu.classList.remove('open');
+    const knop = menu.querySelector('.nav-account__knop');
+    if (knop) knop.setAttribute('aria-expanded', 'false');
+  });
+}
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') sluitAccountmenus(null); });
+
+// Mobiel menu togglen, accountmenu, afdrukken, bedrijfsblokken toevoegen/verwijderen
 document.addEventListener('click', function (e) {
   // Galerij: YouTube-video afspelen (thumbnail vervangen door de ingesloten speler)
   const video = e.target.closest('[data-youtube]');
@@ -192,6 +202,15 @@ document.addEventListener('click', function (e) {
   if (toggle) {
     const nav = toggle.closest('.nav');
     if (nav) nav.classList.toggle('open');
+  }
+
+  // Accountmenu in de menubalk (ingelogd): open/dicht met de knop, dicht bij een klik ergens anders
+  const accountKnop = e.target.closest('.nav-account__knop');
+  sluitAccountmenus(accountKnop ? accountKnop.closest('.nav-account') : null);
+  if (accountKnop) {
+    const menu = accountKnop.closest('.nav-account');
+    const open = menu.classList.toggle('open');
+    accountKnop.setAttribute('aria-expanded', open ? 'true' : 'false');
   }
 
   // Afdrukken (herstelcodes)

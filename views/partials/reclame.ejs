@@ -121,6 +121,20 @@
   </div>
 </aside>
 
+<% } else if (rcVariant === 'mini') { var rc = rcLijst[0], g = rcGegevens(rc); var rcTag = g.link ? 'a' : 'div'; %>
+<%# mini: compacte regel voor het paneel "Onze partners" op de homepage — logo, naam en diensten, foto rechts %>
+<<%= rcTag %> class="<%= g.klasse %>" style="<%= g.stijl %>"<% if (g.link) { %> href="<%= g.klik %>" target="_blank" rel="noopener sponsored"<% } %> aria-label="Advertentie: <%= rc.naam %>">
+  <div class="reclame__kader<%= g.foto ? ' reclame__kader--foto' : '' %>">
+    <% if (g.logo) { %><span class="reclame__logo"><img src="<%= g.logo %>" alt="Logo <%= rc.naam %>" loading="lazy"></span><% } %>
+    <span class="reclame__midden">
+      <span class="reclame__label" title="Betaalde vermelding van een bedrijf uit het netwerk">Advertentie</span>
+      <span class="reclame__naam"><%= rc.naam %></span>
+      <% if (g.diensten.length) { %><span class="reclame__inline"><%= g.diensten.slice(0, 4).join(' · ') %></span><% } else if (rc.slogan) { %><span class="reclame__slogan"><%= rc.slogan %></span><% } else if (rc.kop || rc.tekst) { %><span class="reclame__inline"><%= h.kort(rc.kop || rc.tekst, 70) %></span><% } %>
+    </span>
+    <% if (g.foto) { %><span class="reclame__foto"><img src="<%= g.foto %>" alt="" loading="lazy"></span><% } %>
+  </div>
+</<%= rcTag %>>
+
 <% } else { %>
 <div class="reclame-slider reclame-slider--balk" data-reclame-slider data-interval="8000" aria-roledescription="diavoorstelling" aria-label="Partners van het netwerk">
   <div class="reclame-slides">

@@ -1,112 +1,143 @@
-<section class="hero hero--foto" style="background-image:url('https://images.unsplash.com/photo-1658419892513-b2a713c870ea?q=80&w=1600&auto=format&fit=crop');">
+<%# Homepage in de huisstijl: foto-hero met rode accentbalk, iconenrij en drie panelen met een rode kopbalk. %>
+<section class="hero hero--foto" style="background-image:url('/static/img/hero-chinook.jpg?v=1');">
   <div class="wrap">
-    <span class="kicker reveal">Nec temere, nec timide · noch roekeloos, noch bevreesd</span>
-    <h1 class="reveal d1">Eén netwerk. Voor ondernemen én voor elkaar.</h1>
-    <p class="lede reveal d2">Het platform van de Business Club Luchtmobiel: presenteer jezelf en je bedrijf, deel vacatures, vind ondersteuning voor je projecten en draag bij aan veteranenzaken. Door leden, voor leden en de brigade.</p>
-    <div class="hero-acties reveal d3">
-      <% if (user) { %>
-        <a href="/leden" class="btn btn--light">Naar de ledengids</a>
-        <a href="/dashboard" class="btn btn--ghost">Mijn dashboard</a>
-      <% } else { %>
-        <a href="/registreren" class="btn btn--light">Word lid</a>
-        <a href="/over" class="btn btn--ghost">Hoe het werkt</a>
-      <% } %>
-    </div>
-
-    <div class="statbar reveal d4">
-      <div class="stat"><div class="getal"><%= stats.leden %></div><div class="label">Leden &amp; bedrijven</div></div>
-      <div class="stat"><div class="getal"><%= stats.vacatures %></div><div class="label">Openstaande vacatures</div></div>
-      <div class="stat"><div class="getal"><%= stats.projecten %></div><div class="label">Projecten met steunvraag</div></div>
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="wrap">
-    <span class="kicker">Wat het platform biedt</span>
-    <h2>Vier modules, één doel</h2>
-    <div class="grid grid--auto" style="margin-top:32px;">
-      <a href="/leden" class="module">
-        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 5.5a3 3 0 010 6M21 20c0-2.5-1.5-4.6-3.6-5.5"/></svg>
-        <h3>Ledengids</h3>
-        <p>Elk lid en bedrijf een eigen profiel met logo, expertise, website en contact. Doorzoekbaar op branche.</p>
-        <span class="pijl">Bekijk de leden →</span>
-      </a>
-      <a href="/vacatures" class="module">
-        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
-        <h3>Vacatures</h3>
-        <p>Plaats openstaande functies en vind talent binnen het netwerk — ook werk dat goed past bij veteranen.</p>
-        <span class="pijl">Bekijk vacatures →</span>
-      </a>
-      <a href="/projecten" class="module">
-        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.5-9.5-9A5 5 0 0112 5a5 5 0 019.5 7C19 16.5 12 21 12 21z"/></svg>
-        <h3>Ondersteuningsprojecten</h3>
-        <p>Vraag steun voor een goed initiatief — financieel, met vrijwilligers of expertise — en meld je aan bij projecten van anderen.</p>
-        <span class="pijl">Bekijk projecten →</span>
-      </a>
-      <a href="/veteranen" class="module">
-        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5z"/><path d="M9 12l2 2 4-4"/></svg>
-        <h3>Veteranenzaken</h3>
-        <p>Een eigen hub met hulpbronnen, contacten en passend werk. Verzorgd door de brigade en het bestuur.</p>
-        <span class="pijl">Naar de hub →</span>
-      </a>
-    </div>
-  </div>
-</section>
-
-<%- include('partials/reclame', { variant: 'groot' }) %>
-
-<% if (evenementen.length) { %>
-<section class="section section--tight">
-  <div class="wrap">
-    <div class="flex between" style="align-items:baseline; margin-bottom:22px;">
-      <div>
-        <span class="kicker">Agenda</span>
-        <h2 style="margin:6px 0 0;">Aankomende evenementen</h2>
+    <div class="hero-tekst">
+      <h1 class="reveal d1"><span class="wit">Eén netwerk.</span><span class="goud">Voor ondernemen, verbinden en ondersteunen.</span></h1>
+      <p class="lede reveal d2">Het platform van Business Club Luchtmobiel. Voor ondernemers, partners en veteranen met een band met de Luchtmobiele Brigade.</p>
+      <div class="hero-acties reveal d3">
+        <% if (user) { %>
+          <a href="/leden" class="btn btn--goud">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Naar de ledengids
+          </a>
+          <a href="/dashboard" class="btn btn--ghost">Mijn dashboard</a>
+        <% } else { %>
+          <a href="/registreren" class="btn btn--goud">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.54l.34.26a3 3 0 0 0 3.2 0L22 8"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg>
+            Word lid
+          </a>
+          <a href="/over" class="btn btn--ghost">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Ontdek het netwerk
+          </a>
+        <% } %>
       </div>
-      <a href="/agenda" class="muted" style="font-weight:600;">Hele agenda →</a>
-    </div>
-    <div class="agenda-teaser">
-      <% evenementen.forEach(function(e){ var dk = h.formatDatumKort(e.start_op).split(' '); %>
-        <a href="/agenda/<%= e.id %>" class="kaartje">
-          <div class="datumchip">
-            <span class="dag"><%= dk[0] %></span>
-            <span class="maand"><%= dk[1] %></span>
-          </div>
-          <div>
-            <% if (e.categorie) { %><span class="badge badge--olive" style="margin-bottom:4px;"><%= e.categorie %></span><% } %>
-            <div style="font-family:var(--font-display); font-weight:700;"><%= e.titel %></div>
-            <div class="meta" style="margin-top:2px;"><%= e.hele_dag ? 'Hele dag' : h.formatTijd(e.start_op) %><%= e.locatie ? ' · ' + e.locatie : '' %></div>
-          </div>
-        </a>
-      <% }) %>
     </div>
   </div>
 </section>
-<% } %>
 
-<% if (nieuws.length) { %>
+<nav class="snelmenu" aria-label="Snel naar">
+  <div class="wrap">
+    <div class="snelmenu__lijst">
+      <a href="/leden">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span class="tekst"><strong>Ledengids</strong><span>Onze leden en bedrijven</span></span>
+      </a>
+      <a href="/vacatures">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><path d="M2 13h20"/></svg>
+        <span class="tekst"><strong>Vacatures</strong><span>Kansen binnen ons netwerk</span></span>
+      </a>
+      <a href="/projecten">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        <span class="tekst"><strong>Projecten</strong><span>Initiatieven en samenwerking</span></span>
+      </a>
+      <a href="/agenda">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span class="tekst"><strong>Agenda</strong><span>Evenementen en bijeenkomsten</span></span>
+      </a>
+      <a href="/veteranen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M15.5 13.3 17 23l-5-3-5 3 1.5-9.7"/><path d="m12 5 .9 1.9 2.1.3-1.5 1.5.4 2.1L12 9.8l-1.9 1 .4-2.1L9 7.2l2.1-.3z"/></svg>
+        <span class="tekst"><strong>Veteranenzaken</strong><span>Ondersteuning en initiatieven</span></span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<%
+  var rcHome = typeof kiesReclames === 'function' ? (kiesReclames() || []).slice(0, 3) : [];
+  var rcMailHome = 'mailto:' + ((typeof reclameLib !== 'undefined' && reclameLib) ? reclameLib.contactAdres() : 'info@bclmb.nl') + '?subject=' + encodeURIComponent('Adverteren op het ledenplatform van de Business Club Luchtmobiel');
+  var chevron = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>';
+  var pin = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+  var kalender = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
+%>
 <section class="section section--tight">
   <div class="wrap">
-    <div class="flex between" style="align-items:baseline; margin-bottom:22px;">
-      <div><span class="kicker">Van het bestuur</span><h2 style="margin:6px 0 0;">Nieuws</h2></div>
-      <a href="/nieuws" class="muted" style="font-weight:600;">Alle berichten →</a>
-    </div>
-    <div class="grid grid--auto">
-      <% nieuws.forEach(function(n){ %>
-        <a href="/nieuws/<%= n.id %>" class="card" style="display:block;">
-          <div class="meta"><%= h.formatDatum(n.aangemaakt) %></div>
-          <div style="font-family:var(--font-display); font-weight:700; font-size:1.1rem; margin:4px 0 6px; color:var(--ink);"><%= n.titel %></div>
-          <p class="muted mb-0"><%= h.kort(n.inhoud, 120) %></p>
-        </a>
-      <% }) %>
+    <div class="panelen">
+
+      <div class="paneel">
+        <div class="paneel__kop"><h2>Aankomende evenementen</h2><a href="/agenda" aria-label="Naar de hele agenda"><%- chevron %></a></div>
+        <div class="paneel__inhoud">
+          <% if (!evenementen.length) { %>
+            <p class="lege">Er staan nog geen evenementen in de agenda.</p>
+          <% } %>
+          <% evenementen.forEach(function(e){ var dk = h.formatDatumKort(e.start_op).split(' '); %>
+            <a href="/agenda/<%= e.id %>" class="evt">
+              <span class="datumtegel"><span class="dag"><%= dk[0] %></span><span class="maand"><%= dk[1] %></span></span>
+              <span class="evt__tekst">
+                <strong><%= e.titel %></strong>
+                <span class="sub"><%= e.categorie ? e.categorie + ' · ' : '' %><%= e.hele_dag ? 'Hele dag' : h.formatTijd(e.start_op) + ' uur' %></span>
+                <% if (e.locatie) { %><span class="plek"><%- pin %> <%= e.locatie %></span><% } %>
+              </span>
+            </a>
+          <% }) %>
+        </div>
+        <div class="paneel__voet"><a href="/agenda" class="btn btn--ghost btn--sm btn--block">Hele agenda</a></div>
+      </div>
+
+      <div class="paneel">
+        <div class="paneel__kop"><h2>Nieuws uit het netwerk</h2><a href="/nieuws" aria-label="Naar alle nieuwsberichten"><%- chevron %></a></div>
+        <div class="paneel__inhoud">
+          <% if (!nieuws.length) { %>
+            <p class="lege">Er is nog geen nieuws geplaatst.</p>
+          <% } else { var eerste = nieuws[0]; %>
+            <a href="/nieuws/<%= eerste.id %>" class="nieuws-top">
+              <% if (eerste.afbeelding_id) { %><img src="/media/<%= eerste.afbeelding_id %>" alt="" loading="lazy"><% } %>
+              <div class="titel"><%= eerste.titel %></div>
+              <% if (!eerste.afbeelding_id) { %><p class="samenvatting"><%= h.kort(eerste.inhoud, 140) %></p><% } %>
+              <div class="datum"><%- kalender %> <%= h.formatDatum(eerste.aangemaakt) %></div>
+            </a>
+            <% if (nieuws.length > 1) { %>
+              <ul class="nieuws-meer">
+                <% nieuws.slice(1).forEach(function(n){ %>
+                  <li><a href="/nieuws/<%= n.id %>"><%= n.titel %></a><div class="meta"><%= h.formatDatum(n.aangemaakt) %></div></li>
+                <% }) %>
+              </ul>
+            <% } %>
+          <% } %>
+        </div>
+        <div class="paneel__voet"><a href="/nieuws" class="btn btn--ghost btn--sm btn--block">Alle berichten</a></div>
+      </div>
+
+      <div class="paneel">
+        <div class="paneel__kop"><h2>Onze partners</h2><a href="/partners" aria-label="Naar alle partners"><%- chevron %></a></div>
+        <div class="paneel__inhoud">
+          <% rcHome.forEach(function(rc){ %><%- include('partials/reclame', { variant: 'mini', item: rc, tel: false }) %><% }) %>
+          <% if (partners.length) { %>
+            <div class="paneel__partners">
+              <% partners.slice(0, 4).forEach(function(p){ %>
+                <a href="/partners/<%= p.id %>" title="<%= p.samenvatting || p.naam %>">
+                  <span class="partner-logo">
+                    <% if (p.logo_id) { %><img src="/media/<%= p.logo_id %>" alt="Logo <%= p.naam %>" loading="lazy"><% } else { %><span class="initialen"><%= h.initialen(p.naam) %></span><% } %>
+                  </span>
+                  <span><%= p.naam %></span>
+                </a>
+              <% }) %>
+            </div>
+          <% } %>
+          <% if (!rcHome.length && !partners.length) { %>
+            <p class="lege">Nog geen partners geplaatst.</p>
+          <% } %>
+          <p class="paneel__adverteren">Ook jouw bedrijf onder de aandacht van het netwerk? <a href="<%= rcMailHome %>">Mail het bestuur</a>.</p>
+        </div>
+        <div class="paneel__voet"><a href="/partners" class="btn btn--ghost btn--sm btn--block">Alle partners</a></div>
+      </div>
+
     </div>
   </div>
 </section>
-<% } %>
 
 <% if (vacatures.length || projecten.length) { %>
-<section class="section section--tight" style="background:var(--bone-2); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+<section class="section section--tight" style="background:var(--white); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
   <div class="wrap">
     <div class="grid grid--2" style="gap:40px;">
       <div>
@@ -120,7 +151,7 @@
             <div class="card" style="padding:18px 20px;">
               <div class="flex between">
                 <div>
-                  <a class="card-titel" href="<%= user ? '/vacatures/' + v.id : '/inloggen' %>" style="font-family:var(--font-display); font-weight:700; font-size:1.05rem;"><%= v.titel %></a>
+                  <a class="card-titel" href="<%= user ? '/vacatures/' + v.id : '/inloggen' %>" style="font-family:var(--font-display); font-weight:800; font-size:1.05rem;"><%= v.titel %></a>
                   <div class="meta"><%= v.bedrijf || '' %><%= v.plaats ? ' · ' + v.plaats : '' %></div>
                 </div>
                 <% if (v.veteraan_vriendelijk) { %><span class="badge badge--maroon">Veteraan welkom</span><% } %>
@@ -140,7 +171,7 @@
             <div class="card" style="padding:18px 20px;">
               <div class="flex between" style="align-items:flex-start;">
                 <div>
-                  <a class="card-titel" href="<%= user ? '/projecten/' + p.id : '/inloggen' %>" style="font-family:var(--font-display); font-weight:700; font-size:1.05rem;"><%= p.titel %></a>
+                  <a class="card-titel" href="<%= user ? '/projecten/' + p.id : '/inloggen' %>" style="font-family:var(--font-display); font-weight:800; font-size:1.05rem;"><%= p.titel %></a>
                   <div class="meta"><%= h.kort(p.samenvatting, 90) %></div>
                 </div>
                 <% if (p.steun_type) { %><span class="badge badge--olive"><%= p.steun_type %></span><% } %>
@@ -154,30 +185,12 @@
 </section>
 <% } %>
 
-<% if (partners.length) { %>
-<section class="section section--tight">
-  <div class="wrap">
-    <div class="flex between" style="align-items:baseline; margin-bottom:22px;">
-      <div><span class="kicker">Partners &amp; initiatieven</span><h2 style="margin:6px 0 0;">Samen sterker</h2></div>
-      <a href="/partners" class="muted" style="font-weight:600;">Alle partners →</a>
-    </div>
-    <div class="partner-strip">
-      <% partners.forEach(function(p){ %>
-        <a href="/partners/<%= p.id %>" title="<%= p.samenvatting || p.naam %>">
-          <div class="partner-logo">
-            <% if (p.logo_id) { %><img src="/media/<%= p.logo_id %>" alt="Logo <%= p.naam %>" loading="lazy"><% } else { %><span class="initialen"><%= h.initialen(p.naam) %></span><% } %>
-          </div>
-          <span><%= p.naam %></span>
-        </a>
-      <% }) %>
-    </div>
-  </div>
-</section>
-<% } %>
+<div style="height:44px;"></div>
+<%- include('partials/reclame', { variant: 'groot' }) %>
 
 <section class="beeldband" style="background-image:url('https://images.unsplash.com/photo-1758518730384-be3d205838e8?q=80&w=1600&auto=format&fit=crop');">
   <div class="wrap">
-    <span class="kicker" style="color:var(--sand);">Zaken &amp; verbinding</span>
+    <span class="kicker">Zaken &amp; verbinding</span>
     <h2>Korte lijnen, sterke afspraken.</h2>
     <p>Binnen het netwerk doen leden zaken met elkaar, delen ze kansen en ondersteunen ze goede initiatieven. Vertrouwd, besloten en met een gedeelde achtergrond.</p>
   </div>
@@ -201,7 +214,7 @@
     <% if (user) { %>
       <a href="/profiel" class="btn btn--primary">Mijn profiel aanvullen</a>
     <% } else { %>
-      <a href="/registreren" class="btn btn--primary">Word lid</a>
+      <a href="/registreren" class="btn btn--goud">Word lid</a>
     <% } %>
   </div>
 </section>

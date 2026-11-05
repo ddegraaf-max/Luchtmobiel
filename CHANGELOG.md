@@ -3,6 +3,12 @@
 Het versienummer staat in de voettekst van elke pagina en in **Beheer** (met de code van de uitgerolde update).
 Bij elke update wordt het nummer in `package.json` opgehoogd en hier beschreven wat er is veranderd.
 
+## 1.11.0 — 6 november 2026
+- **Nieuwe huisstijl door de hele site**: wit en lichtgrijs met baretrood en goud, lettertype Open Sans. Witte menubalk met het embleem en het woordmerk *Business Club Luchtmobiel*, de actieve pagina als rode pil, rechts *Inloggen* en de gouden knop *Word lid*; ingelogd een accountmenu met de voornaam (Dashboard, Mijn profiel, Galerij/Beheer, Uitloggen). Menu-volgorde: Home, Ledengids, Vacatures, Projecten, Agenda, Nieuws, Partners, Sponsoring, Veteranenzaken; *De Brigade* staat in het mobiele menu en in de voettekst.
+- **Homepage**: foto-hero (Chinook boven de heide bij zonsondergang) met de kop *Eén netwerk. Voor ondernemen, verbinden en ondersteunen.* naast een rode accentbalk; iconenrij Ledengids · Vacatures · Projecten · Agenda · Veteranenzaken; drie panelen met rode kopbalk — *Aankomende evenementen* (datumtegels), *Nieuws uit het netwerk* (laatste bericht met foto) en *Onze partners* (reclameblokken compact plus uitgelichte partners). Daaronder vacatures en projecten, het grote reclameblok, de beeldband, de galerij en de oproep om lid te worden.
+- Alle andere pagina's volgen mee: rode paginakoppen met gouden labels, witte kaarten met zachte schaduw, rode datumtegels in de agenda, gouden knoppen op rode vlakken, donkere voettekst met gouden lijn en het woordmerk.
+- Technisch: kleuren en lettertype staan als variabelen bovenaan `public/css/style.css`; de hero-foto is `public/img/hero-chinook.jpg` (vervang het bestand om een andere foto te gebruiken).
+
 ## 1.10.0 — 3 november 2026
 - **Reünie 11 Luchtmobiele Brigade** (8 juli 2027, Oranjekazerne Schaarsbergen, 7e lustrum) staat in de agenda, met de poster uit de VRB-nieuwsbrief en een knop om aan te melden op www.reunie11lmb.nl.
 - Agenda: een evenement kan een **website of aanmeldlink** krijgen. Staat "Aanmelden mogelijk maken" uit, dan verwijst de knop Aanmelden naar die site; anders komt er een knop "Meer informatie" bij. De link staat ook in het agenda-overzicht en gaat mee in het .ics-bestand. Nieuwe categorie *Reünie*.

@@ -18,6 +18,7 @@ Een besloten netwerk waar leden (en de brigade) **zelf** alles beheren: hun prof
 - **Zelfservice** — leden registreren met een toegangscode en beheren daarna alles zelf. Jij hoeft niets goed te keuren.
 - **Beheer** — jij bepaalt rollen (lid / brigade / admin) en kunt leden activeren of verwijderen.
 - **Veilig inloggen** — wachtwoord vergeten via e-mail, tweestapsverificatie met een authenticator-app (Google/Microsoft Authenticator, Authy, 1Password), herstelcodes, en bescherming tegen brute force en CSRF.
+- **Huisstijl** — wit en lichtgrijs met baretrood en goud, Open Sans; witte menubalk met rode pil voor de actieve pagina en een gouden *Word lid*-knop, foto-hero en panelen met rode kopbalk op de homepage. Zie [Huisstijl](#huisstijl-kleuren-lettertype-fotos).
 
 Afbeeldingen worden in de **database** opgeslagen (niet op schijf), zodat ze een Railway-deploy altijd overleven.
 
@@ -208,6 +209,14 @@ Laat je `REGISTRATIE_CODE` helemaal leeg, dan mag iedereen zonder code registrer
 5. `npm test` draait de unit-tests.
 
 ---
+
+## Huisstijl (kleuren, lettertype, foto's)
+
+De site volgt de huisstijl van november 2026: wit en lichtgrijs met **baretrood** (`#8c1f2b`) en **goud** (`#f2b632`), lettertype **Open Sans** (Google Fonts). Alle kleuren en maten staan als variabelen bovenaan `public/css/style.css` (`:root`); verander je daar een waarde, dan volgt de hele site.
+
+- **Menubalk** (`views/partials/header.ejs`): embleem + woordmerk, de actieve pagina als rode pil, rechts *Inloggen* en de gouden knop *Word lid*. Ingelogd verschijnt een accountmenu met de voornaam. Op schermen smaller dan 1000 px wordt het een uitklapmenu (hamburger).
+- **Homepage** (`views/home.ejs`): foto-hero met rode accentbalk, iconenrij, drie panelen met rode kopbalk (evenementen, nieuws, partners). De hero-foto is `public/img/hero-chinook.jpg` (800×387, rechts uitgelijnd met een donkere overloop links); zet een andere foto onder dezelfde naam neer en verhoog `?v=` in `home.ejs` om de browsercache te verversen.
+- **Paginakoppen** op de overige pagina's zijn rood met een gouden label (`.paginakop`); knoppen op rode vlakken worden goud.
 
 ## Techniek in het kort
 - **Node.js + Express** met **EJS**-templates.

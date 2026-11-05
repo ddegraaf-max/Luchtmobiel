@@ -39,7 +39,7 @@ router.get('/', async (req, res) => {
     )).rows;
 
     nieuws = (await pool.query(
-      `SELECT id, titel, inhoud, aangemaakt FROM nieuws WHERE gepubliceerd = true ORDER BY aangemaakt DESC LIMIT 3`
+      `SELECT id, titel, inhoud, aangemaakt, afbeelding_id, categorie FROM nieuws WHERE gepubliceerd = true ORDER BY aangemaakt DESC LIMIT 3`
     )).rows;
 
     partners = (await pool.query(

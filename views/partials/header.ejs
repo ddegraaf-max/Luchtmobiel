@@ -1,46 +1,70 @@
+<%
+  // Hoofdmenu in de huisstijl: wit, actieve pagina als rode pil, rechts "Inloggen" en de gouden knop "Word lid".
+  // Ingelogd: een accountmenu met de voornaam (Dashboard, Mijn profiel, Galerij/Beheer, Uitloggen).
+  var navAdmin = !!(user && user.rol === 'admin');
+  var navRedactie = !!(user && (user.rol === 'admin' || user.rol === 'brigade'));
+  var navVoornaam = user ? String(user.naam || '').trim().split(' ')[0] : '';
+  function navActief(p) { return p === '/' ? (path === '/' ? 'actief' : '') : (path.startsWith(p) ? 'actief' : ''); }
+%>
 <header class="site-header">
   <div class="wrap">
-    <nav class="nav">
-      <a class="brand" href="/">
-        <img class="brand-logo" src="/static/img/logo.png?v=2" alt="Business Club Luchtmobiel embleem">
-        <span class="naam">Business Club Luchtmobiel<small>Netwerk &amp; Veteranenzaken</small></span>
+    <nav class="nav" aria-label="Hoofdmenu">
+      <a class="brand" href="/" aria-label="Business Club Luchtmobiel — naar de homepage">
+        <img class="brand-logo" src="/static/img/logo.png?v=2" alt="">
+        <span class="woordmerk"><small>Business Club</small><strong>Luchtmobiel</strong></span>
       </a>
 
       <div class="nav-links">
-        <a href="/vacatures" class="<%= path.startsWith('/vacatures') ? 'actief' : '' %>">Vacatures</a>
-        <a href="/projecten" class="<%= path.startsWith('/projecten') ? 'actief' : '' %>">Projecten</a>
-        <a href="/agenda" class="<%= path.startsWith('/agenda') ? 'actief' : '' %>">Agenda</a>
-        <a href="/nieuws" class="<%= path.startsWith('/nieuws') ? 'actief' : '' %>">Nieuws</a>
-        <a href="/partners" class="<%= path.startsWith('/partners') ? 'actief' : '' %>">Partners</a>
-        <a href="/sponsorverzoeken" class="<%= path.startsWith('/sponsorverzoeken') ? 'actief' : '' %>">Sponsoring</a>
-        <a href="/veteranen" class="<%= path.startsWith('/veteranen') ? 'actief' : '' %>">Veteranenzaken</a>
-        <a href="/eenheden" class="<%= path.startsWith('/eenheden') ? 'actief' : '' %>">De Brigade</a>
-        <% if (user) { %>
-          <a href="/leden" class="<%= path.startsWith('/leden') ? 'actief' : '' %>">Leden</a>
-          <a href="/dashboard" class="<%= path === '/dashboard' ? 'actief' : '' %>">Dashboard</a>
-          <% if (user.rol === 'admin' || user.rol === 'brigade') { %><a href="/galerij/beheer" class="<%= path.startsWith('/galerij') ? 'actief' : '' %>">Galerij</a><% } %>
-          <% if (user.rol === 'admin') { %><a href="/beheer" class="<%= path.startsWith('/beheer') ? 'actief' : '' %>">Beheer</a><% } %>
-        <% } %>
+        <a href="/" class="nav-home <%= navActief('/') %>">Home</a>
+        <a href="/leden" class="<%= navActief('/leden') %>">Ledengids</a>
+        <a href="/vacatures" class="<%= navActief('/vacatures') %>">Vacatures</a>
+        <a href="/projecten" class="<%= navActief('/projecten') %>">Projecten</a>
+        <a href="/agenda" class="<%= navActief('/agenda') %>">Agenda</a>
+        <a href="/nieuws" class="<%= navActief('/nieuws') %>">Nieuws</a>
+        <a href="/partners" class="<%= navActief('/partners') %>">Partners</a>
+        <a href="/sponsorverzoeken" class="<%= navActief('/sponsorverzoeken') %>">Sponsoring</a>
+        <a href="/veteranen" class="<%= navActief('/veteranen') %>">Veteranenzaken</a>
         <div class="nav-mobiel-acties">
+          <a href="/eenheden" class="<%= navActief('/eenheden') %>">De Brigade</a>
           <% if (user) { %>
-            <a href="/profiel" class="btn btn--ghost btn--sm">Mijn profiel</a>
-            <form action="/uitloggen" method="post" class="inline-form"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="btn btn--primary btn--sm" type="submit">Uitloggen</button></form>
+            <a href="/dashboard" class="<%= path === '/dashboard' ? 'actief' : '' %>">Dashboard</a>
+            <a href="/profiel" class="<%= navActief('/profiel') %>">Mijn profiel</a>
+            <% if (navRedactie) { %><a href="/galerij/beheer" class="<%= navActief('/galerij') %>">Galerij</a><% } %>
+            <% if (navAdmin) { %><a href="/beheer" class="<%= navActief('/beheer') %>">Beheer</a><% } %>
+            <form action="/uitloggen" method="post" class="inline-form"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="btn btn--ghost btn--sm" type="submit">Uitloggen</button></form>
           <% } else { %>
-            <a href="/inloggen" class="btn btn--ghost btn--sm">Inloggen</a>
-            <a href="/registreren" class="btn btn--primary btn--sm">Word lid</a>
+            <a href="/inloggen" class="btn btn--ghost">Inloggen</a>
+            <a href="/registreren" class="btn btn--goud">Word lid</a>
           <% } %>
         </div>
       </div>
 
       <div class="nav-cta">
         <% if (user) { %>
-          <a href="/profiel" class="btn btn--ghost btn--sm">Mijn profiel</a>
-          <form action="/uitloggen" method="post" class="inline-form"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <button class="btn btn--primary btn--sm" type="submit">Uitloggen</button>
-          </form>
+          <div class="nav-account">
+            <button class="nav-account__knop" type="button" aria-haspopup="true" aria-expanded="false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <%= navVoornaam || 'Account' %>
+              <svg class="pijltje" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="nav-account__menu">
+              <a href="/dashboard" class="<%= path === '/dashboard' ? 'actief' : '' %>">Dashboard</a>
+              <a href="/profiel" class="<%= navActief('/profiel') %>">Mijn profiel</a>
+              <% if (navRedactie) { %><a href="/galerij/beheer" class="<%= navActief('/galerij') %>">Galerij</a><% } %>
+              <% if (navAdmin) { %><a href="/beheer" class="<%= navActief('/beheer') %>">Beheer</a><% } %>
+              <hr>
+              <form action="/uitloggen" method="post"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button type="submit">Uitloggen</button></form>
+            </div>
+          </div>
         <% } else { %>
-          <a href="/inloggen" class="btn btn--ghost btn--sm">Inloggen</a>
-          <a href="/registreren" class="btn btn--primary btn--sm">Word lid</a>
+          <a href="/inloggen" class="nav-inloggen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Inloggen
+          </a>
+          <a href="/registreren" class="btn btn--goud">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.54l.34.26a3 3 0 0 0 3.2 0L22 8"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg>
+            Word lid
+          </a>
         <% } %>
         <button class="nav-toggle" type="button" aria-label="Menu"><span></span></button>
       </div>
