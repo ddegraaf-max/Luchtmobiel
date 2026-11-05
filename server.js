@@ -49,8 +49,8 @@ const SOCIAL = {
 
 // Omschrijving per openbare overzichtspagina (meta description en deelvoorvertoning).
 const BESCHRIJVINGEN = {
-  '/': 'Het ledenplatform van de Business Club Luchtmobiel: ondernemers, professionals en 11 Luchtmobiele Brigade — ledengids, vacatures, projecten, agenda, nieuws en veteranenzaken.',
-  '/over': 'Hoe het netwerk van de Business Club Luchtmobiel werkt: lid worden, je bedrijf presenteren, vacatures en projecten delen en bijdragen aan veteranenzaken.',
+  '/': 'Platform van Business Club Luchtmobiel voor veteranenzaken en het ledennetwerk: hulpbronnen en passend werk voor veteranen, ledengids, vacatures, projecten, agenda, nieuws, partners en sponsorverzoeken. De officiële clubwebsite is www.bclmb.nl.',
+  '/over': 'Waar dit platform voor is: veteranenzaken en het ledennetwerk van Business Club Luchtmobiel, naast de officiële clubwebsite www.bclmb.nl. Lid worden, je bedrijf presenteren, vacatures en projecten delen.',
   '/eenheden': '11 Luchtmobiele Brigade: de bataljons Garde Grenadiers en Jagers, Van Heutsz en Stoottroepen Prins Bernhard, de ondersteunende eenheden en hun geschiedenis.',
   '/agenda': 'Agenda van de Business Club Luchtmobiel: netwerkbijeenkomsten, ceremonies, excursies en sponsoracties voor leden en de brigade.',
   '/nieuws': 'Nieuws van het bestuur van de Business Club Luchtmobiel en berichten van 11 Luchtmobiele Brigade, overgenomen van bclmb.nl, LinkedIn en Facebook.',

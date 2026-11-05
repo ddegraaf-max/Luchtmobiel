@@ -2,6 +2,8 @@
 
 Een besloten netwerk waar leden (en de brigade) **zelf** alles beheren: hun profiel, vacatures, ondersteuningsprojecten en de veteranenhub. Gebouwd met Node.js/Express, PostgreSQL en EJS — klaar voor Railway.
 
+**Twee websites, één club.** De officiële website van Business Club Luchtmobiel is [www.bclmb.nl](https://www.bclmb.nl) (over de club, het lidmaatschap en de bijeenkomsten). Dit platform (luchtmobiel.red) is daarnaast speciaal ingericht voor **veteranenzaken** en de praktische onderdelen van het netwerk: ledengids, vacatures, projecten, agenda, nieuws, partners en sponsorverzoeken. Dat staat op elke pagina in de balk boven het menu, in de hero en de voettekst (teksten in `views/partials/header.ejs`, `views/home.ejs`, `views/partials/footer.ejs` en `views/over.ejs`).
+
 ---
 
 ## Wat zit erin?

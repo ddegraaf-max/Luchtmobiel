@@ -6,6 +6,13 @@
   var navVoornaam = user ? String(user.naam || '').trim().split(' ')[0] : '';
   function navActief(p) { return p === '/' ? (path === '/' ? 'actief' : '') : (path.startsWith(p) ? 'actief' : ''); }
 %>
+<%# Balk boven het menu: waar dit platform voor is, en waar de officiële clubwebsite staat. %>
+<div class="topbalk">
+  <div class="wrap">
+    <span class="topbalk__tekst"><strong>Platform voor veteranenzaken</strong><span class="topbalk__meer"> en het ledennetwerk van Business Club Luchtmobiel</span></span>
+    <a class="topbalk__link" href="https://www.bclmb.nl" target="_blank" rel="noopener"><span class="topbalk__meer">Officiële clubwebsite: </span><span class="topbalk__kort">Clubsite: </span>www.bclmb.nl ↗</a>
+  </div>
+</div>
 <header class="site-header">
   <div class="wrap">
     <nav class="nav" aria-label="Hoofdmenu">
@@ -16,6 +23,7 @@
 
       <div class="nav-links">
         <a href="/" class="nav-home <%= navActief('/') %>">Home</a>
+        <a href="/veteranen" class="<%= navActief('/veteranen') %>">Veteranenzaken</a>
         <a href="/leden" class="<%= navActief('/leden') %>">Ledengids</a>
         <a href="/vacatures" class="<%= navActief('/vacatures') %>">Vacatures</a>
         <a href="/projecten" class="<%= navActief('/projecten') %>">Projecten</a>
@@ -23,7 +31,6 @@
         <a href="/nieuws" class="<%= navActief('/nieuws') %>">Nieuws</a>
         <a href="/partners" class="<%= navActief('/partners') %>">Partners</a>
         <a href="/sponsorverzoeken" class="<%= navActief('/sponsorverzoeken') %>">Sponsoring</a>
-        <a href="/veteranen" class="<%= navActief('/veteranen') %>">Veteranenzaken</a>
         <div class="nav-mobiel-acties">
           <a href="/eenheden" class="<%= navActief('/eenheden') %>">De Brigade</a>
           <% if (user) { %>

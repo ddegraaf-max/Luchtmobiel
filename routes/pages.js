@@ -51,7 +51,7 @@ router.get('/', async (req, res) => {
   }
 
   const galerij = await getGalerij('home');
-  res.render('home', { title: 'Het netwerk van de Luchtmobiele Brigade', stats, vacatures, projecten, evenementen, nieuws, partners, galerij });
+  res.render('home', { title: 'Platform voor veteranenzaken en het ledennetwerk', stats, vacatures, projecten, evenementen, nieuws, partners, galerij });
 });
 
 // Over / het netwerk

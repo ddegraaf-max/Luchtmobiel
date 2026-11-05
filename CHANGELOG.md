@@ -3,6 +3,10 @@
 Het versienummer staat in de voettekst van elke pagina en in **Beheer** (met de code van de uitgerolde update).
 Bij elke update wordt het nummer in `package.json` opgehoogd en hier beschreven wat er is veranderd.
 
+## 1.12.0 — 6 november 2026
+- **Duidelijk waar dit platform voor is.** Business Club Luchtmobiel heeft een officiële website (www.bclmb.nl); dit platform is speciaal voor **veteranenzaken** en de overige onderdelen van het netwerk. Dat staat nu op elke pagina in een smalle balk boven het menu ("Platform voor veteranenzaken en het ledennetwerk · Officiële clubwebsite: www.bclmb.nl"), in de hero en de voettekst, op de pagina *Over het netwerk* en in de omschrijving voor zoekmachines en deelvoorvertoningen.
+- **Veteranenzaken vooraan**: direct na Home in het menu en als eerste in de iconenrij op de homepage. Nieuwe veteranenband op de homepage (*Voor wie gediend heeft, en voor wie hen wil steunen*) met de gouden V, de vier pijlers en knoppen naar Veteranenzaken en Sponsorverzoeken; de algemene fotoband met de handdruk is vervallen.
+
 ## 1.11.0 — 6 november 2026
 - **Nieuwe huisstijl door de hele site**: wit en lichtgrijs met baretrood en goud, lettertype Open Sans. Witte menubalk met het embleem en het woordmerk *Business Club Luchtmobiel*, de actieve pagina als rode pil, rechts *Inloggen* en de gouden knop *Word lid*; ingelogd een accountmenu met de voornaam (Dashboard, Mijn profiel, Galerij/Beheer, Uitloggen). Menu-volgorde: Home, Ledengids, Vacatures, Projecten, Agenda, Nieuws, Partners, Sponsoring, Veteranenzaken; *De Brigade* staat in het mobiele menu en in de voettekst.
 - **Homepage**: foto-hero (Chinook boven de heide bij zonsondergang) met de kop *Eén netwerk. Voor ondernemen, verbinden en ondersteunen.* naast een rode accentbalk; iconenrij Ledengids · Vacatures · Projecten · Agenda · Veteranenzaken; drie panelen met rode kopbalk — *Aankomende evenementen* (datumtegels), *Nieuws uit het netwerk* (laatste bericht met foto) en *Onze partners* (reclameblokken compact plus uitgelichte partners). Daaronder vacatures en projecten, het grote reclameblok, de beeldband, de galerij en de oproep om lid te worden.

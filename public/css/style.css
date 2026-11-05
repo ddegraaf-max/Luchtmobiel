@@ -79,6 +79,20 @@ p { margin: 0 0 1rem; }
 }
 .kicker::before { content: ""; width: 22px; height: 3px; border-radius: 2px; background: var(--goud); display: inline-block; }
 
+/* ---------- balk boven het menu: waar dit platform voor is ---------- */
+.topbalk { background: var(--maroon-deep); color: rgba(255,255,255,.9); font-size: .8rem; line-height: 1.4; }
+.topbalk .wrap { display: flex; align-items: center; justify-content: space-between; gap: 6px 20px; min-height: 34px; padding-top: 6px; padding-bottom: 6px; flex-wrap: wrap; }
+.topbalk strong { color: var(--goud); font-weight: 800; }
+.topbalk__link { color: var(--white); font-weight: 700; white-space: nowrap; }
+.topbalk__link:hover { color: var(--goud); text-decoration: none; }
+.topbalk__kort { display: none; }
+@media (max-width: 680px) {
+  .topbalk { font-size: .74rem; }
+  .topbalk .wrap { justify-content: space-between; gap: 4px 12px; }
+  .topbalk__meer { display: none; }
+  .topbalk__kort { display: inline; }
+}
+
 /* ---------- header / nav ---------- */
 .site-header {
   position: sticky; top: 0; z-index: 50;
@@ -197,7 +211,9 @@ p { margin: 0 0 1rem; }
 }
 .hero-tekst h1 .wit { display: block; }
 .hero-tekst h1 .goud { display: block; color: var(--goud); font-size: .82em; margin-top: .12em; }
-.hero--foto p.lede { font-size: 1.2rem; max-width: 44ch; color: rgba(255,255,255,.94); }
+.hero--foto p.lede { font-size: 1.15rem; max-width: 50ch; color: rgba(255,255,255,.94); }
+.hero--foto p.lede a { color: var(--goud); font-weight: 700; }
+.hero-tekst .kicker { margin-bottom: 1rem; }
 
 /* statbalk (beheer) */
 .statbar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; margin-top: 40px; }
@@ -215,6 +231,26 @@ p { margin: 0 0 1rem; }
 .snelmenu .tekst { min-width: 0; }
 .snelmenu strong { display: block; font-size: 1.1rem; font-weight: 800; line-height: 1.2; }
 .snelmenu .tekst span { display: block; font-size: .85rem; color: var(--ink-soft); margin-top: 2px; }
+
+.snelmenu .snelmenu__hoofd strong { color: var(--maroon); }
+
+/* ---------- veteranenband (home): waar dit platform voor is ---------- */
+.veteranen-band { position: relative; overflow: hidden; background: linear-gradient(135deg, var(--maroon-deep) 0%, var(--maroon) 100%); color: var(--white); }
+.veteranen-band::before {
+  content: ""; position: absolute; top: 50%; right: 6%; transform: translateY(-50%); width: 150px; height: 270px; opacity: .85; pointer-events: none;
+  background: url("/static/img/veteranen-v.png?v=4") no-repeat center / contain;
+}
+.veteranen-band .wrap { position: relative; z-index: 1; padding-top: 56px; padding-bottom: 56px; }
+.veteranen-band .kicker { color: var(--goud); }
+.veteranen-band h2 { color: var(--white); max-width: 24ch; }
+.veteranen-band p { color: rgba(255,255,255,.92); max-width: 62ch; font-size: 1.05rem; }
+.veteranen-band p a { color: var(--goud); font-weight: 700; }
+.veteranen-band .btn--ghost { color: var(--white); border-color: rgba(255,255,255,.75); }
+.veteranen-band .btn--ghost:hover { border-color: #fff; background: rgba(255,255,255,.1); }
+.veteranen-punten { list-style: none; padding: 0; margin: 18px 0 26px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px 20px; max-width: 760px; }
+.veteranen-punten li { display: flex; gap: .55em; align-items: flex-start; font-weight: 600; font-size: .95rem; }
+.veteranen-punten li::before { content: "✓"; color: var(--goud); font-weight: 800; flex: none; }
+@media (max-width: 860px) { .veteranen-band::before { display: none; } }
 
 /* ---------- panelen met rode kopbalk (home) ---------- */
 .panelen { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; align-items: start; }

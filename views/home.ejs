@@ -2,8 +2,9 @@
 <section class="hero hero--foto" style="background-image:url('/static/img/hero-chinook.jpg?v=1');">
   <div class="wrap">
     <div class="hero-tekst">
+      <span class="kicker reveal">Platform voor veteranenzaken &amp; het ledennetwerk</span>
       <h1 class="reveal d1"><span class="wit">Eén netwerk.</span><span class="goud">Voor ondernemen, verbinden en ondersteunen.</span></h1>
-      <p class="lede reveal d2">Het platform van Business Club Luchtmobiel. Voor ondernemers, partners en veteranen met een band met de Luchtmobiele Brigade.</p>
+      <p class="lede reveal d2">Naast de officiële clubwebsite <a href="https://www.bclmb.nl" target="_blank" rel="noopener">www.bclmb.nl</a> is dit het platform van Business Club Luchtmobiel voor veteranenzaken, de ledengids, vacatures, projecten, agenda, partners en sponsoring.</p>
       <div class="hero-acties reveal d3">
         <% if (user) { %>
           <a href="/leden" class="btn btn--goud">
@@ -29,6 +30,10 @@
 <nav class="snelmenu" aria-label="Snel naar">
   <div class="wrap">
     <div class="snelmenu__lijst">
+      <a href="/veteranen" class="snelmenu__hoofd">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M15.5 13.3 17 23l-5-3-5 3 1.5-9.7"/><path d="m12 5 .9 1.9 2.1.3-1.5 1.5.4 2.1L12 9.8l-1.9 1 .4-2.1L9 7.2l2.1-.3z"/></svg>
+        <span class="tekst"><strong>Veteranenzaken</strong><span>Hulpbronnen, contacten en passend werk</span></span>
+      </a>
       <a href="/leden">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         <span class="tekst"><strong>Ledengids</strong><span>Onze leden en bedrijven</span></span>
@@ -44,10 +49,6 @@
       <a href="/agenda">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         <span class="tekst"><strong>Agenda</strong><span>Evenementen en bijeenkomsten</span></span>
-      </a>
-      <a href="/veteranen">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M15.5 13.3 17 23l-5-3-5 3 1.5-9.7"/><path d="m12 5 .9 1.9 2.1.3-1.5 1.5.4 2.1L12 9.8l-1.9 1 .4-2.1L9 7.2l2.1-.3z"/></svg>
-        <span class="tekst"><strong>Veteranenzaken</strong><span>Ondersteuning en initiatieven</span></span>
       </a>
     </div>
   </div>
@@ -136,6 +137,24 @@
   </div>
 </section>
 
+<section class="veteranen-band">
+  <div class="wrap">
+    <span class="kicker">Veteranenzaken · waar dit platform voor is</span>
+    <h2>Voor wie gediend heeft, en voor wie hen wil steunen.</h2>
+    <p>Business Club Luchtmobiel heeft een officiële website, <a href="https://www.bclmb.nl" target="_blank" rel="noopener">www.bclmb.nl</a>. Dit platform is daarnaast speciaal ingericht voor veteranenzaken — hulpbronnen, contacten en passend werk, verzorgd door 11 Luchtmobiele Brigade en het bestuur — en voor alles wat het netwerk praktisch nodig heeft.</p>
+    <ul class="veteranen-punten">
+      <li>Hulpbronnen en contacten voor veteranen</li>
+      <li>Vacatures die passen bij veteranen</li>
+      <li>Sponsorverzoeken voor militairen en veteranen</li>
+      <li>Projecten die steun zoeken</li>
+    </ul>
+    <div class="flex">
+      <a href="/veteranen" class="btn btn--goud">Naar veteranenzaken</a>
+      <a href="/sponsorverzoeken" class="btn btn--ghost">Sponsorverzoeken</a>
+    </div>
+  </div>
+</section>
+
 <% if (vacatures.length || projecten.length) { %>
 <section class="section section--tight" style="background:var(--white); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
   <div class="wrap">
@@ -187,14 +206,6 @@
 
 <div style="height:44px;"></div>
 <%- include('partials/reclame', { variant: 'groot' }) %>
-
-<section class="beeldband" style="background-image:url('https://images.unsplash.com/photo-1758518730384-be3d205838e8?q=80&w=1600&auto=format&fit=crop');">
-  <div class="wrap">
-    <span class="kicker">Zaken &amp; verbinding</span>
-    <h2>Korte lijnen, sterke afspraken.</h2>
-    <p>Binnen het netwerk doen leden zaken met elkaar, delen ze kansen en ondersteunen ze goede initiatieven. Vertrouwd, besloten en met een gedeelde achtergrond.</p>
-  </div>
-</section>
 
 <section class="section foto-sectie">
   <div class="wrap">
