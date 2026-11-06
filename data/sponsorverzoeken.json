@@ -1,6 +1,22 @@
 {
-  "bijgewerkt": "2026-11-05T06:14:34Z",
+  "bijgewerkt": "2026-11-06T06:10:00Z",
   "items": [
+    {
+      "id": "vst-dutch3-voor-vst-wandeling",
+      "titel": "Dutch3 voor VST",
+      "organisatie": "Veteranen Search Team (VST)",
+      "doelgroep": "Veteranen",
+      "samenvatting": "Een vrijwilliger van het Veteranen Search Team zamelt tijdens gezinswandelingen geld in voor het VST, een organisatie van veteranen die wordt ingezet bij vermissingen; doelbedrag € 150.",
+      "omschrijving": null,
+      "url": "https://steun.veteranensearchteam.nl/acties/dutch3-voor-vst",
+      "bron_naam": "veteranensearchteam.nl",
+      "plaats": null,
+      "doelbedrag": "€ 150",
+      "einddatum": null,
+      "gepubliceerd_op_bron": null,
+      "gevonden_op": "2026-11-06",
+      "zoekterm": "steun.veteranensearchteam.nl (vaste bron)"
+    },
     {
       "id": "hulpvoorhelden-samen-voor-helden-jorn-robert",
       "titel": "Samen voor helden: Cios-studenten lopen van kazerne naar politiecentrum voor Hulp voor Helden",
