@@ -3,6 +3,9 @@
 Het versienummer staat in de voettekst van elke pagina en in **Beheer** (met de code van de uitgerolde update).
 Bij elke update wordt het nummer in `package.json` opgehoogd en hier beschreven wat er is veranderd.
 
+## 1.12.2 — 6 november 2026
+- **Clublogo in de menubalk.** Naast het embleem staat nu het logo van Business Club Luchtmobiel zoals op www.bclmb.nl (valk in driehoek met *Businessclub Luchtmobiel*), achter een dun goudlijntje; de tekstregel *Business Club / Luchtmobiel* is vervallen. In de voettekst staat hetzelfde logo in het wit. Bestand: `public/img/bclmb-logo.png`.
+
 ## 1.12.1 — 6 november 2026
 - **Mobiel menu hersteld.** Op telefoons plakte de menubalk niet bovenaan (een regel tegen horizontaal schuiven zette dat onbedoeld uit), waardoor het uitgeklapte menu met de pagina meeschoof en los boven de inhoud kwam te hangen. De menubalk blijft nu bovenaan staan; het menu hangt eronder, is compacter, schuift binnenin als het niet op het scherm past, legt een donkere laag over de pagina en sluit met een tik daarop, met het kruisje of met Escape. Zolang het menu open staat schuift de pagina niet mee.
 

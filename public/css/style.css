@@ -104,11 +104,8 @@ p { margin: 0 0 1rem; }
 .brand { display: flex; align-items: center; gap: 12px; margin-right: auto; flex: none; }
 .brand:hover { text-decoration: none; }
 .brand-logo { height: 56px; width: auto; display: block; border-radius: 12px; }
-.woordmerk { display: block; border-left: 2px solid var(--goud); padding-left: 14px; line-height: 1; }
-.woordmerk small { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--ink); margin-bottom: 4px; }
-.woordmerk strong { display: block; font-size: 1.45rem; font-weight: 800; letter-spacing: -.01em; text-transform: uppercase; color: var(--maroon); }
-.woordmerk--licht small { color: rgba(255,255,255,.85); }
-.woordmerk--licht strong { color: var(--white); }
+/* Naast het embleem het logo van de club (overgenomen van www.bclmb.nl), achter een dun goudlijntje */
+.brand-clublogo { display: block; height: 66px; width: auto; border-left: 2px solid var(--goud); padding-left: 14px; }
 .nav-links { display: flex; align-items: center; gap: 2px; }
 .nav-links a {
   color: var(--ink); font-weight: 600; font-size: .86rem; white-space: nowrap;
@@ -445,8 +442,7 @@ input[type=file] { font-size: .88rem; }
 .site-footer .footer-merk { display: flex; align-items: center; gap: 14px; padding: 0; }
 .site-footer .footer-merk:hover { text-decoration: none; }
 .footer-merk img { height: 54px; width: auto; border-radius: 10px; }
-.footer-merk .woordmerk strong { font-size: 1.3rem; }
-.footer-merk .woordmerk small { font-size: .66rem; }
+.footer-merk .footer-clublogo { height: 60px; border-radius: 0; filter: invert(1); }  /* zwart logo wit op de donkere voettekst */
 
 /* Bezoekersteller: vizier met het aantal bezoekers in het midden */
 .vizier { position: relative; width: 118px; flex: none; text-align: center; }
@@ -524,7 +520,7 @@ input[type=file] { font-size: .88rem; }
 @media (max-width: 1300px) {
   .nav { gap: 12px; }
   .brand-logo { height: 50px; }
-  .woordmerk strong { font-size: 1.3rem; }
+  .brand-clublogo { height: 58px; }
   .nav-links a { font-size: .82rem; padding: 7px 8px; }
   .nav-cta { gap: 8px; padding-left: 10px; }
   .nav-cta .btn--goud { padding: 8px 13px; font-size: .86rem; }
@@ -543,7 +539,6 @@ input[type=file] { font-size: .88rem; }
 @media (max-width: 1200px) {
   .nav { gap: 12px; }
   .brand-logo { height: 50px; }
-  .woordmerk { display: none; }
   .nav-links a { font-size: .8rem; padding: 7px 8px; }
   .nav-links .nav-home { display: none; }
   .nav-cta { gap: 8px; padding-left: 10px; }
@@ -564,12 +559,14 @@ input[type=file] { font-size: .88rem; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
 }
 .nav-mobiel-acties { display: none; }
+/* Smalle laptops (1001–1080 px): alle menu-items passen alleen zonder het clublogo */
+@media (max-width: 1080px) {
+  .brand-clublogo { display: none; }
+}
 @media (max-width: 1000px) {
   .nav { height: 70px; gap: 10px; }
   .brand-logo { height: 46px; }
-  .woordmerk { display: block; }
-  .woordmerk small { display: none; }
-  .woordmerk strong { font-size: 1.2rem; }
+  .brand-clublogo { display: block; height: 52px; padding-left: 10px; }
   .nav-links, .nav-cta .btn, .nav-cta .nav-inloggen, .nav-account { display: none; }
   .nav-cta { border-left: 0; padding-left: 0; }
   .nav-toggle { display: block; }
@@ -800,7 +797,7 @@ h1, h2, h3, .hero h1, .paginakop h1, .beeldband h2 { overflow-wrap: break-word; 
   .missie-tijdlijn { grid-template-columns: 1fr; }
 }
 @media (max-width: 400px) {
-  .woordmerk strong { font-size: 1.05rem; }
+  .brand-clublogo { height: 46px; }
   .statbar { grid-template-columns: 1fr 1fr; }
   .hero h1 { font-size: 1.75rem; }
   .hero-tekst h1 { font-size: 1.8rem; }
