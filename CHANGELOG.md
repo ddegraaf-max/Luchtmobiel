@@ -3,6 +3,9 @@
 Het versienummer staat in de voettekst van elke pagina en in **Beheer** (met de code van de uitgerolde update).
 Bij elke update wordt het nummer in `package.json` opgehoogd en hier beschreven wat er is veranderd.
 
+## 1.12.1 — 6 november 2026
+- **Mobiel menu hersteld.** Op telefoons plakte de menubalk niet bovenaan (een regel tegen horizontaal schuiven zette dat onbedoeld uit), waardoor het uitgeklapte menu met de pagina meeschoof en los boven de inhoud kwam te hangen. De menubalk blijft nu bovenaan staan; het menu hangt eronder, is compacter, schuift binnenin als het niet op het scherm past, legt een donkere laag over de pagina en sluit met een tik daarop, met het kruisje of met Escape. Zolang het menu open staat schuift de pagina niet mee.
+
 ## 1.12.0 — 6 november 2026
 - **Duidelijk waar dit platform voor is.** Business Club Luchtmobiel heeft een officiële website (www.bclmb.nl); dit platform is speciaal voor **veteranenzaken** en de overige onderdelen van het netwerk. Dat staat nu op elke pagina in een smalle balk boven het menu ("Platform voor veteranenzaken en het ledennetwerk · Officiële clubwebsite: www.bclmb.nl"), in de hero en de voettekst, op de pagina *Over het netwerk* en in de omschrijving voor zoekmachines en deelvoorvertoningen.
 - **Veteranenzaken vooraan**: direct na Home in het menu en als eerste in de iconenrij op de homepage. Nieuwe veteranenband op de homepage (*Voor wie gediend heeft, en voor wie hen wil steunen*) met de gouden V, de vier pijlers en knoppen naar Veteranenzaken en Sponsorverzoeken; de algemene fotoband met de handdruk is vervallen.

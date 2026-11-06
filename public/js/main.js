@@ -179,7 +179,29 @@ function sluitAccountmenus(behalve) {
     if (knop) knop.setAttribute('aria-expanded', 'false');
   });
 }
-document.addEventListener('keydown', function (e) { if (e.key === 'Escape') sluitAccountmenus(null); });
+// Mobiel menu (hamburger): open/dicht, hoogte afstemmen op de ruimte onder de menubalk,
+// pagina niet laten schuiven zolang het open staat.
+function zetMobielMenu(nav, open) {
+  nav.classList.toggle('open', open);
+  const knop = nav.querySelector('.nav-toggle');
+  if (knop) knop.setAttribute('aria-expanded', open ? 'true' : 'false');
+  if (open) {
+    const header = nav.closest('.site-header');
+    const onder = header ? header.getBoundingClientRect().bottom : 70;
+    nav.style.setProperty('--menu-max', Math.max(200, Math.round(window.innerHeight - onder)) + 'px');
+  } else {
+    nav.style.removeProperty('--menu-max');
+  }
+  document.documentElement.classList.toggle('menu-open', open);
+}
+function sluitMobieleMenus() {
+  document.querySelectorAll('.nav.open').forEach(function (nav) { zetMobielMenu(nav, false); });
+}
+window.addEventListener('resize', function () {
+  document.querySelectorAll('.nav.open').forEach(function (nav) { zetMobielMenu(nav, true); });
+});
+
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { sluitAccountmenus(null); sluitMobieleMenus(); } });
 
 // Mobiel menu togglen, accountmenu, afdrukken, bedrijfsblokken toevoegen/verwijderen
 document.addEventListener('click', function (e) {
@@ -201,7 +223,10 @@ document.addEventListener('click', function (e) {
   const toggle = e.target.closest('.nav-toggle');
   if (toggle) {
     const nav = toggle.closest('.nav');
-    if (nav) nav.classList.toggle('open');
+    if (nav) zetMobielMenu(nav, !nav.classList.contains('open'));
+  } else if (e.target.classList && e.target.classList.contains('nav') && e.target.classList.contains('open')) {
+    // Klik op de donkere achtergrond (het ::before van .nav) sluit het menu
+    zetMobielMenu(e.target, false);
   }
 
   // Accountmenu in de menubalk (ingelogd): open/dicht met de knop, dicht bij een klik ergens anders

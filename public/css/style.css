@@ -573,16 +573,26 @@ input[type=file] { font-size: .88rem; }
   .nav-links, .nav-cta .btn, .nav-cta .nav-inloggen, .nav-account { display: none; }
   .nav-cta { border-left: 0; padding-left: 0; }
   .nav-toggle { display: block; }
+  /* Uitgeklapt menu: hangt onder de (plakkende) menubalk, schuift binnenin als het niet past
+     (--menu-max wordt door main.js gezet op de ruimte onder de balk), met een donkere achtergrond
+     over de pagina. De pagina zelf schuift intussen niet (html.menu-open). */
   .nav.open .nav-links {
-    display: flex; flex-direction: column; position: absolute; top: 70px; left: 0; right: 0;
-    background: var(--white); border-bottom: 1px solid var(--line); padding: 14px 24px 18px; gap: 2px; align-items: stretch;
-    box-shadow: var(--shadow); z-index: 60; max-height: calc(100vh - 70px); overflow-y: auto;
+    display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0;
+    background: var(--white); border-bottom: 1px solid var(--line); padding: 10px 20px 16px; gap: 0; align-items: stretch;
+    box-shadow: var(--shadow); z-index: 60; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
+    max-height: var(--menu-max, calc(100vh - 110px));
   }
-  .nav.open .nav-links a { padding: 12px; border-radius: var(--radius); font-size: 1rem; }
+  .nav.open .nav-links a { padding: 10px 12px; border-radius: var(--radius); font-size: .98rem; }
   .nav.open .nav-links .nav-home { display: block; }
-  .nav-mobiel-acties { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; padding-top: 14px; border-top: 1px solid var(--line); }
+  .nav.open::before { content: ""; position: absolute; top: 100%; left: 0; right: 0; height: 100vh; background: rgba(29,29,31,.45); z-index: 55; }
+  .nav-toggle span, .nav-toggle span::before, .nav-toggle span::after { transition: transform .2s, top .2s, background .2s; }
+  .nav.open .nav-toggle span { background: transparent; }
+  .nav.open .nav-toggle span::before { top: 0; transform: rotate(45deg); }
+  .nav.open .nav-toggle span::after { top: 0; transform: rotate(-45deg); }
+  html.menu-open { overflow: hidden; }
+  .nav-mobiel-acties { display: flex; flex-direction: column; gap: 0; margin-top: 8px; padding-top: 10px; border-top: 1px solid var(--line); }
   .nav-mobiel-acties .btn, .nav-mobiel-acties .inline-form, .nav-mobiel-acties .inline-form .btn { width: 100%; }
-  .nav-mobiel-acties .btn { margin-top: 6px; }
+  .nav-mobiel-acties .btn { margin-top: 8px; padding: 11px 16px; font-size: .98rem; }
 }
 @media (max-width: 680px) {
   .grid--3, .grid--2, .statbar { grid-template-columns: 1fr; }
@@ -777,7 +787,10 @@ body { overflow-wrap: break-word; }
 h1, h2, h3, .hero h1, .paginakop h1, .beeldband h2 { overflow-wrap: break-word; }
 
 @media (max-width: 680px) {
-  html, body { overflow-x: hidden; }              /* geen horizontale schuif */
+  /* Geen horizontale schuif. Alleen op <html> (werkt door op het venster); op <body> 'clip', want
+     'overflow-x: hidden' op beide maakt van <body> een schuifvak en dan plakt de menubalk niet meer. */
+  html { overflow-x: hidden; }
+  body { overflow-x: clip; }
   .paginakop h1 { font-size: 1.7rem; }
   .beeldband { min-height: 260px; }
   .beeldband .wrap { padding: 44px 24px; }

@@ -21,7 +21,7 @@
         <span class="woordmerk"><small>Business Club</small><strong>Luchtmobiel</strong></span>
       </a>
 
-      <div class="nav-links">
+      <div class="nav-links" id="hoofdmenu">
         <a href="/" class="nav-home <%= navActief('/') %>">Home</a>
         <a href="/veteranen" class="<%= navActief('/veteranen') %>">Veteranenzaken</a>
         <a href="/leden" class="<%= navActief('/leden') %>">Ledengids</a>
@@ -73,7 +73,7 @@
             Word lid
           </a>
         <% } %>
-        <button class="nav-toggle" type="button" aria-label="Menu"><span></span></button>
+        <button class="nav-toggle" type="button" aria-label="Menu" aria-controls="hoofdmenu" aria-expanded="false"><span></span></button>
       </div>
     </nav>
   </div>
